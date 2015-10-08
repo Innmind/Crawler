@@ -15,7 +15,11 @@
         "issues": "http://github.com/Innmind/Crawler/issues"
     },
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "guzzlehttp/guzzle": "~5",
+        "symfony/event-dispatcher": "~2.7",
+        "symfony/stopwatch": "~2.7",
+        "jeremykendall/php-domain-parser": "^3.0"
     },
     "autoload": {
         "psr-0": {
