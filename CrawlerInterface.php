@@ -12,7 +12,7 @@ interface CrawlerInterface
      *
      * @param Request $request
      *
-     * @return Resource
+     * @return \Innmind\Crawler\Resource
      */
     public function crawl(Request $request);
 
