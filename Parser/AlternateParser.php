@@ -119,7 +119,7 @@ class AlternateParser implements ParserInterface
             return [];
         }
 
-        return $alternates->each(function (Crawler $node) use ($resource) {
+        return $alternates->each(function(Crawler $node) use ($resource) {
             return [
                 $node->attr('hreflang'),
                 $this->resolver->resolve(
