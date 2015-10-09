@@ -21,7 +21,8 @@
         "symfony/stopwatch": "~2.7",
         "jeremykendall/php-domain-parser": "^3.0",
         "symfony/dom-crawler": "~2.7",
-        "symfony/css-selector": "~2.7"
+        "symfony/css-selector": "~2.7",
+        "innmind/url-resolver": "^1.0"
     },
     "autoload": {
         "psr-0": {
