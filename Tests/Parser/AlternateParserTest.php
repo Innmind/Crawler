@@ -23,6 +23,30 @@ class AlternateParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($r, $return);
         $this->assertSame([], $r->keys());
+
+        $return = $p->parse(
+            $r = new Resource('http://xn--example.com/', 'text/html'),
+            new Response(
+                200,
+                [],
+                Stream::factory(<<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+HTML
+                )
+            ),
+            new Stopwatch
+        );
+
+        $this->assertSame($r, $return);
+        $this->assertSame([], $r->keys());
     }
 
     public function testParse()
