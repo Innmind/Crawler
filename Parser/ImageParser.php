@@ -34,7 +34,7 @@ class ImageParser implements ParserInterface
         $stopwatch->stop('image_size');
 
         $stopwatch->start('exif');
-        $this->readExif($resource, $response);
+        $this->readExif($resource);
         $stopwatch->stop('exif');
         $this->findWeight($resource, $response);
 
@@ -93,14 +93,11 @@ class ImageParser implements ParserInterface
      * Read all the exif data from the image
      *
      * @param Resource $resource
-     * @param ResponseInterface $response
      *
      * @return void
      */
-    protected function readExif(
-        Resource $resource,
-        ResponseInterface $response
-    ) {
+    protected function readExif(Resource $resource)
+    {
         if (!preg_match('/image\/jpeg/', $resource->getContentType())) {
             return;
         }
@@ -113,7 +110,7 @@ class ImageParser implements ParserInterface
             foreach ($exif as $key => $section) {
                 if (is_array($section)) {
                     foreach ($section as $name => $value) {
-                        $data[$key.'.'.$name] = $value;
+                        $data[$key . '.' . $name] = $value;
                     }
                 } else {
                     $data[$key] = $section;
