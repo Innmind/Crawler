@@ -39,6 +39,11 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('.jpeg', $resource->get('extension'));
         $this->assertTrue($resource->has('exif'));
         $this->assertSame(54636, $resource->get('weight'));
+
+        $response = new Response(200, ['Content-Length' => 42]);
+
+        $return = $p->parse($resource, $response, new Stopwatch);
+        $this->assertSame(42, $resource->get('weight'));
     }
 
     public function testName()
