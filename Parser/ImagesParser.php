@@ -42,9 +42,7 @@ class ImagesParser implements ParserInterface
                     return;
                 }
 
-                $alt = $caption->count() === 1 ?
-                    $caption->text() :
-                    $img->attr('alt');
+                $alt = $caption->count() === 1 ? $caption->text() : $img->attr('alt');
 
                 $url = $this->resolver->resolve(
                     $resource->has('base') ? $resource->get('base') : $resource->getUrl(),
