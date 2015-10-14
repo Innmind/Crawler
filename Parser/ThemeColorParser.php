@@ -32,6 +32,8 @@ class ThemeColorParser implements ParserInterface
 
         if ($color->count() === 1) {
             $color = $color->attr('content');
+            $rgb = [];
+            $hsl = [];
 
             switch (true) {
                 case (bool) preg_match(self::SHORT_HEX_PATTERN, $color):
@@ -62,7 +64,7 @@ class ThemeColorParser implements ParserInterface
                     return $resource;
             }
 
-            if (isset($red)) {
+            if (isset($red) && isset($green) && isset($blue)) {
                 list($hue, $sat, $lit) = $this->convertRGBToHsl(
                     $red,
                     $green,
@@ -107,9 +109,10 @@ class ThemeColorParser implements ParserInterface
         $max = max($red, $green, $blue);
         $min = min($red, $green, $blue);
         $lit = ($max + $min) / 2;
+        $hue = 0;
 
         if ($max === $min) {
-            $hue = $sat = 0;
+            $sat = 0;
         } else {
             $diff = $max - $min;
             $sat = $lit > 0.5 ? $diff / (2 - $max - $min) : $diff / ($max + $min);
@@ -132,7 +135,7 @@ class ThemeColorParser implements ParserInterface
         $hue *= 60;
 
         return [
-            $hue ? round($hue, 1) : 0,
+            round($hue, 1),
             $sat ? round($sat * 100, 1) : 0,
             $lit ? round($lit * 100, 1) : 0,
         ];
