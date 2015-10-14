@@ -37,7 +37,7 @@ class ThemeColorParser implements ParserInterface
                 case (bool) preg_match(self::SHORT_HEX_PATTERN, $color):
                     $parts = str_split(substr($color, 1));
                     foreach ($parts as &$part) {
-                        $part = hexdec($part.$part);
+                        $part = hexdec($part . $part);
                     }
                     list($red, $green, $blue) = $parts;
                     break;
@@ -112,9 +112,7 @@ class ThemeColorParser implements ParserInterface
             $hue = $sat = 0;
         } else {
             $diff = $max - $min;
-            $sat = $lit > 0.5 ?
-                $diff / (2 - $max - $min) :
-                $diff / ($max + $min);
+            $sat = $lit > 0.5 ? $diff / (2 - $max - $min) : $diff / ($max + $min);
 
             switch ($max) {
                 case $red:
