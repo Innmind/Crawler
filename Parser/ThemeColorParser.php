@@ -87,6 +87,8 @@ class ThemeColorParser implements ParserInterface
     /**
      * Convert a rgb code to a valid hsl components
      *
+     * @see https://en.wikipedia.org/wiki/HSL_and_HSV Section "Hue and Chroma" (3.3)
+     *
      * @param int $red
      * @param int $green
      * @param int $blue
