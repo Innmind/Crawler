@@ -4,17 +4,23 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\ThemeColorParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 class ThemeColorParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new ThemeColorParser(new DomCrawlerFactory);
+    }
+
     public function testDoesntParse()
     {
-        $p = new ThemeColorParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -23,11 +29,11 @@ class ThemeColorParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertSame([], $r->keys());
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('http://xn--example.com/', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -50,10 +56,9 @@ HTML
 
     public function testParse()
     {
-        $p = new ThemeColorParser;
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -69,7 +74,7 @@ HTML
         );
 
         $r = new Resource('', 'text/html');
-        $return = $p->parse($r, $response, new Stopwatch);
+        $return = $this->p->parse($r, $response, new Stopwatch);
 
         $this->assertSame($r, $return);
         $this->assertTrue($r->has('theme-color'));
@@ -77,7 +82,7 @@ HTML
 
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -92,13 +97,13 @@ HTML
             )
         );
 
-        $p->parse($r, $response, new Stopwatch);
+        $this->p->parse($r, $response, new Stopwatch);
 
         $this->assertSame([180.0, 100.0, 26.7], $r->get('theme-color'));
 
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -113,13 +118,13 @@ HTML
             )
         );
 
-        $p->parse($r, $response, new Stopwatch);
+        $this->p->parse($r, $response, new Stopwatch);
 
         $this->assertSame([42.0, 42.1, 42.0], $r->get('theme-color'));
 
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -134,7 +139,7 @@ HTML
             )
         );
 
-        $p->parse($r, $response, new Stopwatch);
+        $this->p->parse($r, $response, new Stopwatch);
 
         $this->assertSame([24.1, 66.1, 42.1], $r->get('theme-color'));
     }

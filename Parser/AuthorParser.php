@@ -4,12 +4,19 @@ namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Message\ResponseInterface;
 
 class AuthorParser implements ParserInterface
 {
+    protected $crawlerFactory;
+
+    public function __construct(DomCrawlerFactory $crawlerFactory)
+    {
+        $this->crawlerFactory = $crawlerFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,7 +29,7 @@ class AuthorParser implements ParserInterface
             return $resource;
         }
 
-        $dom = new Crawler((string) $response->getBody());
+        $dom = $this->crawlerFactory->make($response);
         $author = $dom->filter('
             meta[name="author"][content],
             meta[name="Author"][content],

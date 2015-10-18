@@ -4,8 +4,8 @@ namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Message\ResponseInterface;
 
 class ThemeColorParser implements ParserInterface
@@ -14,6 +14,13 @@ class ThemeColorParser implements ParserInterface
     const LONG_HEX_PATTERN = '/^#[0-9a-fA-F]{6}$/';
     const RGB_PATTERN = '/^rgb\((?P<red>\d{1,3}), ?(?P<green>\d{1,3}), ?(?P<blue>\d{1,3})\)$/';
     const HSL_PATTERN = '/^hsl\((?P<hue>\d{1,3}\.?\d?), ?(?P<sat>\d{1,3}\.?\d?)%, ?(?P<lit>\d{1,3}\.?\d?)%\)$/';
+
+    protected $crawlerFactory;
+
+    public function __construct(DomCrawlerFactory $crawlerFactory)
+    {
+        $this->crawlerFactory = $crawlerFactory;
+    }
 
     /**
      * {@inheritdoc}
@@ -27,7 +34,7 @@ class ThemeColorParser implements ParserInterface
             return $resource;
         }
 
-        $dom = new Crawler((string) $response->getBody());
+        $dom = $this->crawlerFactory->make($response);
         $color = $dom->filter('meta[name="theme-color"][content]');
 
         if ($color->count() === 1) {

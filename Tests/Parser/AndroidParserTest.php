@@ -4,17 +4,23 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\AndroidParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 class AndroidParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new AndroidParser(new DomCrawlerFactory);
+    }
+
     public function testDoesntParse()
     {
-        $p = new AndroidParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -23,11 +29,11 @@ class AndroidParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertFalse($r->has('android'));
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -50,13 +56,11 @@ HTML
 
     public function testParse()
     {
-        $p = new AndroidParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>

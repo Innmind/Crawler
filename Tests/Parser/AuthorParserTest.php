@@ -4,17 +4,23 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\AuthorParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 class AuthorParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new AuthorParser(new DomCrawlerFactory);
+    }
+
     public function testDoesntParse()
     {
-        $p = new AuthorParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -23,11 +29,11 @@ class AuthorParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertFalse($r->has('author'));
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -53,13 +59,11 @@ HTML
      */
     public function testParse($tag)
     {
-        $p = new AuthorParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>

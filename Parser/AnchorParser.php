@@ -4,12 +4,20 @@ namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Message\ResponseInterface;
 
 class AnchorParser implements ParserInterface
 {
+    protected $crawlerFactory;
+
+    public function __construct(DomCrawlerFactory $crawlerFactory)
+    {
+        $this->crawlerFactory = $crawlerFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,7 +30,7 @@ class AnchorParser implements ParserInterface
             return $resource;
         }
 
-        $dom = new Crawler((string) $response->getBody());
+        $dom = $this->crawlerFactory->make($response);
         $anchors = $dom
             ->filter('a[href^="#"]')
             ->reduce(function(Crawler $node) {

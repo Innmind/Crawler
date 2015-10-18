@@ -4,17 +4,23 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\IosParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 class IosParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new IosParser(new DomCrawlerFactory);
+    }
+
     public function testDoesntParse()
     {
-        $p = new IosParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -23,11 +29,11 @@ class IosParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertFalse($r->has('ios'));
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -50,13 +56,11 @@ HTML
 
     public function testParse()
     {
-        $p = new IosParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>

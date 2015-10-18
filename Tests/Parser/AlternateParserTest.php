@@ -4,6 +4,7 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\AlternateParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Innmind\UrlResolver\UrlResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -11,11 +12,19 @@ use GuzzleHttp\Stream\Stream;
 
 class AlternateParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new AlternateParser(
+            new UrlResolver([]),
+            new DomCrawlerFactory
+        );
+    }
+
     public function testDoesntParse()
     {
-        $p = new AlternateParser(new UrlResolver([]));
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -24,11 +33,11 @@ class AlternateParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertSame([], $r->keys());
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('http://xn--example.com/', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -51,11 +60,11 @@ HTML
 
     public function testParse()
     {
-        $p = new AlternateParser(new UrlResolver([]));
         $response = new Response(
             200,
             [
                 'Link' => '<http://fr.xn--example.com/>; rel="alternate"; hreflang="fr", <http://example.com/2>; rel="next"',
+                'Content-Type' => 'text/html',
             ],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
@@ -72,7 +81,7 @@ HTML
             )
         );
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('http://xn--example.com/', 'text/html'),
             $response,
             new Stopwatch

@@ -4,17 +4,23 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\AnchorParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 class AnchorParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new AnchorParser(new DomCrawlerFactory);
+    }
+
     public function testDoesntParse()
     {
-        $p = new AnchorParser;
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -26,10 +32,9 @@ class AnchorParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $p = new AnchorParser;
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -50,7 +55,7 @@ HTML
             )
         );
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'text/html'),
             $response,
             new Stopwatch

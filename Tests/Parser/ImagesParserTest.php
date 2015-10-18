@@ -4,6 +4,7 @@ namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\ImagesParser;
 use Innmind\Crawler\Resource;
+use Innmind\Crawler\DomCrawlerFactory;
 use Innmind\UrlResolver\UrlResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -11,11 +12,19 @@ use GuzzleHttp\Stream\Stream;
 
 class ImagesParserTest extends \PHPUnit_Framework_TestCase
 {
+    protected $p;
+
+    public function setUp()
+    {
+        $this->p = new ImagesParser(
+            new UrlResolver([]),
+            new DomCrawlerFactory
+        );
+    }
+
     public function testDoesntParse()
     {
-        $p = new ImagesParser(new UrlResolver([]));
-
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('', 'application/json'),
             new Response(200),
             new Stopwatch
@@ -24,11 +33,11 @@ class ImagesParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($r, $return);
         $this->assertSame([], $r->keys());
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('http://xn--example.com/', 'text/html'),
             new Response(
                 200,
-                [],
+                ['Content-Type' => 'text/html'],
                 Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -51,10 +60,9 @@ HTML
 
     public function testParse()
     {
-        $p = new ImagesParser(new UrlResolver([]));
         $response = new Response(
             200,
-            [],
+            ['Content-Type' => 'text/html'],
             Stream::factory(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -79,7 +87,7 @@ HTML
             )
         );
 
-        $return = $p->parse(
+        $return = $this->p->parse(
             $r = new Resource('http://xn--example.com/', 'text/html'),
             $response,
             new Stopwatch
@@ -97,7 +105,7 @@ HTML
         );
 
         $r->set('base', 'http://xn--example.com/dir/');
-        $p->parse($r, $response, new Stopwatch );
+        $this->p->parse($r, $response, new Stopwatch);
 
         $this->assertSame(
             [
