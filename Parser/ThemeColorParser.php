@@ -72,7 +72,9 @@ class ThemeColorParser implements ParserInterface
                 );
             }
 
-            $resource->set('theme-color', [$hue, $sat, $lit]);
+            if (isset($hue) && isset($sat) && isset($lit)) {
+                $resource->set('theme-color', [$hue, $sat, $lit]);
+            }
         }
 
         return $resource;
