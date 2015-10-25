@@ -83,6 +83,8 @@ class ContentParser implements ParserInterface
 
                 if (in_array($child->nodeName, $this->toIgnore, true)) {
                     $node->removeChild($child);
+                    $i--;
+                    $length--;
                 } else {
                     $this->clean($child);
                 }
