@@ -109,6 +109,10 @@ class ContentParser implements ParserInterface
             $group = $node;
         }
 
+        if ($group->count() === 1) {
+            return $this->findContentNode($group);
+        }
+
         $group->each(function(Crawler $child, $i) use (&$dispersion) {
             $dispersion[$i] = str_word_count($child->text());
         });
