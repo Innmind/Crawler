@@ -123,7 +123,7 @@ class ContentParser implements ParserInterface
         for ($i = 1; $i < 5; $i++) {
             $diff = $quantile->quartile($i)->value() - $quantile->quartile($i - 1)->value();
 
-            if ($diff > $quantile->mean()) {
+            if ($diff >= $quantile->mean()) {
                 $lookup[] = $i;
             }
         }
