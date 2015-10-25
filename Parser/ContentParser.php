@@ -33,14 +33,13 @@ class ContentParser implements ParserInterface
         }
 
         $stopwatch->start('html_cleaning');
-        $dom = new \DOMDocument(
-            null,
-            $resource->has('charset') ? $resource->get('charset') : null
-        );
-        $dom->loadXml((string) $response->getBody());
+        $crawler = $this->crawlerFactory->make($response);
+        $dom = $crawler->getNode(0);
+        $this->clean($dom);
+        $this->clean($dom);
         $this->clean($dom);
         $crawler = new Crawler;
-        $crawler->addDocument($dom);
+        $crawler->addNode($dom);
         $stopwatch->stop('html_cleaning');
 
         $body = $crawler->filter('body');
