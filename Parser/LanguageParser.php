@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\ResponseInterface;
@@ -21,7 +21,7 @@ class LanguageParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {
@@ -66,11 +66,11 @@ class LanguageParser implements ParserInterface
      * If the language is already set in the resource, no averride is done
      *
      * @param string $languages
-     * @param Resource $resource
+     * @param HttpResource $resource
      *
      * @return void
      */
-    protected function parseLanguages($languages, Resource $resource)
+    protected function parseLanguages($languages, HttpResource $resource)
     {
         if ($resource->has('languages')) {
             return;

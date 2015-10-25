@@ -27,7 +27,7 @@ class Parser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {

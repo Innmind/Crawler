@@ -56,7 +56,7 @@ class Crawler implements CrawlerInterface
         );
         $stopwath->stop('crawl');
 
-        $resource = new Resource(
+        $resource = new HttpResource(
             $response->getEffectiveUrl(),
             $response->getHeader('Content-Type')
         );
@@ -73,7 +73,7 @@ class Crawler implements CrawlerInterface
     /**
      * {@inheritdoc}
      */
-    public function getStopwatch(Resource $resource)
+    public function getStopwatch(HttpResource $resource)
     {
         if (!$this->resources->contains($resource)) {
             throw new \InvalidArgumentException(sprintf(
@@ -88,7 +88,7 @@ class Crawler implements CrawlerInterface
     /**
      * {@inheritdoc}
      */
-    public function release(Resource $resource)
+    public function release(HttpResource $resource)
     {
         $this->resources->detach($resource);
 

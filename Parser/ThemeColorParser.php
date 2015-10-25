@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\ResponseInterface;
@@ -26,7 +26,7 @@ class ThemeColorParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {

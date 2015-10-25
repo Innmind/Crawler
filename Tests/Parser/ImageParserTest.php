@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\ImageParser;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
 
@@ -14,7 +14,7 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
         $p = new ImageParser;
 
         $return = $p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             new Response(200),
             new Stopwatch
         );
@@ -27,7 +27,7 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
     {
         $p = new ImageParser;
 
-        $resource = new Resource('fixtures/dont_panic.jpg', 'image/jpeg');
+        $resource = new HttpResource('fixtures/dont_panic.jpg', 'image/jpeg');
         $response = new Response(200);
 
         $return = $p->parse($resource, $response, new Stopwatch);

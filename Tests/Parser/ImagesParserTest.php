@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\ImagesParser;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Innmind\UrlResolver\UrlResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -25,7 +25,7 @@ class ImagesParserTest extends \PHPUnit_Framework_TestCase
     public function testDoesntParse()
     {
         $return = $this->p->parse(
-            $r = new Resource('', 'application/json'),
+            $r = new HttpResource('', 'application/json'),
             new Response(200),
             new Stopwatch
         );
@@ -34,7 +34,7 @@ class ImagesParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([], $r->keys());
 
         $return = $this->p->parse(
-            $r = new Resource('http://xn--example.com/', 'text/html'),
+            $r = new HttpResource('http://xn--example.com/', 'text/html'),
             new Response(
                 200,
                 ['Content-Type' => 'text/html'],
@@ -88,7 +88,7 @@ HTML
         );
 
         $return = $this->p->parse(
-            $r = new Resource('http://xn--example.com/', 'text/html'),
+            $r = new HttpResource('http://xn--example.com/', 'text/html'),
             $response,
             new Stopwatch
         );

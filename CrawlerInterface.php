@@ -12,25 +12,25 @@ interface CrawlerInterface
      *
      * @param Request $request
      *
-     * @return \Innmind\Crawler\Resource
+     * @return HttpResource
      */
     public function crawl(Request $request);
 
     /**
      * Return a stopwatch containing the times spent for each part of the crawl
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      *
      * @return Stopwatch
      */
-    public function getStopwatch(Resource $resource);
+    public function getStopwatch(HttpResource $resource);
 
     /**
      * Clear inner references to the given resource
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      *
      * @return CrawlerInterface self
      */
-    public function release(Resource $resource);
+    public function release(HttpResource $resource);
 }

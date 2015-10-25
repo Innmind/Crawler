@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\ResponseInterface;
 use Pdp\PublicSuffixListManager;
@@ -24,7 +24,7 @@ class UriParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {

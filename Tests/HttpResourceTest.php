@@ -2,27 +2,27 @@
 
 namespace Innmind\Crawler\Tests;
 
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 
-class ResourceTest extends \PHPUnit_Framework_TestCase
+class HttpResourceTest extends \PHPUnit_Framework_TestCase
 {
     public function testUrl()
     {
-        $r = new Resource('http://example.com/', '');
+        $r = new HttpResource('http://example.com/', '');
 
         $this->assertSame('http://example.com/', $r->getUrl());
     }
 
     public function testContentType()
     {
-        $r = new Resource('', 'application/json');
+        $r = new HttpResource('', 'application/json');
 
         $this->assertSame('application/json', $r->getContentType());
     }
 
     public function testSet()
     {
-        $r = new Resource('', '');
+        $r = new HttpResource('', '');
 
         $this->assertFalse($r->has('foo'));
         $this->assertSame($r, $r->set('foo', 'bar'));
@@ -37,7 +37,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowIfTryingToAccessUnknownAttribute()
     {
-        $r = new Resource('http://example.com/', '');
+        $r = new HttpResource('http://example.com/', '');
 
         $r->get('foo');
     }

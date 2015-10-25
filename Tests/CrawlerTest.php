@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Tests;
 use Innmind\Crawler\Crawler;
 use Innmind\Crawler\Parser;
 use Innmind\Crawler\Request;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Client as Http;
@@ -73,7 +73,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request('http://example.com/');
         $resource = $this->c->crawl($request);
-        $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertInstanceOf(HttpResource::class, $resource);
         $this->assertSame('http://example.com/', $resource->getUrl());
         $this->assertTrue($preFired);
         $this->assertTrue($postFired);

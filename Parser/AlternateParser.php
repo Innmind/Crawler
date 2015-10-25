@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Innmind\UrlResolver\ResolverInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -27,7 +27,7 @@ class AlternateParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {
@@ -68,13 +68,13 @@ class AlternateParser implements ParserInterface
     /**
      * Try to find alternate version of the resource via http links
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      * @param ResponseInterface $response
      *
      * @return array
      */
     protected function parseHttpLinks(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response
     ) {
         $links = $response::parseHeader($response, 'Link');
@@ -104,13 +104,13 @@ class AlternateParser implements ParserInterface
     /**
      * Try to find alternate version of the resource in the html content
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      * @param ResponseInterface $response
      *
      * @return array
      */
     protected function parseHtmlLinks(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response
     ) {
         if (!preg_match('/html/', $resource->getContentType())) {

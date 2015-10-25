@@ -2,7 +2,7 @@
 
 namespace Innmind\Crawler;
 
-class Resource
+class HttpResource
 {
     protected $url;
     protected $contentType;
@@ -40,7 +40,7 @@ class Resource
      * @param string $key
      * @param mixed $value
      *
-     * @return Resource self
+     * @return HttpResource self
      */
     public function set($key, $value)
     {

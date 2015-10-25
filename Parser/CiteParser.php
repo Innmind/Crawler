@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\DomCrawler\Crawler;
@@ -22,7 +22,7 @@ class CiteParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {

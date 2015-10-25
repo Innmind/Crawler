@@ -4,7 +4,7 @@ namespace Innmind\Crawler\Tests;
 
 use Innmind\Crawler\Parser;
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\Parser\UriParser;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -30,7 +30,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $response->setEffectiveUrl($url);
 
         $resource = $p->parse(
-            new Resource($url, 'text/html'),
+            new HttpResource($url, 'text/html'),
             $response,
             $s = new Stopwatch
         );

@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\AnchorParser;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -21,7 +21,7 @@ class AnchorParserTest extends \PHPUnit_Framework_TestCase
     public function testDoesntParse()
     {
         $return = $this->p->parse(
-            $r = new Resource('', 'application/json'),
+            $r = new HttpResource('', 'application/json'),
             new Response(200),
             new Stopwatch
         );
@@ -56,7 +56,7 @@ HTML
         );
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             $response,
             new Stopwatch
         );

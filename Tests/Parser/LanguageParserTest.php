@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\LanguageParser;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -21,7 +21,7 @@ class LanguageParserTest extends \PHPUnit_Framework_TestCase
     public function testDoesntParse()
     {
         $return = $this->p->parse(
-            $r = new Resource('', 'application/json'),
+            $r = new HttpResource('', 'application/json'),
             new Response(200),
             new Stopwatch
         );
@@ -30,7 +30,7 @@ class LanguageParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($r->has('languages'));
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             new Response(
                 200,
                 ['Content-Type' => 'text/html'],
@@ -57,7 +57,7 @@ HTML
     public function testParse()
     {
         $return = $this->p->parse(
-            $r = new Resource('', 'application/json'),
+            $r = new HttpResource('', 'application/json'),
             new Response(
                 200,
                 ['Content-Language' => 'fr, en, d3o']
@@ -70,7 +70,7 @@ HTML
         $this->assertSame(['fr', 'en'], $r->get('languages'));
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             new Response(
                 200,
                 ['Content-Type' => 'text/html'],
@@ -93,7 +93,7 @@ HTML
         $this->assertSame(['de'], $r->get('languages'));
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             new Response(
                 200,
                 ['Content-Type' => 'text/html'],

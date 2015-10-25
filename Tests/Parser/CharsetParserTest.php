@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Tests\Parser;
 
 use Innmind\Crawler\Parser\CharsetParser;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\Response;
@@ -21,7 +21,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
     public function testDoesntParse()
     {
         $return = $this->p->parse(
-            $r = new Resource('', 'application/json'),
+            $r = new HttpResource('', 'application/json'),
             new Response(200),
             new Stopwatch
         );
@@ -30,7 +30,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([], $r->keys());
 
         $return = $this->p->parse(
-            $r = new Resource('http://xn--example.com/', 'text/html'),
+            $r = new HttpResource('http://xn--example.com/', 'text/html'),
             new Response(
                 200,
                 ['Content-Type' => 'text/html'],
@@ -74,7 +74,7 @@ HTML
         );
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html'),
+            $r = new HttpResource('', 'text/html'),
             $response,
             new Stopwatch
         );
@@ -84,7 +84,7 @@ HTML
         $this->assertSame('UTF-8', $r->get('charset'));
 
         $return = $this->p->parse(
-            $r = new Resource('', 'text/html; charset="UTF-16"'),
+            $r = new HttpResource('', 'text/html; charset="UTF-16"'),
             new Response(200),
             new Stopwatch
         );

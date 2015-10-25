@@ -12,14 +12,14 @@ interface ParserInterface
      *
      * It may also add a section to the stopwatch
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      * @param ResponseInterface $response
      * @param Stopwatch $stopwatch
      *
      * @return \Innmind\Crawler\Resource
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     );

@@ -3,7 +3,7 @@
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
-use Innmind\Crawler\Resource;
+use Innmind\Crawler\HttpResource;
 use Symfony\Component\Stopwatch\Stopwatch;
 use GuzzleHttp\Message\ResponseInterface;
 
@@ -16,7 +16,7 @@ class ImageParser implements ParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response,
         Stopwatch $stopwatch
     ) {
@@ -52,13 +52,13 @@ class ImageParser implements ParserInterface
     /**
      * Try to find the image weight
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      * @param ResponseInterface $response
      *
      * @return void
      */
     protected function findWeight(
-        Resource $resource,
+        HttpResource $resource,
         ResponseInterface $response
     ) {
         if ($response->hasHeader('Content-Length')) {
@@ -92,11 +92,11 @@ class ImageParser implements ParserInterface
     /**
      * Read all the exif data from the image
      *
-     * @param Resource $resource
+     * @param HttpResource $resource
      *
      * @return void
      */
-    protected function readExif(Resource $resource)
+    protected function readExif(HttpResource $resource)
     {
         if (!preg_match('/image\/jpeg/', $resource->getContentType())) {
             return;
