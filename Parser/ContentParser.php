@@ -37,8 +37,6 @@ class ContentParser implements ParserInterface
         $crawler = $this->crawlerFactory->make($response);
         $dom = $crawler->getNode(0);
         $this->clean($dom);
-        $this->clean($dom);
-        $this->clean($dom);
         $crawler = new Crawler;
         $crawler->addNode($dom);
         $stopwatch->stop('html_cleaning');
