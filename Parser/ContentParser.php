@@ -48,6 +48,8 @@ class ContentParser implements ParserInterface
             $stopwatch->start('content_finding');
             $node = $this->findContentNode($body);
             $stopwatch->stop('content_finding');
+
+            $resource->set('content', trim($node->text()));
         }
 
         return $resource;
