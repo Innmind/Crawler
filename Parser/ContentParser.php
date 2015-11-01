@@ -106,6 +106,10 @@ class ContentParser implements ParserInterface
 
         if ($node->count() === 1) {
             $group = $node->children();
+
+            if ($group->count() === 0) {
+                return $node;
+            }
         } else {
             $group = $node;
         }
