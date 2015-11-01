@@ -6,7 +6,6 @@ use Innmind\Crawler\ParserInterface;
 use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Innmind\Math\Quantile\Quantile;
-use Innmind\Math\Regression\LinearRegression;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Message\ResponseInterface;
@@ -121,16 +120,6 @@ class ContentParser implements ParserInterface
         $group->each(function(Crawler $child, $i) use (&$dispersion) {
             $dispersion[$i] = str_word_count($child->text());
         });
-
-        if (count($dispersion) > 2) {
-            $regression = new LinearRegression($dispersion);
-
-            if ($regression->intercept() > 0) {
-                foreach ($dispersion as $i => &$value) {
-                    $value = $regression($i);
-                }
-            }
-        }
 
         $quantile = new Quantile($dispersion);
         $lookup = [];
