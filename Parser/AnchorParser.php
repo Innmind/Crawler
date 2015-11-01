@@ -41,7 +41,6 @@ class AnchorParser implements ParserInterface
             });
         $resource->set('anchors', array_unique($anchors));
 
-
         return $resource;
     }
 
