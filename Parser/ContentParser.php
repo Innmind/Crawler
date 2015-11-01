@@ -147,10 +147,10 @@ class ContentParser implements ParserInterface
             return $node;
         }
 
-        $min = $quantile->quartile(min($lookup) - 1)->value();
+        $min = $quantile->quartile(min($lookup))->value();
 
         $nodes = $group->reduce(function(Crawler $child, $i) use ($min, $dispersion) {
-            return $dispersion[$i] > $min;
+            return $dispersion[$i] >= $min;
         });
 
         return $this->findContentNode($nodes);
