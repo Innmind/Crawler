@@ -4,6 +4,7 @@ namespace Innmind\Crawler;
 
 use Innmind\Crawler\Event\PreRequestEvent;
 use Innmind\Crawler\Event\PostRequestEvent;
+use Innmind\Crawler\Event\ParsingEvent;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use GuzzleHttp\Client as Http;
@@ -61,9 +62,17 @@ class Crawler implements CrawlerInterface
             $response->getHeader('Content-Type')
         );
 
+        $this->dispatcher->dispatch(
+            Events::PRE_PARSING,
+            new ParsingEvent($resource, $response)
+        );
         $stopwath->openSection();
         $this->parser->parse($resource, $response, $stopwath);
         $stopwath->stopSection('parsing');
+        $this->dispatcher->dispatch(
+            Events::POST_PARSING,
+            new ParsingEvent($resource, $response)
+        );
 
         $this->resources->attach($resource, $stopwath);
 
