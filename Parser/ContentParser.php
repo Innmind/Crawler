@@ -41,13 +41,37 @@ class ContentParser implements ParserInterface
         $stopwatch->stop('html_cleaning');
 
         $body = $crawler->filter('body');
+        $roleArticle = $body->filter('[role="article"]');
+        $roleDocument = $body->filter('[role="document"]');
+        $roleMain = $body->filter('[role="main"]');
+        $main = $body->filter('main');
+        $article = $body->filter('article');
 
-        if ($body->count() === 1) {
-            $body = $body->eq(0);
-            $stopwatch->start('content_finding');
-            $node = $this->findContentNode($body);
-            $stopwatch->stop('content_finding');
+        switch (true) {
+            case $roleArticle->count() === 1:
+                $node = $roleArticle;
+                break;
+            case $roleDocument->count() === 1:
+                $node = $roleDocument;
+                break;
+            case $roleMain->count() === 1:
+                $node = $roleMain;
+                break;
+            case $main->count() === 1:
+                $node = $main;
+                break;
+            case $article->count() === 1:
+                $node = $article;
+                break;
+            case $body->count() === 1:
+                $body = $body->eq(0);
+                $stopwatch->start('content_finding');
+                $node = $this->findContentNode($body);
+                $stopwatch->stop('content_finding');
+                break;
+        }
 
+        if (isset($node)) {
             $resource->set('content', trim($node->text()));
         }
 
