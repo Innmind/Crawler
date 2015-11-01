@@ -89,7 +89,7 @@ class ContentParser implements ParserInterface
     /**
      * Remove all the script and stylesheet tags
      *
-     * @param DOMNode $node
+     * @param \DOMNode $node
      *
      * @return void
      */

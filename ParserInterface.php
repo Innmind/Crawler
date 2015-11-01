@@ -16,7 +16,7 @@ interface ParserInterface
      * @param ResponseInterface $response
      * @param Stopwatch $stopwatch
      *
-     * @return \Innmind\Crawler\Resource
+     * @return HttpResource
      */
     public function parse(
         HttpResource $resource,
