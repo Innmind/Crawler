@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<!-- source: https://medium.com/@Baptouuuu/why-js-frameworks-fail-to-last-1440df0df321 -->
+<html xmlns:cc="http://creativecommons.org/ns#">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# medium-com: http://ogp.me/ns/fb/medium-com#">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why JS frameworks fail to last — Medium</title>
+<link rel="canonical" href="https://medium.com/@Baptouuuu/why-js-frameworks-fail-to-last-1440df0df321">
+<meta name="title" content="Why JS frameworks fail to last">
+<meta name="referrer" content="always">
+<meta name="description" content="Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fa…">
+<meta property="og:site_name" content="Medium">
+<meta property="og:title" content="Why JS frameworks fail to last">
+<meta property="og:url" content="https://medium.com/@Baptouuuu/why-js-frameworks-fail-to-last-1440df0df321">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/0*Q88wPazVKfc1h-b8.jpg">
+<meta property="fb:app_id" content="542599432471018">
+<meta property="og:description" content="Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fa…">
+<meta name="twitter:site" content="@Medium">
+<meta name="twitter:image:src" content="https://cdn-images-1.medium.com/max/1600/0*Q88wPazVKfc1h-b8.jpg">
+<link rel="publisher" href="https://plus.google.com/103654360130207659246">
+<link rel="author" href="https://medium.com/@Baptouuuu">
+<meta name="author" content="Baptiste LANGLADE">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<meta property="article:publisher" content="https://www.facebook.com/medium">
+<meta property="article:author" content="https://medium.com/@Baptouuuu">
+<meta property="fb:smart_publish:robots" content="noauto">
+<meta property="article:published_time" content="2015-06-07T08:12:21.952Z">
+<meta name="twitter:creator" content="@Baptouuuu">
+<meta name="twitter:app:name:iphone" content="Medium">
+<meta name="twitter:app:id:iphone" content="828256236">
+<meta name="twitter:app:url:iphone" content="medium:/p/1440df0df321">
+<meta property="al:ios:app_name" content="Medium">
+<meta property="al:ios:app_store_id" content="828256236">
+<meta property="al:android:package" content="com.medium.reader">
+<meta property="al:android:app_name" content="Medium">
+<meta property="al:ios:url" content="medium:/p/1440df0df321">
+<meta property="al:android:url" content="medium://p/1440df0df321">
+<meta property="al:web:url" content="https://medium.com/@Baptouuuu/why-js-frameworks-fail-to-last-1440df0df321">
+<link rel="alternate" href="android-app://com.medium.reader/https/medium.com/p/1440df0df321" />
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" type="text/css" href="https://cdn-static-1.medium.com/_/fp/css/fonts-base.LqXl5T9RMAR39Ge23ku50w.css" />
+<link rel="stylesheet" href="https://cdn-static-1.medium.com/_/fp/css/main-base.lYj8n6c1e6lmPqtVO2pSIg.css">
+<script>
+if (window.top !== window.self)
+    window.top.location = window.self.location.href;
+var OB_startTime = new Date().getTime();
+var OB_loadErrors = [];
+function _onerror(e) { OB_loadErrors.push(e) };
+if (document.addEventListener)
+    document.addEventListener("error", _onerror, true);
+else if (document.attachEvent)
+    document.attachEvent("onerror", _onerror);
+function _asyncScript(u) {
+    var d = document,
+        f = d.getElementsByTagName("script")[0],
+        s = d.createElement("script");
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = u;
+    f.parentNode.insertBefore(s, f);
+}
+function _asyncStyles(u) {
+    var d = document,
+        f = d.getElementsByTagName("script")[0],
+        s = d.createElement("link");
+    s.rel = "stylesheet";
+    s.href = u;
+    f.parentNode.insertBefore(s, f);
+    return s
+}
+var _gaq = _gaq || [];
+_gaq.push(["_setAccount", "UA-24232453-2"]);
+_gaq.push(["_setDomainName", window.location.hostname]);
+_gaq.push(["_setAllowLinker", true]);
+_gaq.push(["_trackPageview"]);
+_asyncScript(("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js");
+</script>
+<link rel="manifest" href="/manifest.json">
+<!--[if lt IE 9]>
+<script charset="UTF-8" src="https://cdn-static-1.medium.com/_/fp/js/shiv.RI2ePTZ5gFmMgLzG5bEVAA.js">
+</script>
+<![endif]-->
+<link rel="shortcut icon" href="https://cdn-static-1.medium.com/_/fp/icons/favicon-new.TAS6uQ-Y7kcKgi0xjcYHXw.ico">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-ipad-retina.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-iphone-retina.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-ipad.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body itemscope itemtype="http://schema.org/Article" class=" template-flex-article browser-chrome os-mac is-withMagicUnderlines is-noJs">
+<script>document.body.className = document.body.className.replace(/(^|\s)is-noJs(\s|$)/, "$1is-js$2")</script>
+<div class="site-main" id="container">
+<div class="butterBar butterBar--error">
+</div>
+<div class="surface">
+<div id="prerendered" class="screenContent">
+<canvas class="canvas-renderer">
+</canvas>
+<nav class="metabar u-clearfix js-metabar metabar--top metabar--postArticle">
+<div class="metabar-block metabar-left u-floatLeft">
+<a href="https://medium.com/" class="siteNav-logo" data-log-event="home">
+<svg viewBox="0 0 45 45" width="45" height="45" class="svgIcon svgIcon--logoNew svgIcon-size--45px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-logoNew-45px-p0">
+</use>
+<use class="svgIcon-use svgIcon-use--part1" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-logoNew-45px-p1">
+</use>
+<use class="svgIcon-use svgIcon-use--part2" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-logoNew-45px-p2">
+</use>
+<use class="svgIcon-use svgIcon-use--part3" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-logoNew-45px-p3">
+</use>
+</svg>
+<span class="u-textScreenReader">Homepage</span>
+</a>
+</div>
+<div class="metabar-block metabar-right u-floatRight">
+<div class="buttonSet">
+<a class="button u-xs-hide button--withChrome"  href="https://medium.com/p/1440df0df321/edit" data-action="post-edit">Edit</a>
+<span class="metabar-divider u-xs-hide">
+</span>
+</div>
+<div class="inputGroup u-xs-hide metabar-predictiveSearch">
+<button class="button button--chromeless button--inline button--withIcon is-inSiteNavBar button--withSvgIcon"  title="Click to start typing a search term" aria-label="Click to start typing a search term" data-action="focus-search-input">
+<svg viewBox="0 0 25 25" width="25" height="25" class="svgIcon svgIcon--search svgIcon-size--25px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-search-25px-p0">
+</use>
+</svg>
+</button>
+<input class="js-predictiveSearchInput textInput textInput--rounded textInput--dark" type="search" placeholder="Search Medium">
+</div>
+<div class="buttonSet">
+<button class="button button--circle button--withChrome button--withIcon is-inSiteNavBar u-showOnMobile button--withSvgIcon"  title="Search" aria-label="Search" data-action="open-search">
+<svg viewBox="0 0 25 25" width="25" height="25" class="svgIcon svgIcon--search svgIcon-size--25px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-search-25px-p0">
+</use>
+</svg>
+</button>
+<button class="button button--circle button--withChrome button--withIcon button--activity is-inSiteNavBar js-notificationsButton button--withSvgIcon"  title="Notifications" aria-label="Notifications" data-action="open-notifications">
+<svg viewBox="0 0 25 25" width="25" height="25" class="svgIcon svgIcon--bell svgIcon-size--25px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-bell-25px-p0">
+</use>
+</svg>
+</button>
+<button class="button button--circle button--borderless button--boxShadowBorder button--withChrome is-inSiteNavBar js-userActions" aria-haspopup="true" data-action="open-userActions">
+<div class="avatar">
+<img src="https://cdn-images-1.medium.com/fit/c/80/80/0*Q88wPazVKfc1h-b8.jpg" class="avatar-image avatar-image--smaller" alt="Baptiste LANGLADE">
+</div>
+</button>
+</div>
+</div>
+</nav>
+<div class="postActionsBar js-postActionsBar">
+<div class="postActionsBar-container container u-size740">
+<div class="postActionsBar-content row js-postActionsBarContent">
+<div class="postActions col u-xs-size12of12">
+<div class="u-floatLeft buttonSet buttonSet--withLabels">
+<div class="buttonSet-inner js-postActionRecommend">
+<button class="button button--primary button--large button--chromeless button--withIcon button--withSvgIcon"  title="Recommend to share this article with your followers and let the author know you liked it" aria-label="Recommend to share this article with your followers and let the author know you liked it" data-action="upvote" data-action-value="1440df0df321">
+<span class="button-defaultState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--heart svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-heart-29px-p0">
+</use>
+</svg>
+</span>
+<span class="button-activeState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--heartFilled svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-heartFilled-29px-p0">
+</use>
+</svg>
+</span>
+</button>
+<button class="button button--chromeless"  data-action="show-recommends">2</button>
+</div>
+<div class="buttonSet-inner">
+<button class="button button--large button--dark button--chromeless button--withIcon button--withSvgIcon"  data-action="respond">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--response svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-response-29px-p0">
+</use>
+</svg>
+</button>
+</div>
+</div>
+<div class="u-floatRight buttonSet">
+<div class="buttonSet-inner">
+<button class="button button--large button--dark button--chromeless button--withIcon button--withSvgIcon"  title="Share this story on Twitter, Facebook, or email" aria-label="Share this story on Twitter, Facebook, or email" data-action="show-share-popover">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--share svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-share-29px-p0">
+</use>
+</svg>
+</button>
+</div>
+<div class="buttonSet-inner">
+<button class="button button--large button--dark button--chromeless button--withIcon js-bookmarkButton button--withSvgIcon"  title="Bookmark this story to read later" aria-label="Bookmark this story to read later" data-action="add-to-bookmarks" data-action-value="1440df0df321">
+<span class="button-defaultState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--bookmark svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-bookmark-29px-p0">
+</use>
+</svg>
+</span>
+<span class="button-activeState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--bookmarkFilled svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-bookmarkFilled-29px-p0">
+</use>
+</svg>
+</span>
+</button>
+</div>
+<div class="buttonSet-separator">
+</div>
+<div class="buttonSet-inner">
+<a class="link avatar avatar--inline"  href="https://medium.com/@Baptouuuu" data-action="show-user-card" data-action-type="hover" data-user-id="cb8248010d1f" dir="auto">
+<img src="https://cdn-images-1.medium.com/fit/c/48/48/0*Q88wPazVKfc1h-b8.jpg" class="avatar-image avatar-image--micro" alt="Go to the profile of Baptiste LANGLADE">
+<span class="avatar-text">Baptiste LANGLADE</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<article class="u-sizeViewHeightMin100 postArticle postArticle--full" lang="en" data-allow-notes="true">
+<header class="container is-underMetabar u-size740">
+<div class="postMetaHeader row u-xs-top10 u-xs-bottom10">
+<div class="col u-xs-size5of12">
+<div class="u-floatLeft">
+<div class="postMetaInline-avatar">
+<a class="link avatar"  href="https://medium.com/@Baptouuuu" data-action="show-user-card" data-action-type="hover" data-user-id="cb8248010d1f" dir="auto">
+<img src="https://cdn-images-1.medium.com/fit/c/72/72/0*Q88wPazVKfc1h-b8.jpg" class="avatar-image u-xs-size32x32 u-sm-size36x36" alt="Go to the profile of Baptiste LANGLADE">
+</a>
+</div>
+<div class="postMetaInline-feedSummary">
+<a class="link link link--darken link--accent"  href="https://medium.com/@Baptouuuu" data-action="show-user-card" data-action-type="hover" data-user-id="cb8248010d1f" dir="auto">Baptiste LANGLADE</a>
+<span class="postMetaInline postMetaInline--supplemental">Jun 7<span class="middotDivider">
+</span>
+<span class="readingTime">11 min read</span>
+</span>
+</div>
+</div>
+</div>
+<div class="col u-xs-size7of12">
+<div class="u-floatRight">
+<div class="voteWidget postMetaHeader-socialProof js-voteWidget is-iconVisible">
+</div>
+</div>
+</div>
+</div>
+</header>
+<main role="main" class="postArticle-content js-postField js-notesSource">
+<section name="93ad" class=" section--body section--first">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<h3 name="d682" id="d682" class="graf--h3 graf--first">Why JS frameworks fail to last</h3>
+<p name="59ed" id="59ed" class="graf--p graf-after--h3">Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise <em class="markup--em markup--p-em">and fall</em> of countless frameworks.</p>
+<p name="f590" id="f590" class="graf--p graf-after--p">And there’s a bad thing behind it that nobody seems to have pointed out yet. So the whole purpose of this article is to try to figure out what’s going on.</p>
+<p name="a20a" id="a20a" class="graf--p graf-after--p">I’ll try to be the most objective as possible.</p>
+<p name="0ef6" id="0ef6" class="graf--p graf-after--p graf--last">
+<em class="markup--em markup--p-em">P.S. : I only talk about frontend here, no backend js!</em>
+</p>
+</div>
+</div>
+</section>
+<section name="867f" class=" section--body">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<p name="7916" id="7916" class="graf--p graf--first">So, I think anyone will agree when I say the current situation is completely insane and not sustainable.</p>
+<p name="ba89" id="ba89" class="graf--p graf-after--p">Right now, you can’t be sure if the framework you’ve picked will still fit when your app will grow in size, or if the next release won’t break it. Anyone serious enough about his code should be concerned by this.</p>
+<p name="52d7" id="52d7" data-align="center" class="graf--p graf-after--p">The hard question is why in hell can’t we reach a stage of stability?</p>
+<p name="420b" id="420b" class="graf--p graf-after--p">A first answer may be the community mentality. I’ve noticed a touch of arrogance in the sense that as the language is unique compared to any other, it should not consider what everyone else has learned. Consequently, the community try to rethink everything on its own, and it does it poorly (in my opinion).</p>
+<p name="65a6" id="65a6" class="graf--p graf-after--p">Why this feeling of uniqueness is pretty simple to answer, the js is the only language available in the browser context and it’s one that evolved a lot in the last couple of years. It opened a whole new platform to build websites/apps, attracting a <em class="markup--em markup--p-em">lot </em>of new developers.</p>
+<p name="0206" id="0206" class="graf--p graf-after--p">And as the platform is still in expansion, more people are joining in; the more comes, the more we talk about it. And I suppose it ends up where anyone in this bubble when looking around see another one inside this same bubble, hence the feeling you’re in the only one.</p>
+<p name="fa9e" id="fa9e" data-align="center" class="graf--p graf-after--p">Somehow this led to the hipster syndrome.</p>
+<p name="fc70" id="fc70" class="graf--p graf-after--p">Anyone try to invent something new, and everyone around fall in the hype.</p>
+<p name="63ef" id="63ef" class="graf--p graf-after--p">But guess what?! This new thing you’re trying to build/solve, chances are it’s already been solved elsewhere!</p>
+<h4 name="76a3" id="76a3" class="graf--h4 graf-after--p">Same rules apply to everyone</h4>
+<p name="f896" id="f896" class="graf--p graf-after--h4">Software engineering isn’t new, and lot of problems related to code structure has been solved. You know, with this little thing we call design patterns!</p>
+<p name="b01d" id="b01d" class="graf--p graf-after--p">It’s not because your language is kinda new, those couldn’t be applied to you.</p>
+<p name="b3f6" id="b3f6" class="graf--p graf-after--p">I admit, this ain’t always easy to apply them depending on the maturity of your language. But javascript has what it needs to build apps in a professional way now.</p>
+<p name="d5e8" id="d5e8" class="graf--p graf-after--p">To be honest, I felt great when I heard AngularJS brought a dependency injection mechanism. I thought: great, we’re finally on the right track. (Then they fucked it up with Angular 2, but I’ll come back on this point later)</p>
+<p name="a6c4" id="a6c4" class="graf--p graf-after--p">Another pattern attacked recently by the community is <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" data-href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" class="markup--anchor markup--p-anchor" rel="nofollow">MVC</a>. We hear here and there that it’s outdated and <a href="http://www.infoq.com/news/2014/05/facebook-mvc-flux" data-href="http://www.infoq.com/news/2014/05/facebook-mvc-flux" class="markup--anchor markup--p-anchor" rel="nofollow">irrelevant</a>.</p>
+<blockquote name="4802" id="4802" class="graf--pullquote pullquote graf-after--p">This single pattern has been introduced 45 years ago!</blockquote>
+<p name="6195" id="6195" class="graf--p graf-after--pullquote">It’s one of the first principle you learn about software engineering. And as far as I can tell, every framework (except js ones) is built around it.</p>
+<p name="9e5c" id="9e5c" class="graf--p graf-after--p">Yes, javascript is a building block of a huge industry which is the web. But yet, it’s still a tiny part of the software engineering field! And it has only be serious for the past 3 to 5 years. With this kind of history, how dare you think you know more than the ones almost ten times older?</p>
+<p name="79e4" id="79e4" class="graf--p graf-after--p">So before being taken seriously at replacing existing pattern, implement existing ones correctly, and only then we can discuss your new ideas.</p>
+<p name="3462" id="3462" class="graf--p graf-after--p">
+<em class="markup--em markup--p-em">Hint</em>: a good starting point at implementing something serious is to look at what’s done in another language (ideally one close to your domain), and <a href="http://www.brainyquote.com/quotes/quotes/p/pablopicas380469.html" data-href="http://www.brainyquote.com/quotes/quotes/p/pablopicas380469.html" class="markup--anchor markup--p-anchor" rel="nofollow">be a great artist</a> about it: steal the ideas!</p>
+<h4 name="f8a2" id="f8a2" class="graf--h4 graf-after--p">The point of a framework</h4>
+<p name="67d5" id="67d5" class="graf--p graf-after--h4">It’s now time to explain whats <em class="markup--em markup--p-em">is</em> a framework. The overall definition could be resumed to:</p>
+<blockquote name="662e" id="662e" class="graf--blockquote graf-after--p">A set of tools working together to help you build a solution to a problem, while keeping your codebase structured around a set of principles that can still apply no matter the size of your solution.</blockquote>
+<p name="ca05" id="ca05" class="graf--p graf-after--blockquote">The first key point to get here is the notion of <em class="markup--em markup--p-em">a</em> <em class="markup--em markup--p-em">set of tools. </em>The thing to understand is that in js we mostly think about frameworks as a big swiss knife that help us do a lot of things. It should not!</p>
+<p name="6456" id="6456" class="graf--p graf-after--p">The notion is to have a bunch of libraries that work together, but each should be first designed to work as standalone. Each part of a framework need to respond to a key problem, and respond in a way that can be applied to any context.</p>
+<p name="6a53" id="6a53" class="graf--p graf-after--p">Let’s take a simple example: a router. The idea is simple, each time the url change you want to trigger something in your code, for a set of defined routes. Generic problem that can be answered in a small library. But right now, can you use the router of Ember or Angular without the rest of the framework? From what I saw the answer is no.</p>
+<p name="f114" id="f114" class="graf--p graf-after--p">And this should be applicable to every part of a framework.</p>
+<p name="2bea" id="2bea" class="graf--p graf-after--p">If when you look at a framework, you can’t determine when a feature stops and another one starts, that’s a first indicator that something’s wrong.</p>
+<p name="965b" id="965b" class="graf--p graf-after--p">But of course in a model that each part should work as standalone, you need some glue to wire them together. But in the end this small layer is what really represent the framework.</p>
+<p name="df09" id="df09" class="graf--p graf-after--p">The good thing with this approach is that you’re no longer tied to a framework but to a set of tools. So if at some point you realize that a component no longer feet your needs, you can more easily replace it. Or if from the start you don’t like the framework’s organisation but really want to use some solutions, well you can! (by building your own glue layer)</p>
+<p name="a3f1" id="a3f1" class="graf--p graf-after--p">Which leads me to the second key part of the definition: the code structure.</p>
+<p name="8fa9" id="8fa9" class="graf--p graf-after--p">If a vendor starts by telling you: this is how you build a controller, how to build a view, etc… They are missing an essential part of their job. The documentation should first tell you: this is how we intend you to <em class="markup--em markup--p-em">structure</em> your code because it will help you easily find what your looking, add new code, etc…</p>
+<p name="7ebe" id="7ebe" class="graf--p graf-after--p">The second most important question you should have in mind when looking for a framework is: ok, it answers my needs in order to solve A, B, C, etc… but how can I be sure that I can add features to my solution in an easy way while keeping the global structure as clean as the first project keystroke?</p>
+<p name="e5ee" id="e5ee" class="graf--p graf-after--p">If you can’t answer this, think twice before using this framework.</p>
+<p name="2ca4" id="2ca4" class="graf--p graf-after--p">The shot you’re about to make is intended for the long run, not the middle one and especially not the short one. But you may respond: well we don’t know what’s coming up next? so why not settle with what we have now and will change if necessary?</p>
+<p name="bdbd" id="bdbd" class="graf--p graf-after--p">My answer would be simple: this is weakness! Weakness induced by industry’s pressure to make a choice quickly.</p>
+<p name="5e27" id="5e27" class="graf--p graf-after--p">Once again, software engineering isn’t new, we have plenty of history on how to do things. That’s why you need to aim to a set of principles (or patterns if you prefer) that are not bound to any technology in particular.</p>
+<p name="c71c" id="c71c" class="graf--p graf-after--p">So remember: composability over <em class="markup--em markup--p-em">swiss knife</em>, principles over technology.</p>
+<h4 name="367b" id="367b" class="graf--h4 graf-after--p">Latest shiny tech is not THE answer</h4>
+<p name="a9d5" id="a9d5" class="graf--p graf-after--h4">This section follows up a bit of the composability explain before.</p>
+<p name="66b8" id="66b8" class="graf--p graf-after--p">I noticed a weird trend lately on how to build your apps. One that revolves around the notion: hey guys, we have a great new tech, let’s focus on that specific point and do some, not so great, things around to build our app!</p>
+<p name="2f7a" id="2f7a" class="graf--p graf-after--p">When I say this, I have the virtual DOM (<a href="https://facebook.github.io/react/" data-href="https://facebook.github.io/react/" class="markup--anchor markup--p-anchor" rel="nofollow">React</a>) and custom elements (<a href="https://www.polymer-project.org/1.0/" data-href="https://www.polymer-project.org/1.0/" class="markup--anchor markup--p-anchor" rel="nofollow">Polymer</a>) in mind.</p>
+<p name="7b8e" id="7b8e" class="graf--p graf-after--p">Those are good technologies but it answers only one problem!</p>
+<p name="5595" id="5595" class="graf--p graf-after--p">First, let’s take a look at custom elements. We all know the div soup to build some <em class="markup--em markup--p-em">great</em> UI; but the problem was styling leaking, js snippets having side effects (due to selectors matching what we didn’t have thought of). And the answer was the custom elements, where the goal is to wrap a little brick of your UI (i.e.: a chat box, a profile card, and so on).</p>
+<p name="6881" id="6881" class="graf--p graf-after--p">Then the idea was perverted. As each brick is self contained, why not build bigger bricks based on smaller ones?</p>
+<p name="a785" id="a785" class="graf--p graf-after--p">But, you see, the problem is custom elements are here to built UI not contain functional logic!</p>
+<p name="84dd" id="84dd" class="graf--p graf-after--p graf--last">At first it may not seem that horrible to do it this way. And if your codebase doesn’t grow, it may be fine. But to point back to principles, there’s one in software called separation of concerns. The idea is simple, a component will do a simple job with a closed perimeter; if it needs data not directly available, it will not look for it but will be provided to it. With this concept, the UI only handles UI stuff, by using custom elements to do it in a more stable way. But the UI will not organise things, a higher level (which is completely separated from the UI) will handle this task and will <em class="markup--em markup--p-em">provide</em> to the UI what it needs to do its job.</p>
+</div>
+</div>
+</section>
+<section name="4ee9" class=" section--body">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<p name="9bb3" id="9bb3" class="graf--p graf--first">Second example, the virtual DOM.</p>
+<p name="2466" id="2466" class="graf--p graf-after--p">Facebook gave us a nice tool here which only updates the parts of the real DOM that needs to be updated based on a new set of data by diffing a virtual and the real DOM.</p>
+<p name="1665" id="1665" class="graf--p graf-after--p">As is, this tech is fine; but they brought React where you mix your view with the model layer. The <em class="markup--em markup--p-em">why </em>is that in complex applications you end up in complex tree of layers requiring data, and if you want to update part of this tree the higher level have to know about the needs of deeper levels (which leads to unwanted coupling). So their answer is that a level in this tree should know how to retrieve its data.</p>
+<p name="2154" id="2154" class="graf--p graf-after--p">First problem: it breaks separation of concerns!</p>
+<p name="7ac3" id="7ac3" class="graf--p graf-after--p">Second problem: well it’s not a problem but an indicator, it means that the overall system terribly lacks structure through principles.</p>
+<p name="037a" id="037a" class="graf--p graf-after--p">I see you coming with your question: how the hell do I keep separation of concerns and that part of the UI without higher levels knowing whats needed?</p>
+<p name="8d7d" id="8d7d" class="graf--p graf-after--p">Honestly the answer is very simple! The UI is structured in many layers, an action occurs on a deep layer, the event bubbles up and is catched by any listener in the tree. This last one dispatch an event saying: hey, the user wants to do this, do anybody knows how to respond to this? You’ve done your job well and there’s a listener of that event who understand this interaction, fetch some data (via another component) and then update that small layer the event originated from.</p>
+<p name="8219" id="8219" class="graf--p graf-after--p graf--last">I know, too much code to do a simple thing, right? But that my friends, like it or not, is what’s needed to keep a codebase decoupled and scalable.</p>
+</div>
+</div>
+</section>
+<section name="9010" class=" section--body">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<p name="db97" id="db97" class="graf--p graf--first">The last example I want to point out is to explain why I said Angular 2 fucked its dependency injection.</p>
+<p name="0d88" id="0d88" class="graf--p graf-after--p">They leverage ES6 module mechanism associated to annotations.</p>
+<p name="3246" id="3246" class="graf--p graf-after--p">The module loader is really great as you can only import in your module the classes you need for yours to work.</p>
+<p name="a89a" id="a89a" class="graf--p graf-after--p">They had the idea to use an annotation at the level of your class to specify the other classes (that you imported with the module loader) you want to inject in yours. Then when you request an instance of your class via the DIC, it looks for this annotation and automatically inject the dependencies.</p>
+<p name="d6cb" id="d6cb" class="graf--p graf-after--p">First problem: a class should import others because it knows it will use them in order to work, <em class="markup--em markup--p-em">but </em>a class should not be aware of how objects will be injected.</p>
+<p name="7e75" id="7e75" class="graf--p graf-after--p">A few examples to explain why this approach is wrong are simple ones. Say you have a class that needs to persist data, so you want to inject an object dedicated to the storage. But if you want to do things correctly, your class should not be aware of the specific storage chosen, so normally you would import a class acting as an interface (as there’s no real interface in js ☹). But the thing is that you simply can’t do this with their DIC, because it uses the class imported to build an instance of it. Your only choice here is to explicitly specify which implementation you want.</p>
+<p name="f4ab" id="f4ab" class="graf--p graf-after--p">Another feature I use a lot with a DIC, is to tag my services. A great example how this is helpful is with a storage engine. Imagine a library that propose a common interface to store objects and with by default 2 persisters (say localstorage and IndexedDB). This library let you choose which persister you want via configuration.</p>
+<p name="605f" id="605f" class="graf--p graf-after--p">Tags are a good feat here for the persisters. At the DIC level, you could say: look at all the services tagged as <em class="markup--em markup--p-em">storage.persister </em>and inject them in the global storage mechanism.</p>
+<p name="00c9" id="00c9" class="graf--p graf-after--p">Now if you want to add a new persister, you implement the persister interface, create a service and tag it. And tada, magic happened!</p>
+<p name="4a6e" id="4a6e" class="graf--p graf-after--p">And if you don’t want to load the storage mechanism with the DIC, you can still inject manually your persister; because it induced the developer to build its library in an open way.</p>
+<p name="2ff9" id="2ff9" class="graf--p graf-after--p">And as I’m sure you guessed, you can’t do this with the new Angular’s DIC.</p>
+<p name="2c03" id="2c03" class="graf--p graf-after--p">By coupling too tightly components, it encourages you to build your code the same way. And you soon end up stuck because you can’t figure out how to extend/modify your code.</p>
+<h4 name="2f38" id="2f38" class="graf--h4 graf-after--p">The real problem</h4>
+<p name="2ac9" id="2ac9" class="graf--p graf-after--h4">To sum up, currently the majority of frameworks fall into a common pitfall. They think their goal is to help you build a user interface with the less code possible. And nobody can deny they put a lot of thinking into it.</p>
+<p name="31db" id="31db" class="graf--p graf-after--p">It is the root of all the problems. If you focus on only one feature, you’ll end up with a strong concept on one side, and the other side a ton of things you don’t really know how to integrate. This is when you start writing weird stuff to try to still do all the things a framework is expected to do.</p>
+<p name="b621" id="b621" class="graf--p graf-after--p">No matter how strong the concept is in helping you build great UI for your users, don’t forget that what you’re searching for is a concept helping you build great code!</p>
+<p name="1023" id="1023" class="graf--p graf-after--p">And you’ll never reach this point if you keep choosing this kind of frameworks.</p>
+<p name="61fb" id="61fb" class="graf--p graf-after--p">So, if the one you want to pick checks one of the following items, please abstain.</p>
+<ul class="postList">
+<li name="1d26" id="1d26" class="graf--li graf-after--p">each component can’t be used outside the framework</li>
+<li name="50e6" id="50e6" class="graf--li graf-after--li">the documentation doesn’t start by explaining the patterns ruling the framework</li>
+<li name="3c55" id="3c55" class="graf--li graf-after--li">bragging mainly about one feature (especially if it’s UI)</li>
+</ul>
+<p name="6784" id="6784" class="graf--p graf-after--li graf--last">I understand it may be hard not to choose but I can guarantee you’ll regret it at some point if you do.</p>
+</div>
+</div>
+</section>
+<section name="68a6" class=" section--body">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<p name="4adc" id="4adc" class="graf--p graf--first">This post may seem harsh and angry at a whole community, that’s because it’s in part intended to. I wanted to be harsh, but only to a part of this community. Those of you who start in software with javascript, I’m not angry at you; you’re forgivable as you start learning. This feeling is headed to those who lead the community by their frameworks, and mainly towards the big ones (Facebook &amp; Google) as they have a big responsability on many teams. There are big companies with, let’s hope, lot of experience in writing good software, that’s why when they speak people tend to listen carefully.</p>
+<p name="b11b" id="b11b" class="graf--p graf-after--p">With great power comes great responsibility, right? So before rolling out your experiments to the public, make sure it will work in the long run; or at least insist deeply in the fact that it’s an experiment and casualties may arise.</p>
+<p name="d820" id="d820" class="graf--p graf-after--p">But it’s also up to every team to discern what’s best for their projects. Cut the politics, do not rush to a solution because it has a big name on it and everyone else jumped in. Weight every point, does the solution seem right (meaning good patterns)? does it feet your needs? will it scale?</p>
+<p name="65ef" id="65ef" class="graf--p graf-after--p">And remember that the answer for the best solution may be:</p>
+<blockquote name="ede3" id="ede3" data-align="center" class="graf--pullquote pullquote graf-after--p graf--last">None!</blockquote>
+</div>
+</div>
+</section>
+<section name="5c98" class=" section--body section--last">
+<div class="section-divider layoutSingleColumn">
+<hr class="section-divider">
+</div>
+<div class="section-content">
+<div class="section-inner layoutSingleColumn">
+<p name="cedf" id="cedf" class="graf--p graf--first">
+<em class="markup--em markup--p-em">If you agree with what’s written here (or even if you don’t), have a look at this </em>
+<a href="https://github.com/Baptouuuu/Sy" data-href="https://github.com/Baptouuuu/Sy" class="markup--anchor markup--p-anchor" rel="nofollow">
+<em class="markup--em markup--p-em">repository</em>
+</a>
+<em class="markup--em markup--p-em">. I wrote this last year, with all the principles I praise here in mind. And as I said, I didn’t invent all of this, I stole the ideas from </em>
+<a href="http://symfony.com/" data-href="http://symfony.com/" class="markup--anchor markup--p-anchor" rel="nofollow">
+<em class="markup--em markup--p-em">Symfony2</em>
+</a>
+<em class="markup--em markup--p-em">.</em>
+</p>
+<p name="abbd" id="abbd" class="graf--p graf-after--p graf--last">
+<em class="markup--em markup--p-em">It’s intended to help me build the frontend of my pet projects. You can play with it but I don’t advise using it in a work environment yet.</em>
+</p>
+</div>
+</div>
+</section>
+</main>
+<footer class="postArticle-footer">
+<div class="postActionsFooter container u-size740">
+<div class="row">
+<div class="col u-xs-size12of12">
+</div>
+</div>
+<div class="row">
+<div class="col u-xs-size12of12 js-postTags">
+<div class="postTags">
+<div class="tags tags--postTags tags--borderless">
+<a class="link"  href="https://medium.com/tag/js?source=post" title="Go to Js" aria-label="Go to Js" data-action-source="post">Js</a>
+<a class="link"  href="https://medium.com/tag/framework?source=post" title="Go to Framework" aria-label="Go to Framework" data-action-source="post">Framework</a>
+<a class="link"  href="https://medium.com/tag/fail?source=post" title="Go to Fail" aria-label="Go to Fail" data-action-source="post">Fail</a>
+</div>
+</div>
+</div>
+</div>
+<div class="row js-postActionsFooter">
+<div class="postActions col u-xs-size12of12">
+<div class="u-floatLeft buttonSet buttonSet--withLabels">
+<div class="buttonSet-inner js-postActionRecommend">
+<button class="button button--primary button--large button--chromeless button--withIcon button--withSvgIcon"  title="Recommend to share this article with your followers and let the author know you liked it" aria-label="Recommend to share this article with your followers and let the author know you liked it" data-action="upvote" data-action-value="1440df0df321">
+<span class="button-defaultState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--heart svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-heart-29px-p0">
+</use>
+</svg>
+</span>
+<span class="button-activeState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--heartFilled svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-heartFilled-29px-p0">
+</use>
+</svg>
+</span>
+</button>
+<button class="button button--chromeless"  data-action="show-recommends">2</button>
+</div>
+<div class="buttonSet-inner">
+<button class="button button--large button--dark button--chromeless button--withIcon button--withSvgIcon"  data-action="respond">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--response svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-response-29px-p0">
+</use>
+</svg>
+</button>
+</div>
+</div>
+<div class="u-floatRight buttonSet buttonSet--narrow">
+<button class="button button--large button--dark button--chromeless button--withIcon button--withSvgIcon"  title="Share this story on Twitter, Facebook, or email" aria-label="Share this story on Twitter, Facebook, or email" data-action="show-share-popover">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--share svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-share-29px-p0">
+</use>
+</svg>
+</button>
+<button class="button button--large button--dark button--chromeless button--withIcon js-bookmarkButton button--withSvgIcon"  title="Bookmark this story to read later" aria-label="Bookmark this story to read later" data-action="add-to-bookmarks" data-action-value="1440df0df321">
+<span class="button-defaultState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--bookmark svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-bookmark-29px-p0">
+</use>
+</svg>
+</span>
+<span class="button-activeState">
+<svg viewBox="0 0 29 29" width="29" height="29" class="svgIcon svgIcon--bookmarkFilled svgIcon-size--29px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-bookmarkFilled-29px-p0">
+</use>
+</svg>
+</span>
+</button>
+<button class="button button--large button--dark button--chromeless button--withIcon js-moreActionsButton button--withSvgIcon"  title="More actions" aria-label="More actions" data-action="more-actions">
+<svg viewBox="0 0 25 25" width="25" height="25" class="svgIcon svgIcon--more svgIcon-size--25px">
+<use class="svgIcon-use svgIcon-use--part0" xlink:href="/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg#svg-more-25px-p0">
+</use>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="container u-size740">
+<div class="row postFooter-info2">
+<div class="col u-xs-size12of12">
+<hr class="postFooter-infoDivider">
+</div>
+</div>
+<div class="row js-postFooterInfo">
+<div class="col u-xs-size12of12">
+<li class="card card-user">
+<div class="card-imageWrapper ">
+<a class="link avatar"  href="https://medium.com/@Baptouuuu?source=footer_card" title="Go to the profile of Baptiste LANGLADE" aria-label="Go to the profile of Baptiste LANGLADE" data-action-source="footer_card" data-user-id="cb8248010d1f" dir="auto">
+<img src="https://cdn-images-1.medium.com/fit/c/120/120/0*Q88wPazVKfc1h-b8.jpg" class="avatar-image avatar-image--small" alt="Go to the profile of Baptiste LANGLADE">
+</a>
+</div>
+<div class="card-content">
+<h3 class="card-name">
+<a class="link link--primary"  href="https://medium.com/@Baptouuuu" property="cc:attributionName" title="Go to the profile of Baptiste LANGLADE" aria-label="Go to the profile of Baptiste LANGLADE" rel="author cc:attributionUrl" data-user-id="cb8248010d1f" dir="auto">Baptiste LANGLADE</a>
+</h3>
+<p class="card-description">Young developer (mainly PHP and frontend JS) living in Grenoble, France. Amazed by sciences and the nature.</p>
+</div>
+</li>
+</div>
+</div>
+</div>
+<div class="responsesWrapper supplementalPostContent js-responsesWrapper">
+</div>
+<div class="post-footer supplementalPostContent js-readNext">
+</div>
+</footer>
+</article>
+</div>
+</div>
+</div>
+<div class="loadingBar">
+</div>
+<script>// <![CDATA[
+window["obvInit"] = function (opt_embedded) {window["obvInit"]["embedded"] = opt_embedded; window["obvInit"]["ready"] = true;}
+// ]]></script><script>// <![CDATA[
+var GLOBALS = {"audioUrl":"https://d1fcbxp97j4nb2.cloudfront.net","baseUrl":"https://medium.com","bestOfFirstSlug":"may-2013","bestOfLatestSlug":"september-2015","buildLabel":"18115-27baeaf","currentUser":{"userId":"cb8248010d1f","username":"Baptouuuu","name":"Baptiste LANGLADE","bio":"Young developer (mainly PHP and frontend JS) living in Grenoble, France. Amazed by sciences and the nature.","imageId":"0*Q88wPazVKfc1h-b8.jpg","backgroundImageId":"1*762qiA-EgMrxTuoqjb9otQ.jpeg","twitterScreenName":"Baptouuuu","twitterAvatar":"https://pbs.twimg.com/profile_images/1400086811/Baptouuuuu.jpg","createdAt":1396856602492,"updatedAt":1445773699931,"lastPostCreatedAt":1439967505268,"upvotes":2,"loggedInReads":55,"loggedInReadsUnique":46,"loggedOutReads":930,"loggedInViews":104,"loggedOutViews":2800,"postsRead":61,"languageCode":"en-us","flagSeenEditor":2,"twitterLastImportedAt":1445773678241,"isVerified":true,"subscriberEmail":"","lastOpenedAndroidApp":1445331521003},"currentUserHasUnverifiedEmail":false,"facebookKey":"542599432471018","facebookScope":["public_profile","email","user_friends"],"isAuthenticated":true,"isCurrentUserVerified":true,"language":"en-us","loadingPlaceholderImg":"https://cdn-static-1.medium.com/_/fp/img/media-loading-placeholder.b31hiO4ynbDLRrXWEFF4aQ.png","mediumTwitterScreenName":"medium","miroUrl":"https://cdn-images-1.medium.com","moduleUrls":{"base":"https://cdn-static-1.medium.com/_/fp/js/main-base.bundle.jr1oesq8T5U8ETJa6UxSjQ.js","notes":"https://cdn-static-1.medium.com/_/fp/js/main-notes.bundle._BCikbjY41OeZah8wSrmSw.js","posters":"https://cdn-static-1.medium.com/_/fp/js/main-posters.bundle.-UuC4CVRaHZI3miYRtw-TQ.js","common-async":"https://cdn-static-1.medium.com/_/fp/js/main-common-async.bundle.mT1_fs72UtqRGaNh6RbNpQ.js","stats":"https://cdn-static-1.medium.com/_/fp/js/main-stats.bundle.Ax2ph3ZaPXh7jk8WO-Njng.js","misc-screens":"https://cdn-static-1.medium.com/_/fp/js/main-misc-screens.bundle.sHoW3Qg1FJMRG5BSp1eZ3Q.js"},"postColumnWidth":700,"previewConfig":{"weightThreshold":1,"weightEmptyParagraph":0,"weightIframeParagraph":0.8,"weightImageParagraph":0.51,"weightTextParagraph":0.08,"weightBq":0.003,"weightH":0.005,"weightP":0.003,"minPTextLength":60,"truncateBoundaryChars":20,"detectTitle":true,"detectTitleLevThreshold":0.15,"experimentImagesInsetCenter":false,"previewConfigVariantA":{"experimentImagesInsetCenter":true},"previewConfigVariantB":{"weightThreshold":10,"detectTitle":false}},"productName":"Medium","supportsEdit":true,"termsUrl":"//medium.com/policy/9db0094a1e0f","textshotHost":"textshot.medium.com","transactionId":"1445773710817:b74a4f777c8a","useragent":{"browser":"chrome","family":"chrome","os":"mac","version":46,"supportsDesktopEdit":true,"supportsMobileEdit":false,"supportsInteract":true,"supportsView":true,"isMobile":false,"isTablet":false,"isNative":false,"supportsFileAPI":true,"isTier1":true,"clientVersion":"","unknownParagraphsBad":false,"clientChannel":"","supportsRealScrollEvents":true,"supportsVhUnits":true,"ruinsViewportSections":false,"supportsHtml5Video":true,"supportsMagicUnderlines":true,"isFacebook":false,"isWebView":false,"isFacebookWebView":false,"supportsSvgExternalResources":true,"supportsScrollableMetabar":true,"supportsProgressiveMedia":true},"variants":{"allow_access":true,"allow_signup":true,"can_vote":true,"can_update_settings":true,"can_send_push_notifications":true,"can_export_data":true,"enable_notes":true,"allow_test_auth":"disallow","enable_email_login":true,"enable_email_registration":true,"enable_post_licensing":true,"filter_other_languages":true,"use_experimental_css":true,"can_resume_from_last_read_location":true,"can_report_bad_posts":true,"enable_embeds":true,"enable_recommend_notes":true,"enable_recommend_notes_composition":true,"use_full_width_images":true,"upload_multiple_files":true,"can_follow_users":true,"can_block_users":true,"filter_posts_from_blocked_users":true,"filter_posts_from_blocking_users":true,"filter_notes_from_blocked_users":true,"filter_notes_from_blocking_users":true,"hide_blocker_profile_from_blockee":true,"hide_blocker_post_page_from_blockee":true,"prevent_interactions_from_blockee":true,"enable_custom_push_notification_prompts_ios":true,"onboarding_connect_addtional_social_accounts_enabled_ios":true,"allow_request_account_deletion":true,"enable_bookmarks_list_ios":true,"see_featured_post_tab":true,"receive_rec_note_pushes":true,"receive_post_published_pushes":true,"receive_mention_pushes":true,"enable_account_conversion":true,"use_new_scheduled_delivery_flow":true,"feed_homepage":true,"enable_collection_subscription_fanout":true,"welcome_post_url":"https://medium.com/about/about-medium-9eac453da935","google_search":true,"signin_services":"twitter,facebook,google","signup_services":"twitter,facebook,google","mobile_app_promotion":"dialog","enable_bing_search":true,"enable_algolia_search":true,"show_tagged_posts_in_search":true,"enable_respond_to_web":true,"drafts_unauth":true,"enable_quotes":true,"enable_profile_quotes":true,"combined_margin_quotes":true,"friends_only_quotes":true,"enable_quotes_emails":true,"enable_search_ios":true,"enable_connect_social_accounts_from_settings_ios":true,"enable_new_cover_flow_ios":true,"enable_rating_prompt":true,"enable_post_show_refactor":true,"enable_your_stories_more_actions":true,"enable_user_search_with_bing":true,"enable_drop_caps":true,"enable_session_cookie_encryption":true,"enable_follow_tags":true,"enable_tag_suggestions":true,"enable_tabbed_homepage_ios":true,"enable_editors_can_pull_stories":true,"enable_email_capture_flow_ios":true,"enable_send_pub_newsletters":true,"enable_receive_pub_newsletters":true,"enable_quote_responses":true,"enable_quote_responses2":true,"enable_new_onboarding_flow_ios":true,"enable_follow_tags_from_post_list_ios":true,"enable_embedded_onboarding_education_and_login_ios":true,"enable_contextual_recommend_education_ios":true,"enable_tag_follow_onboarding":true,"your_top_stories_source":"similar-posts","follower_suggestion_source":"friends-of-friends","enable_query_by_in_response_to_post_id":true,"enable_gif_to_video_ios":true,"enable_international_typographic_quotes_through_icu_ios":true,"enable_service_worker":true,"android_rating_prompt_recommend_threshold":5,"enable_follow_suggestions_email":true,"onboarding_tag_stream_experiment":"control","number_of_top_stories":3,"number_of_in_stream_ts4u":3,"number_of_in_stream_global_top_stories":3,"source_of_in_stream_ts4u":"friends-rec-7d","enable_top_stories_in_stream":true,"enable_top_stories_in_stream_on_ios":true,"enable_top_stories_in_stream_on_android":true,"enable_post_recommend_threshold_in_stream":true,"enable_response_recommend_threshold_in_stream":true,"post_recommend_threshold":1,"response_recommend_threshold":2,"new_stream_reasons":true,"google_sign_in_backend":true,"google_sign_in_android":true,"enable_quote_feed_write":true,"enable_onboarding":true,"enable_rds_activity":true,"enable_rds_activity_read":true,"enable_activity_rollup":true,"custom_miro_url":"https://cdn-images-1.medium.com","ios_custom_miro_url":"https://cdn-images-1.medium.com","enable_friends_recommends_plugin":true,"enable_write_stats_cache":true,"enable_populate_post_stats":true,"no_push_notification_for_responses":true,"receive_follow_pushes":true,"receive_recommend_pushes":true,"receive_response_pushes":true,"receive_highlight_pushes":true,"enable_full_fonts":true,"enable_pre_publish_tag_editor":true,"new_google_flow":true,"enable_small_first_page":true,"enable_response_email2":true,"fetch_with_relation_index":true,"enable_screen_placeholders":true,"user_popover_experiment":true,"enable_post_screen_placeholders":true,"enable_profile_screen_placeholders":true,"enable_svg_external_resources":true,"reengagement_notification_duration":3,"enable_infinite_scroll_placeholders":true,"enable_context_cards":true,"enable_progressive_media":true,"enable_oauth_api":true,"enable_oauth_token_self_issuance":true,"enable_tnt_editor":true,"list_of_lists_bucket":"default","enable_zoomable":true,"use_new_push_notification_logic":true,"enable_send_ios_pushes_using_channel_ids":true,"enable_green":true,"explore_tab_ios_posts_per_section_limit":4,"enable_strip_empty_grafs":true},"xsrfToken":"X47anpUg7Ohw3hzu","iosAppId":"828256236","supportEmail":"yourfriends@medium.com","teamName":"Team Medium","fp":{"/img/default-avatar.png":"https://cdn-static-1.medium.com/_/fp/img/default-avatar.dmbNkD5D-u45r44go_cf0g.png","/img/default-preview-image.png":"https://cdn-static-1.medium.com/_/fp/img/default-preview-image.IsBK38jFAJBlWifMLO4z9g.png","/img/email/app_store_badge@2x.png":"https://cdn-static-1.medium.com/_/fp/img/email/app_store_badge@2x.8bDQGNMm-Xs7Hz6WA2XquQ.png","/img/email/app-devices@2x.png":"https://cdn-static-1.medium.com/_/fp/img/email/app-devices@2x.Ewl5-si-nhkLKZFIFSgrOw.png","/img/email/check1.png":"https://cdn-static-1.medium.com/_/fp/img/email/check1.0DM77li7vZhq5o2V9cVYLQ.png","/img/email/check2.png":"https://cdn-static-1.medium.com/_/fp/img/email/check2.GLlNusQmn1hwo9WDN-gE1w.png","/img/email/check3.png":"https://cdn-static-1.medium.com/_/fp/img/email/check3.7VxOUVMXAVbHRRnzMrJ_5A.png","/img/email/email-logo.png":"https://cdn-static-1.medium.com/_/fp/img/email/email-logo.x91rxfZYzIT9OJ5-ySD30A.png","/img/email/fb_logo.png":"https://cdn-static-1.medium.com/_/fp/img/email/fb_logo.Q0M98YwNTu77gLWTK6-RyQ.png","/img/email/google_play_badge@2x.png":"https://cdn-static-1.medium.com/_/fp/img/email/google_play_badge@2x.iWEWlt5_Qj20rr79-IGEBQ.png","/img/email/heart1.png":"https://cdn-static-1.medium.com/_/fp/img/email/heart1.rnGEmSwcGUhztl_zSU7l6Q.png","/img/email/heart2.png":"https://cdn-static-1.medium.com/_/fp/img/email/heart2.HBiLu3koIYsKjjKroohgbA.png","/img/email/heart3.png":"https://cdn-static-1.medium.com/_/fp/img/email/heart3.AIJBOHw11HuhdClVJNtmtg.png","/img/email/large.png":"https://cdn-static-1.medium.com/_/fp/img/email/large.4EIhZbIk5sgqYSoB4YPmUA.png","/img/email/twitter_logo.png":"https://cdn-static-1.medium.com/_/fp/img/email/twitter_logo.Pz4a3o9WMU5QioxLKcyFhQ.png","/img/email/unlisted.png":"https://cdn-static-1.medium.com/_/fp/img/email/unlisted.ikh8R2LElOz_1YM8A2Db4g.png","/img/email/welcome-heart.png":"https://cdn-static-1.medium.com/_/fp/img/email/welcome-heart.6BRCOGcwGeOCBTql8pbq2g.png","/img/email/welcome-response.png":"https://cdn-static-1.medium.com/_/fp/img/email/welcome-response.iWVQLjiUG5pyQrPyGiYEpw.png","/img/email/welcome-write.png":"https://cdn-static-1.medium.com/_/fp/img/email/welcome-write.afdGsuE6YDk3HkaIASRl0w.png","/img/help/add-media-start.gif":"https://cdn-static-1.medium.com/_/fp/img/help/add-media-start.GXmqQ2Svt1WfZGIZSM93tg.gif","/img/help/add-media.gif":"https://cdn-static-1.medium.com/_/fp/img/help/add-media.SZH2LBmkwVExuhozFfVvYg.gif","/img/help/embed-start.gif":"https://cdn-static-1.medium.com/_/fp/img/help/embed-start.EBJ2PcWFJuYopsQV4wwklA.gif","/img/help/embed.gif":"https://cdn-static-1.medium.com/_/fp/img/help/embed.1BM0Di9vd91Kv8fLioJabw.gif","/img/help/text-highlight-start.gif":"https://cdn-static-1.medium.com/_/fp/img/help/text-highlight-start.AvTbakaFuUCd05YoMECoMQ.gif","/img/help/text-highlight.gif":"https://cdn-static-1.medium.com/_/fp/img/help/text-highlight.XVChoKYZ1-s3gJgHm9-7Yg.gif","/img/help/2.0-astronaut-typing.png":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-astronaut-typing.Ob_pXA84QmY6tATF9JFKIw.png","/img/help/2.0-add-media.gif":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-add-media.LhrJcTFODoqjnPPuHNEInA.gif","/img/help/2.0-add-media-start.png":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-add-media-start.PTVdm36977cSfaYOpMNTNQ.png","/img/help/2.0-highlight-menu.gif":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-highlight-menu.vMoUc7pXOyYFMJX68LXicw.gif","/img/help/2.0-highlight-menu-start.png":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-highlight-menu-start.7vCytTKUZPOZvr_MCYADsA.png","/img/help/2.0-embed.gif":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-embed.2g5jIXYtWjsRFa9D-hBhMQ.gif","/img/help/2.0-embed-start.png":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-embed-start.LGy_FmixvcoEVIDKjg1jwA.png","/img/help/2.0-mention.gif":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-mention.H9pEv0eHAvkGUVqdrHxH5g.gif","/img/help/2.0-mention-start.png":"https://cdn-static-1.medium.com/_/fp/img/help/2.0-mention-start.ShYTOfy6w3VDU9PKFfOEyw.png","/img/import/highlight-menu.png":"https://cdn-static-1.medium.com/_/fp/img/import/highlight-menu.kzoaVM8mJJ-Hu9m9uo3Omg.png","/img/import/image-highlight-menu.png":"https://cdn-static-1.medium.com/_/fp/img/import/image-highlight-menu.q43-H2dl0JvBS_5znQCW8A.png","/img/import/publish-metabar.png":"https://cdn-static-1.medium.com/_/fp/img/import/publish-metabar.YbEX1a2Pu0rAR_LuKeg8JA.png"},"facebookNamespace":"medium-com","authBaseUrl":"https://medium.com","imageUploadSizeMb":25,"isAuthDomainRequest":true,"algoliaApiEndpoint":"https://MQ57UUUQZ2.algolia.io","algoliaAppId":"MQ57UUUQZ2","algoliaSearchOnlyApiKey":"aadabda268e3bfaffe7b287709262fec","iosAppStoreUrl":"https://itunes.apple.com/app/medium-everyones-stories/id828256236?pt=698524&mt=8","iosAppLinkBaseUrl":"medium:","algoliaIndexPrefix":"medium_","androidPlayStoreUrl":"https://play.google.com/store/apps/details?id=com.medium.reader","googleClientId":"216296035834-k1k6qe060s2tp2a2jam4ljdcms00sttg.apps.googleusercontent.com","androidPackage":"com.medium.reader","androidPlayStoreMarketScheme":"market://details?id=com.medium.reader","googleAuthUri":"https://accounts.google.com/o/oauth2/auth","androidScheme":"medium","iconsSvgUrl":"/_/proxy-static/_/fp/icons/icons.SbJDOa7JziweDydH2t7ipg.svg","layoutData":{"useDynamicScripts":false,"googleAnalyticsTrackingCode":"UA-24232453-2","jsShivUrl":"https://cdn-static-1.medium.com/_/fp/js/shiv.RI2ePTZ5gFmMgLzG5bEVAA.js","iconsJsUrl":"https://cdn-static-1.medium.com/_/fp/js/icons.t5yjLlVdMkfhvoStTjFMXQ.js","favIconUrl":"https://cdn-static-1.medium.com/_/fp/icons/favicon-new.TAS6uQ-Y7kcKgi0xjcYHXw.ico","cssFontUrls":["https://cdn-static-1.medium.com/_/fp/css/fonts-base.LqXl5T9RMAR39Ge23ku50w.css"]}}
+// ]]></script><script charset="UTF-8" src="https://cdn-static-1.medium.com/_/fp/js/main-base.bundle.jr1oesq8T5U8ETJa6UxSjQ.js" async="true"></script><script>// <![CDATA[
+window["obvInit"]({"value":{"id":"1440df0df321","versionId":"8d6865dc42d4","creatorId":"cb8248010d1f","creator":{"userId":"cb8248010d1f","name":"Baptiste LANGLADE","username":"Baptouuuu","createdAt":1396856602492,"lastPostCreatedAt":1439967505268,"imageId":"0*Q88wPazVKfc1h-b8.jpg","backgroundImageId":"1*762qiA-EgMrxTuoqjb9otQ.jpeg","bio":"Young developer (mainly PHP and frontend JS) living in Grenoble, France. Amazed by sciences and the nature.","twitterScreenName":"Baptouuuu","socialStats":{"userId":"cb8248010d1f","usersFollowedCount":21,"usersFollowedByCount":20,"type":"SocialStats"},"social":{"userId":"cb8248010d1f","targetUserId":"cb8248010d1f","type":"Social"},"facebookAccountId":"","type":"User"},"homeCollectionId":"","title":"Why JS frameworks fail to last","detectedLanguage":"en","latestVersion":"8d6865dc42d4","latestPublishedVersion":"8d6865dc42d4","hasUnpublishedEdits":false,"latestRev":2054,"createdAt":1422526021893,"updatedAt":1433664741952,"acceptedAt":0,"firstPublishedAt":1433664741952,"latestPublishedAt":1433664741952,"isRead":false,"vote":false,"experimentalCss":"","displayAuthor":"","content":{"subtitle":"Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fall of countless…","bodyModel":{"paragraphs":[{"name":"d682","type":3,"text":"Why JS frameworks fail to last","markups":[]},{"name":"59ed","type":1,"text":"Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fall of countless frameworks.","markups":[{"type":2,"start":114,"end":122}]},{"name":"f590","type":1,"text":"And there’s a bad thing behind it that nobody seems to have pointed out yet. So the whole purpose of this article is to try to figure out what’s going on.","markups":[]},{"name":"a20a","type":1,"text":"I’ll try to be the most objective as possible.","markups":[]},{"name":"0ef6","type":1,"text":"P.S. : I only talk about frontend here, no backend js!","markups":[{"type":2,"start":0,"end":54}]},{"name":"7916","type":1,"text":"So, I think anyone will agree when I say the current situation is completely insane and not sustainable.","markups":[]},{"name":"ba89","type":1,"text":"Right now, you can’t be sure if the framework you’ve picked will still fit when your app will grow in size, or if the next release won’t break it. Anyone serious enough about his code should be concerned by this.","markups":[]},{"name":"52d7","type":1,"text":"The hard question is why in hell can’t we reach a stage of stability?","markups":[],"alignment":2},{"name":"420b","type":1,"text":"A first answer may be the community mentality. I’ve noticed a touch of arrogance in the sense that as the language is unique compared to any other, it should not consider what everyone else has learned. Consequently, the community try to rethink everything on its own, and it does it poorly (in my opinion).","markups":[]},{"name":"65a6","type":1,"text":"Why this feeling of uniqueness is pretty simple to answer, the js is the only language available in the browser context and it’s one that evolved a lot in the last couple of years. It opened a whole new platform to build websites/apps, attracting a lot of new developers.","markups":[{"type":2,"start":249,"end":253}]},{"name":"0206","type":1,"text":"And as the platform is still in expansion, more people are joining in; the more comes, the more we talk about it. And I suppose it ends up where anyone in this bubble when looking around see another one inside this same bubble, hence the feeling you’re in the only one.","markups":[]},{"name":"fa9e","type":1,"text":"Somehow this led to the hipster syndrome.","markups":[],"alignment":2},{"name":"fc70","type":1,"text":"Anyone try to invent something new, and everyone around fall in the hype.","markups":[]},{"name":"63ef","type":1,"text":"But guess what?! This new thing you’re trying to build/solve, chances are it’s already been solved elsewhere!","markups":[]},{"name":"76a3","type":13,"text":"Same rules apply to everyone","markups":[]},{"name":"f896","type":1,"text":"Software engineering isn’t new, and lot of problems related to code structure has been solved. You know, with this little thing we call design patterns!","markups":[]},{"name":"b01d","type":1,"text":"It’s not because your language is kinda new, those couldn’t be applied to you.","markups":[]},{"name":"b3f6","type":1,"text":"I admit, this ain’t always easy to apply them depending on the maturity of your language. But javascript has what it needs to build apps in a professional way now.","markups":[]},{"name":"d5e8","type":1,"text":"To be honest, I felt great when I heard AngularJS brought a dependency injection mechanism. I thought: great, we’re finally on the right track. (Then they fucked it up with Angular 2, but I’ll come back on this point later)","markups":[]},{"name":"a6c4","type":1,"text":"Another pattern attacked recently by the community is MVC. We hear here and there that it’s outdated and irrelevant.","markups":[{"type":3,"start":54,"end":57,"href":"http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller","title":"","rel":"","anchorType":0},{"type":3,"start":105,"end":115,"href":"http://www.infoq.com/news/2014/05/facebook-mvc-flux","title":"","rel":"","anchorType":0}]},{"name":"4802","type":7,"text":"This single pattern has been introduced 45 years ago!","markups":[]},{"name":"6195","type":1,"text":"It’s one of the first principle you learn about software engineering. And as far as I can tell, every framework (except js ones) is built around it.","markups":[]},{"name":"9e5c","type":1,"text":"Yes, javascript is a building block of a huge industry which is the web. But yet, it’s still a tiny part of the software engineering field! And it has only be serious for the past 3 to 5 years. With this kind of history, how dare you think you know more than the ones almost ten times older?","markups":[]},{"name":"79e4","type":1,"text":"So before being taken seriously at replacing existing pattern, implement existing ones correctly, and only then we can discuss your new ideas.","markups":[]},{"name":"3462","type":1,"text":"Hint: a good starting point at implementing something serious is to look at what’s done in another language (ideally one close to your domain), and be a great artist about it: steal the ideas!","markups":[{"type":3,"start":148,"end":165,"href":"http://www.brainyquote.com/quotes/quotes/p/pablopicas380469.html","title":"","rel":"","anchorType":0},{"type":2,"start":0,"end":4}]},{"name":"f8a2","type":13,"text":"The point of a framework","markups":[]},{"name":"67d5","type":1,"text":"It’s now time to explain whats is a framework. The overall definition could be resumed to:","markups":[{"type":2,"start":31,"end":33}]},{"name":"662e","type":6,"text":"A set of tools working together to help you build a solution to a problem, while keeping your codebase structured around a set of principles that can still apply no matter the size of your solution.","markups":[]},{"name":"ca05","type":1,"text":"The first key point to get here is the notion of a set of tools. The thing to understand is that in js we mostly think about frameworks as a big swiss knife that help us do a lot of things. It should not!","markups":[{"type":2,"start":49,"end":50},{"type":2,"start":51,"end":65}]},{"name":"6456","type":1,"text":"The notion is to have a bunch of libraries that work together, but each should be first designed to work as standalone. Each part of a framework need to respond to a key problem, and respond in a way that can be applied to any context.","markups":[]},{"name":"6a53","type":1,"text":"Let’s take a simple example: a router. The idea is simple, each time the url change you want to trigger something in your code, for a set of defined routes. Generic problem that can be answered in a small library. But right now, can you use the router of Ember or Angular without the rest of the framework? From what I saw the answer is no.","markups":[]},{"name":"f114","type":1,"text":"And this should be applicable to every part of a framework.","markups":[]},{"name":"2bea","type":1,"text":"If when you look at a framework, you can’t determine when a feature stops and another one starts, that’s a first indicator that something’s wrong.","markups":[]},{"name":"965b","type":1,"text":"But of course in a model that each part should work as standalone, you need some glue to wire them together. But in the end this small layer is what really represent the framework.","markups":[]},{"name":"df09","type":1,"text":"The good thing with this approach is that you’re no longer tied to a framework but to a set of tools. So if at some point you realize that a component no longer feet your needs, you can more easily replace it. Or if from the start you don’t like the framework’s organisation but really want to use some solutions, well you can! (by building your own glue layer)","markups":[]},{"name":"a3f1","type":1,"text":"Which leads me to the second key part of the definition: the code structure.","markups":[]},{"name":"8fa9","type":1,"text":"If a vendor starts by telling you: this is how you build a controller, how to build a view, etc… They are missing an essential part of their job. The documentation should first tell you: this is how we intend you to structure your code because it will help you easily find what your looking, add new code, etc…","markups":[{"type":2,"start":216,"end":225}]},{"name":"7ebe","type":1,"text":"The second most important question you should have in mind when looking for a framework is: ok, it answers my needs in order to solve A, B, C, etc… but how can I be sure that I can add features to my solution in an easy way while keeping the global structure as clean as the first project keystroke?","markups":[]},{"name":"e5ee","type":1,"text":"If you can’t answer this, think twice before using this framework.","markups":[]},{"name":"2ca4","type":1,"text":"The shot you’re about to make is intended for the long run, not the middle one and especially not the short one. But you may respond: well we don’t know what’s coming up next? so why not settle with what we have now and will change if necessary?","markups":[]},{"name":"bdbd","type":1,"text":"My answer would be simple: this is weakness! Weakness induced by industry’s pressure to make a choice quickly.","markups":[]},{"name":"5e27","type":1,"text":"Once again, software engineering isn’t new, we have plenty of history on how to do things. That’s why you need to aim to a set of principles (or patterns if you prefer) that are not bound to any technology in particular.","markups":[]},{"name":"c71c","type":1,"text":"So remember: composability over swiss knife, principles over technology.","markups":[{"type":2,"start":32,"end":43}]},{"name":"367b","type":13,"text":"Latest shiny tech is not THE answer","markups":[]},{"name":"a9d5","type":1,"text":"This section follows up a bit of the composability explain before.","markups":[]},{"name":"66b8","type":1,"text":"I noticed a weird trend lately on how to build your apps. One that revolves around the notion: hey guys, we have a great new tech, let’s focus on that specific point and do some, not so great, things around to build our app!","markups":[]},{"name":"2f7a","type":1,"text":"When I say this, I have the virtual DOM (React) and custom elements (Polymer) in mind.","markups":[{"type":3,"start":41,"end":46,"href":"https://facebook.github.io/react/","title":"","rel":"","anchorType":0},{"type":3,"start":69,"end":76,"href":"https://www.polymer-project.org/1.0/","title":"","rel":"","anchorType":0}]},{"name":"7b8e","type":1,"text":"Those are good technologies but it answers only one problem!","markups":[]},{"name":"5595","type":1,"text":"First, let’s take a look at custom elements. We all know the div soup to build some great UI; but the problem was styling leaking, js snippets having side effects (due to selectors matching what we didn’t have thought of). And the answer was the custom elements, where the goal is to wrap a little brick of your UI (i.e.: a chat box, a profile card, and so on).","markups":[{"type":2,"start":84,"end":89}]},{"name":"6881","type":1,"text":"Then the idea was perverted. As each brick is self contained, why not build bigger bricks based on smaller ones?","markups":[]},{"name":"a785","type":1,"text":"But, you see, the problem is custom elements are here to built UI not contain functional logic!","markups":[]},{"name":"84dd","type":1,"text":"At first it may not seem that horrible to do it this way. And if your codebase doesn’t grow, it may be fine. But to point back to principles, there’s one in software called separation of concerns. The idea is simple, a component will do a simple job with a closed perimeter; if it needs data not directly available, it will not look for it but will be provided to it. With this concept, the UI only handles UI stuff, by using custom elements to do it in a more stable way. But the UI will not organise things, a higher level (which is completely separated from the UI) will handle this task and will provide to the UI what it needs to do its job.","markups":[{"type":2,"start":600,"end":607}]},{"name":"9bb3","type":1,"text":"Second example, the virtual DOM.","markups":[]},{"name":"2466","type":1,"text":"Facebook gave us a nice tool here which only updates the parts of the real DOM that needs to be updated based on a new set of data by diffing a virtual and the real DOM.","markups":[]},{"name":"1665","type":1,"text":"As is, this tech is fine; but they brought React where you mix your view with the model layer. The why is that in complex applications you end up in complex tree of layers requiring data, and if you want to update part of this tree the higher level have to know about the needs of deeper levels (which leads to unwanted coupling). So their answer is that a level in this tree should know how to retrieve its data.","markups":[{"type":2,"start":99,"end":103}]},{"name":"2154","type":1,"text":"First problem: it breaks separation of concerns!","markups":[]},{"name":"7ac3","type":1,"text":"Second problem: well it’s not a problem but an indicator, it means that the overall system terribly lacks structure through principles.","markups":[]},{"name":"037a","type":1,"text":"I see you coming with your question: how the hell do I keep separation of concerns and that part of the UI without higher levels knowing whats needed?","markups":[]},{"name":"8d7d","type":1,"text":"Honestly the answer is very simple! The UI is structured in many layers, an action occurs on a deep layer, the event bubbles up and is catched by any listener in the tree. This last one dispatch an event saying: hey, the user wants to do this, do anybody knows how to respond to this? You’ve done your job well and there’s a listener of that event who understand this interaction, fetch some data (via another component) and then update that small layer the event originated from.","markups":[]},{"name":"8219","type":1,"text":"I know, too much code to do a simple thing, right? But that my friends, like it or not, is what’s needed to keep a codebase decoupled and scalable.","markups":[]},{"name":"db97","type":1,"text":"The last example I want to point out is to explain why I said Angular 2 fucked its dependency injection.","markups":[]},{"name":"0d88","type":1,"text":"They leverage ES6 module mechanism associated to annotations.","markups":[]},{"name":"3246","type":1,"text":"The module loader is really great as you can only import in your module the classes you need for yours to work.","markups":[]},{"name":"a89a","type":1,"text":"They had the idea to use an annotation at the level of your class to specify the other classes (that you imported with the module loader) you want to inject in yours. Then when you request an instance of your class via the DIC, it looks for this annotation and automatically inject the dependencies.","markups":[]},{"name":"d6cb","type":1,"text":"First problem: a class should import others because it knows it will use them in order to work, but a class should not be aware of how objects will be injected.","markups":[{"type":2,"start":96,"end":100}]},{"name":"7e75","type":1,"text":"A few examples to explain why this approach is wrong are simple ones. Say you have a class that needs to persist data, so you want to inject an object dedicated to the storage. But if you want to do things correctly, your class should not be aware of the specific storage chosen, so normally you would import a class acting as an interface (as there’s no real interface in js ☹). But the thing is that you simply can’t do this with their DIC, because it uses the class imported to build an instance of it. Your only choice here is to explicitly specify which implementation you want.","markups":[]},{"name":"f4ab","type":1,"text":"Another feature I use a lot with a DIC, is to tag my services. A great example how this is helpful is with a storage engine. Imagine a library that propose a common interface to store objects and with by default 2 persisters (say localstorage and IndexedDB). This library let you choose which persister you want via configuration.","markups":[]},{"name":"605f","type":1,"text":"Tags are a good feat here for the persisters. At the DIC level, you could say: look at all the services tagged as storage.persister and inject them in the global storage mechanism.","markups":[{"type":2,"start":114,"end":132}]},{"name":"00c9","type":1,"text":"Now if you want to add a new persister, you implement the persister interface, create a service and tag it. And tada, magic happened!","markups":[]},{"name":"4a6e","type":1,"text":"And if you don’t want to load the storage mechanism with the DIC, you can still inject manually your persister; because it induced the developer to build its library in an open way.","markups":[]},{"name":"2ff9","type":1,"text":"And as I’m sure you guessed, you can’t do this with the new Angular’s DIC.","markups":[]},{"name":"2c03","type":1,"text":"By coupling too tightly components, it encourages you to build your code the same way. And you soon end up stuck because you can’t figure out how to extend/modify your code.","markups":[]},{"name":"2f38","type":13,"text":"The real problem","markups":[]},{"name":"2ac9","type":1,"text":"To sum up, currently the majority of frameworks fall into a common pitfall. They think their goal is to help you build a user interface with the less code possible. And nobody can deny they put a lot of thinking into it.","markups":[]},{"name":"31db","type":1,"text":"It is the root of all the problems. If you focus on only one feature, you’ll end up with a strong concept on one side, and the other side a ton of things you don’t really know how to integrate. This is when you start writing weird stuff to try to still do all the things a framework is expected to do.","markups":[]},{"name":"b621","type":1,"text":"No matter how strong the concept is in helping you build great UI for your users, don’t forget that what you’re searching for is a concept helping you build great code!","markups":[]},{"name":"1023","type":1,"text":"And you’ll never reach this point if you keep choosing this kind of frameworks.","markups":[]},{"name":"61fb","type":1,"text":"So, if the one you want to pick checks one of the following items, please abstain.","markups":[]},{"name":"1d26","type":9,"text":"each component can’t be used outside the framework","markups":[]},{"name":"50e6","type":9,"text":"the documentation doesn’t start by explaining the patterns ruling the framework","markups":[]},{"name":"3c55","type":9,"text":"bragging mainly about one feature (especially if it’s UI)","markups":[]},{"name":"6784","type":1,"text":"I understand it may be hard not to choose but I can guarantee you’ll regret it at some point if you do.","markups":[]},{"name":"4adc","type":1,"text":"This post may seem harsh and angry at a whole community, that’s because it’s in part intended to. I wanted to be harsh, but only to a part of this community. Those of you who start in software with javascript, I’m not angry at you; you’re forgivable as you start learning. This feeling is headed to those who lead the community by their frameworks, and mainly towards the big ones (Facebook & Google) as they have a big responsability on many teams. There are big companies with, let’s hope, lot of experience in writing good software, that’s why when they speak people tend to listen carefully.","markups":[]},{"name":"b11b","type":1,"text":"With great power comes great responsibility, right? So before rolling out your experiments to the public, make sure it will work in the long run; or at least insist deeply in the fact that it’s an experiment and casualties may arise.","markups":[]},{"name":"d820","type":1,"text":"But it’s also up to every team to discern what’s best for their projects. Cut the politics, do not rush to a solution because it has a big name on it and everyone else jumped in. Weight every point, does the solution seem right (meaning good patterns)? does it feet your needs? will it scale?","markups":[]},{"name":"65ef","type":1,"text":"And remember that the answer for the best solution may be:","markups":[]},{"name":"ede3","type":7,"text":"None!","markups":[],"alignment":2},{"name":"cedf","type":1,"text":"If you agree with what’s written here (or even if you don’t), have a look at this repository. I wrote this last year, with all the principles I praise here in mind. And as I said, I didn’t invent all of this, I stole the ideas from Symfony2.","markups":[{"type":3,"start":82,"end":92,"href":"https://github.com/Baptouuuu/Sy","title":"","rel":"","anchorType":0},{"type":3,"start":232,"end":240,"href":"http://symfony.com/","title":"","rel":"","anchorType":0},{"type":2,"start":0,"end":241}]},{"name":"abbd","type":1,"text":"It’s intended to help me build the frontend of my pet projects. You can play with it but I don’t advise using it in a work environment yet.","markups":[{"type":2,"start":0,"end":139}]}],"sections":[{"name":"93ad","startIndex":0},{"name":"867f","startIndex":5},{"name":"4ee9","startIndex":52},{"name":"9010","startIndex":60},{"name":"68a6","startIndex":82},{"name":"5c98","startIndex":87}]},"postDisplay":{"coverless":true}},"virtuals":{"createdAtRelative":"9 months ago","updatedAtRelative":"5 months ago","acceptedAtRelative":"","createdAtEnglish":"January 29, 2015","updatedAtEnglish":"June 7, 2015","acceptedAtEnglish":"","firstPublishedAtEnglish":"June 7, 2015","latestPublishedAtEnglish":"June 7, 2015","allowNotes":true,"snippet":"Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fall of countless…","previewImage":{"imageId":"","filter":"","backgroundSize":"","originalWidth":0,"originalHeight":0,"strategy":"resample","height":0,"width":0},"wordCount":2798,"imageCount":0,"readingTime":10.558490566037737,"subtitle":"Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fall of countless…","userPostRelation":{"userId":"cb8248010d1f","postId":"1440df0df321","readAt":0,"readLaterAddedAt":0,"votedAt":0,"collaboratorAddedAt":0,"notesAddedAt":0,"subscribedAt":0,"lastReadSectionName":"5c98","lastReadVersionId":"8d6865dc42d4","lastReadAt":1445773708775,"lastReadParagraphName":"abbd","lastReadPercentage":0.99,"viewedAt":0},"usersBySocialRecommends":[],"notesBySocialRecommends":[],"latestPublishedAtAbbreviated":"Jun 7","firstPublishedAtAbbreviated":"Jun 7","emailSnippet":"frameworks. ¶\n\nAnd there’s a bad thing behind it that nobody seems to have pointed out yet. So the whole purpose of this article is to try to figure out what’s going on. ¶\n\nI’ll try to be the most objective as possible. ¶\n\nP.S. : I only talk about frontend here, no backend js! ¶\n\nSo, I think anyone will agree when I say the current situation is completely insane and not sustainable. ¶\n\nRight now, you can’t be sure if the framework you’ve picked will still fit when your app will grow in size, or…","recommends":2,"socialRecommends":[],"isBookmarked":false,"tags":[{"slug":"js","name":"Js","postCount":3,"virtuals":{"isFollowing":false,"newTopStoriesCount":0},"metadata":{"followerCount":6,"postCount":3,"coverImage":{"id":"1*G6rj2IevhkL3hxDWdFX9cg.png","originalWidth":760,"originalHeight":305}},"type":"Tag"},{"slug":"framework","name":"Framework","postCount":85,"virtuals":{"isFollowing":false,"newTopStoriesCount":0},"metadata":{"followerCount":33,"postCount":85,"coverImage":{"id":"1*K6xgYQXHascf9uZXWFdIzw.png","originalWidth":1743,"originalHeight":903}},"type":"Tag"},{"slug":"fail","name":"Fail","postCount":55,"virtuals":{"isFollowing":false,"newTopStoriesCount":0},"metadata":{"followerCount":0,"postCount":55,"coverImage":{"id":"1*Y25XR2wlt7K_yK9kLTKxJA.jpeg","originalWidth":5472,"originalHeight":3648}},"type":"Tag"}],"socialRecommendsCount":0,"responsesCreatedCount":0},"coverless":true,"slug":"why-js-frameworks-fail-to-last","translationSourcePostId":"","translationSourceCreatorId":"","isApprovedTranslation":false,"inResponseToPostId":"","inResponseToRemovedAt":0,"isTitleSynthesized":true,"allowResponses":true,"importedUrl":"","importedPublishedAt":0,"visibility":0,"isViewed":false,"uniqueSlug":"why-js-frameworks-fail-to-last-1440df0df321","previewContent":{"bodyModel":{"paragraphs":[{"name":"d682","type":3,"text":"Why JS frameworks fail to last","markups":[],"alignment":1},{"name":"59ed","type":1,"text":"Everyone in the JS community, or anybody watching it, have noticed a weird thing for the last few years: the rise and fall of countless frameworks.","markups":[{"type":2,"start":114,"end":122}],"alignment":1},{"name":"f590","type":1,"text":"And there’s a bad thing behind it that nobody seems to have pointed out yet. So the whole purpose of…","markups":[],"alignment":1}],"sections":[{"startIndex":0}]},"isFullContent":false},"license":0,"inResponseToMediaResourceId":"","canonicalUrl":"https://medium.com/@Baptouuuu/why-js-frameworks-fail-to-last-1440df0df321","approvedHomeCollectionId":"","newsletterId":"","isGeneratedSurrogate":false,"canonicalMediaResourceId":"","type":"Post","_isPopulated":true},"collaborators":[],"collectionUserRelations":[],"mode":"canEdit","references":{"User":{"cb8248010d1f":{"userId":"cb8248010d1f","name":"Baptiste LANGLADE","username":"Baptouuuu","createdAt":1396856602492,"lastPostCreatedAt":1439967505268,"imageId":"0*Q88wPazVKfc1h-b8.jpg","backgroundImageId":"1*762qiA-EgMrxTuoqjb9otQ.jpeg","bio":"Young developer (mainly PHP and frontend JS) living in Grenoble, France. Amazed by sciences and the nature.","twitterScreenName":"Baptouuuu","socialStats":{"userId":"cb8248010d1f","usersFollowedCount":21,"usersFollowedByCount":20,"type":"SocialStats"},"social":{"userId":"cb8248010d1f","targetUserId":"cb8248010d1f","type":"Social"},"facebookAccountId":"","type":"User"}},"Social":{"cb8248010d1f":{"userId":"cb8248010d1f","targetUserId":"cb8248010d1f","type":"Social"}},"SocialStats":{"cb8248010d1f":{"userId":"cb8248010d1f","usersFollowedCount":21,"usersFollowedByCount":20,"type":"SocialStats"}}}})
+// ]]></script></body></html>
