@@ -6,7 +6,6 @@ use Innmind\Crawler\ParserInterface;
 use Innmind\Crawler\HttpResource;
 use Innmind\Crawler\DomCrawlerFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Message\ResponseInterface;
 
 class DescriptionParser implements ParserInterface
