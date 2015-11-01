@@ -89,6 +89,24 @@ HTML
             'http://xn--example.com/product/42',
             $r->get('canonical')
         );
+
+        $response = new Response(
+            200,
+            ['Link' => '</product/42>; rel="canonical"']
+        );
+
+        $return = $this->p->parse(
+            $r = new HttpResource('http://xn--example.com/?product_id=42', ''),
+            $response,
+            new Stopwatch
+        );
+
+        $this->assertSame($r, $return);
+        $this->assertTrue($r->has('canonical'));
+        $this->assertSame(
+            'http://xn--example.com/product/42',
+            $r->get('canonical')
+        );
     }
 
     public function testName()
