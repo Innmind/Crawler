@@ -55,7 +55,7 @@ class LinksParser implements ParserInterface
             });
 
         if (!empty($links)) {
-            $resource->set('links', array_unique($links));
+            $resource->set('links', array_filter(array_unique($links)));
         }
 
         return $resource;
