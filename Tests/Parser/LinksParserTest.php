@@ -77,6 +77,7 @@ HTML
 <a href="#anchor"></a>
 <a href="http://sub.xn--example.com/"></a>
 <a href="relative?foo=bar#frag"></a>
+<a href=""></a>
 </body>
 </html>
 HTML
