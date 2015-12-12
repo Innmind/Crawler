@@ -39,7 +39,7 @@ class AnchorParser implements ParserInterface
             ->each(function(Crawler $node) {
                 return substr($node->attr('href'), 1);
             });
-        $resource->set('anchors', array_unique($anchors));
+        $resource->set('anchors', array_values(array_unique($anchors)));
 
         return $resource;
     }
