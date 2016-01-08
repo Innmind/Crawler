@@ -17,11 +17,11 @@
     "require": {
         "php": ">=5.5",
         "guzzlehttp/guzzle": "~5",
-        "symfony/event-dispatcher": "~2.7",
-        "symfony/stopwatch": "~2.7",
+        "symfony/event-dispatcher": "~2.7|~3.0",
+        "symfony/stopwatch": "~2.7|~3.0",
         "jeremykendall/php-domain-parser": "^3.0",
-        "symfony/dom-crawler": "~2.7",
-        "symfony/css-selector": "~2.7",
+        "symfony/dom-crawler": "~2.7|~3.0",
+        "symfony/css-selector": "~2.7|~3.0",
         "innmind/url-resolver": "^1.0",
         "innmind/math": "^1.0"
     },
