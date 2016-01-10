@@ -60,7 +60,7 @@ class LinksParser implements ParserInterface
         $links = array_filter(array_unique($links));
 
         if ($this->avoidSelfReference === true) {
-            $links = array_filter($links, function ($link) use ($resource) {
+            $links = array_filter($links, function($link) use ($resource) {
                 return $link !== $resource->getUrl();
             });
         }
