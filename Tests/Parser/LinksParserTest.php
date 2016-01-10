@@ -107,4 +107,45 @@ HTML
     {
         $this->assertSame('links', LinksParser::getName());
     }
+
+    public function testDoesntIncludeSelfReference()
+    {
+        $response = new Response(
+            200,
+            ['Content-Type' => 'text/html'],
+            Stream::factory(<<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<a href="#anchor"></a>
+<a href="http://sub.xn--example.com/"></a>
+<a href="relative?foo=bar#frag"></a>
+<a href="http://xn--example.com/2"></a>
+</body>
+</html>
+HTML
+            )
+        );
+
+        $r = new HttpResource('http://xn--example.com/2', 'text/html');
+        $r->set('base', 'http://xn--example.com/foo/');
+        $p = new LinksParser(
+            new UrlResolver([]),
+            new DomCrawlerFactory,
+            true
+        );
+        $return = $p->parse($r, $response, new Stopwatch);
+
+        $this->assertSame($r, $return);
+        $this->assertTrue($r->has('links'));
+        $this->assertSame(
+            [
+                'http://sub.xn--example.com/',
+                'http://xn--example.com/foo/relative?foo=bar#frag',
+            ],
+            $r->get('links')
+        );
+    }
 }

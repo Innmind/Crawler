@@ -14,13 +14,16 @@ class LinksParser implements ParserInterface
 {
     protected $resolver;
     protected $crawlerFactory;
+    protected $avoidSelfReference;
 
     public function __construct(
         ResolverInterface $resolver,
-        DomCrawlerFactory $crawlerFactory
+        DomCrawlerFactory $crawlerFactory,
+        $avoidSelfReference = false
     ) {
         $this->resolver = $resolver;
         $this->crawlerFactory = $crawlerFactory;
+        $this->avoidSelfReference = (bool) $avoidSelfReference;
     }
 
     /**
@@ -54,8 +57,16 @@ class LinksParser implements ParserInterface
                 );
             });
 
+        $links = array_filter(array_unique($links));
+
+        if ($this->avoidSelfReference === true) {
+            $links = array_filter($links, function ($link) use ($resource) {
+                return $link !== $resource->getUrl();
+            });
+        }
+
         if (!empty($links)) {
-            $resource->set('links', array_filter(array_unique($links)));
+            $resource->set('links', $links);
         }
 
         return $resource;
