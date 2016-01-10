@@ -35,11 +35,9 @@ class DescriptionParser implements ParserInterface
         if ($description->count() === 1) {
             $desc = $description->attr('content');
         } else if ($resource->has('content')) {
-            $desc = substr(
-                preg_replace('/ {2,}/', ' ', $resource->get('content')),
-                0,
-                150
-            );
+            $content = preg_replace('/\t/m', ' ', $resource->get('content'));
+            $content = preg_replace('/ {2,}/m', ' ', $content);
+            $desc = substr($content, 0, 150);
             $desc .= '...';
         }
 
