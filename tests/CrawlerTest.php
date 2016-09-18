@@ -50,7 +50,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $parser
             ->expects($this->once())
             ->method('parse')
-            ->with($response)
+            ->with($request, $response)
             ->willReturn(
                 (new Map('string', AttributeInterface::class))
                     ->put('foo', $attribute = new Attribute('foo', 42, 24))
@@ -104,7 +104,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $parser
             ->expects($this->once())
             ->method('parse')
-            ->with($response)
+            ->with($request, $response)
             ->willReturn(
                 (new Map('string', AttributeInterface::class))
                     ->put(

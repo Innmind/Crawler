@@ -14,6 +14,7 @@ interface ParserInterface
      * @return MapInterface<string, AttributeInterface>
      */
     public function parse(
+        Request $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface;

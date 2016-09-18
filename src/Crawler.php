@@ -38,9 +38,9 @@ final class Crawler implements CrawlerInterface
         $response = $this->http->apply($request);
         $attributes = $this->parsers->reduce(
             new Map('string', AttributeInterface::class),
-            function(Map $attributes, ParserInterface $parser) use ($response): Map {
+            function(Map $attributes, ParserInterface $parser) use ($request, $response): Map {
                 return $attributes->merge(
-                    $parser->parse($response, $attributes)
+                    $parser->parse($request, $response, $attributes)
                 );
             }
         );
