@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Http\Message\ResponseInterface;
+use Innmind\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
 use Innmind\Immutable\MapInterface;
 
 interface ParserInterface
@@ -14,7 +17,7 @@ interface ParserInterface
      * @return MapInterface<string, AttributeInterface>
      */
     public function parse(
-        Request $request,
+        RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface;

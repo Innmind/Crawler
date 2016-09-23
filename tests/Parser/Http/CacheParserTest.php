@@ -6,12 +6,14 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser\Http\CacheParser,
     ParserInterface,
-    Request,
     HttpResource\AttributeInterface
 };
 use Innmind\Http\{
+    Message\Request,
     Message\ResponseInterface,
+    Message\Method,
     Headers,
+    ProtocolVersion,
     Header\HeaderInterface,
     Header\HeaderValueInterface,
     Header\CacheControl,
@@ -20,6 +22,7 @@ use Innmind\Http\{
     Header\CacheControlValue\SharedMaxAge
 };
 use Innmind\Url\Url;
+use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
     Set,
@@ -47,7 +50,13 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = (new CacheParser)->parse(
-            new Request(Url::fromString('http://example.com')),
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             $expected = new Map('string', AttributeInterface::class)
         );
@@ -73,7 +82,13 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = (new CacheParser)->parse(
-            new Request(Url::fromString('http://example.com')),
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             $expected = new Map('string', AttributeInterface::class)
         );
@@ -100,7 +115,13 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = (new CacheParser)->parse(
-            new Request(Url::fromString('http://example.com')),
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             $expected = new Map('string', AttributeInterface::class)
         );

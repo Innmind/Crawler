@@ -5,13 +5,13 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     ParserInterface,
-    Request,
     HttpResource\AttributeInterface,
     HttpResource\Attribute,
     HttpResource\Attributes
 };
 use Innmind\UrlResolver\ResolverInterface;
 use Innmind\Http\{
+    Message\RequestInterface,
     Message\ResponseInterface,
     Header\Link,
     Header\LinkValue
@@ -35,7 +35,7 @@ final class AlternatesParser implements ParserInterface
     }
 
     public function parse(
-        Request $request,
+        RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {

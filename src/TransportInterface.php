@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Http\Message\ResponseInterface;
+use Innmind\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
 
 interface TransportInterface
 {
-    public function apply(Request $request): ResponseInterface;
+    public function apply(RequestInterface $request): ResponseInterface;
 }

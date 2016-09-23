@@ -9,15 +9,22 @@ use Innmind\Crawler\{
     TransportInterface,
     ParserInterface,
     HttpResource,
-    Request,
     HttpResource\Attribute,
     HttpResource\AttributeInterface
 };
-use Innmind\Http\Message\ResponseInterface;
+use Innmind\Http\{
+    Message\Request,
+    Message\ResponseInterface,
+    Message\Method,
+    Headers,
+    ProtocolVersion,
+    Header\HeaderInterface
+};
 use Innmind\Filesystem\{
     StreamInterface,
     MediaType\NullMediaType,
-    MediaType\MediaType
+    MediaType\MediaType,
+    Stream\StringStream
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\{
@@ -36,7 +43,13 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
                 $parser = $this->createMock(ParserInterface::class)
             )
         );
-        $request = new Request($url = Url::fromString('http://example.com'));
+        $request = new Request(
+            $url = Url::fromString('http://example.com'),
+            new Method('GET'),
+            new ProtocolVersion(1, 1),
+            new Headers(new Map('string', HeaderInterface::class)),
+            new StringStream('')
+        );
         $transport
             ->expects($this->once())
             ->method('apply')
@@ -90,7 +103,13 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
                 $parser = $this->createMock(ParserInterface::class)
             )
         );
-        $request = new Request(Url::fromString('http://example.com'));
+        $request = new Request(
+            Url::fromString('http://example.com'),
+            new Method('GET'),
+            new ProtocolVersion(1, 1),
+            new Headers(new Map('string', HeaderInterface::class)),
+            new StringStream('')
+        );
         $transport
             ->expects($this->once())
             ->method('apply')

@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    Request,
     ParserInterface,
     HttpResource\Attribute
 };
 use Innmind\Http\{
+    Message\RequestInterface,
     Message\ResponseInterface,
     Header\HeaderValueInterface,
     Header\CacheControlValue\SharedMaxAge
@@ -18,7 +18,7 @@ use Innmind\Immutable\MapInterface;
 final class CacheParser implements ParserInterface
 {
     public function parse(
-        Request $request,
+        RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {

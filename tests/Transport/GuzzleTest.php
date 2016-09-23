@@ -5,7 +5,6 @@ namespace Tests\Innmind\Crawler\Transport;
 
 use Innmind\Crawler\{
     Transport\Guzzle,
-    Request,
     TransportInterface
 };
 use Innmind\Url\Url;
@@ -14,7 +13,14 @@ use Innmind\Http\{
     Factory\Header\DefaultFactory,
     Factory\HeaderFactoryInterface,
     Message\ResponseInterface,
-    Message\Method
+    Message\Request,
+    Message\Method,
+    ProtocolVersion,
+    Headers,
+    Header\HeaderInterface,
+    Header\ContentType,
+    Header\ContentTypeValue,
+    Header\ParameterInterface
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;
@@ -55,7 +61,13 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $response = $transport->apply(
-            new Request(Url::fromString('http://example.com'))
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            )
         );
 
         $this->assertInstanceOf(TransportInterface::class, $transport);
@@ -94,8 +106,13 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $response = $transport->apply(
-            (new Request(Url::fromString('http://example.com')))
-                ->withMethod(new Method('POST'))
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('POST'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            )
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
@@ -118,7 +135,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
                 'GET',
                 'http://example.com/',
                 [
-                    'headers' => ['Content-Type' => 'application/json'],
+                    'headers' => ['Content-Type' => ['application/json']],
                 ]
             )
             ->willReturn(
@@ -135,11 +152,25 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $response = $transport->apply(
-            (new Request(Url::fromString('http://example.com')))
-                ->withHeaders(
-                    (new Map('string', 'string'))
-                        ->put('Content-Type', 'application/json')
-                )
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(
+                    (new Map('string', HeaderInterface::class))
+                        ->put(
+                            'Content-Type',
+                            new ContentType(
+                                new ContentTypeValue(
+                                    'application',
+                                    'json',
+                                    new Map('string', ParameterInterface::class)
+                                )
+                            )
+                        )
+                ),
+                new StringStream('')
+            )
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
@@ -179,8 +210,13 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $response = $transport->apply(
-            (new Request(Url::fromString('http://example.com')))
-                ->withPayload(new StringStream('content'))
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('content')
+            )
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
@@ -204,7 +240,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
                 'http://example.com/',
                 [
                     'body' => 'content',
-                    'headers' => ['Content-Type' => 'application/json'],
+                    'headers' => ['Content-Type' => ['application/json']],
                 ]
             )
             ->willReturn(
@@ -221,13 +257,25 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $response = $transport->apply(
-            (new Request(Url::fromString('http://example.com')))
-                ->withMethod(new Method('POST'))
-                ->withPayload(new StringStream('content'))
-                ->withHeaders(
-                    (new Map('string', 'string'))
-                        ->put('Content-Type', 'application/json')
-                )
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('POST'),
+                new ProtocolVersion(1, 1),
+                new Headers(
+                    (new Map('string', HeaderInterface::class))
+                        ->put(
+                            'Content-Type',
+                            new ContentType(
+                                new ContentTypeValue(
+                                    'application',
+                                    'json',
+                                    new Map('string', ParameterInterface::class)
+                                )
+                            )
+                        )
+                ),
+                new StringStream('content')
+            )
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);

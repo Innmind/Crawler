@@ -8,8 +8,10 @@ use Innmind\Crawler\{
     TransportInterface
 };
 use Innmind\Http\{
+    Message\RequestInterface,
     Message\ResponseInterface,
-    Translator\Response\Psr7Translator
+    Translator\Response\Psr7Translator,
+    Header\HeaderValueInterface
 };
 use GuzzleHttp\ClientInterface;
 
@@ -26,19 +28,31 @@ final class Guzzle implements TransportInterface
         $this->translator = $translator;
     }
 
-    public function apply(Request $request): ResponseInterface
+    public function apply(RequestInterface $request): ResponseInterface
     {
         $options = [];
+        $headers = [];
+        $body = (string) $request->body();
 
-        if ($request->hasHeaders()) {
-            $options['headers'] = array_combine(
-                $request->headers()->keys()->toPrimitive(),
-                $request->headers()->values()->toPrimitive()
-            );
+        foreach ($request->headers() as $header) {
+            $headers[$header->name()] = $header
+                ->values()
+                ->reduce(
+                    [],
+                    function(array $raw, HeaderValueInterface $value): array {
+                        $raw[] = (string) $value;
+
+                        return $raw;
+                    }
+                );
         }
 
-        if ($request->hasPayload()) {
-            $options['body'] = (string) $request->payload();
+        if (count($headers) > 0) {
+            $options['headers'] = $headers;
+        }
+
+        if ($request->body()->size() > 0) {
+            $options['body'] = (string) $request->body();
         }
 
         $response = $this->client->request(

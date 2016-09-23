@@ -5,7 +5,6 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser\Http\AlternatesParser,
-    Request,
     HttpResource\AttributeInterface,
     HttpResource\Attributes,
     ParserInterface
@@ -13,8 +12,11 @@ use Innmind\Crawler\{
 use Innmind\UrlResolver\UrlResolver;
 use Innmind\Url\Url;
 use Innmind\Http\{
+    Message\Request,
     Message\ResponseInterface,
+    Message\Method,
     Headers,
+    ProtocolVersion,
     Header\HeaderInterface,
     Header\Header,
     Header\HeaderValue,
@@ -24,6 +26,7 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue
 };
+use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
     Set,
@@ -56,7 +59,13 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = $parser->parse(
-            new Request(Url::fromString('http://example.com')),
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             $expected = new Map('string', AttributeInterface::class)
         );
@@ -87,7 +96,13 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = $parser->parse(
-            new Request(Url::fromString('http://example.com')),
+            new Request(
+                Url::fromString('http://example.com'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             $expected = new Map('string', AttributeInterface::class)
         );
@@ -152,7 +167,13 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $attributes = $parser->parse(
-            new Request(Url::fromString('http://example.com/foo/')),
+            new Request(
+                Url::fromString('http://example.com/foo/'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
             $response,
             new Map('string', AttributeInterface::class)
         );

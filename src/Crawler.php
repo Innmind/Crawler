@@ -7,6 +7,7 @@ use Innmind\Crawler\{
     HttpResource\AttributeInterface,
     Exception\InvalidArgumentException
 };
+use Innmind\Http\Message\RequestInterface;
 use Innmind\Filesystem\MediaType\{
     MediaType,
     NullMediaType
@@ -33,7 +34,7 @@ final class Crawler implements CrawlerInterface
         $this->parsers = $parsers;
     }
 
-    public function execute(Request $request): HttpResource
+    public function execute(RequestInterface $request): HttpResource
     {
         $response = $this->http->apply($request);
         $attributes = $this->parsers->reduce(
