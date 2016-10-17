@@ -8,6 +8,11 @@ use Innmind\Crawler\{
     ParserInterface,
     HttpResource\AttributeInterface
 };
+use Innmind\TimeContinuum\{
+    TimeContinuumInterface,
+    PointInTimeInterface,
+    ElapsedPeriod
+};
 use Innmind\Http\{
     Message\Request,
     Message\ResponseInterface,
@@ -35,7 +40,9 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             ParserInterface::class,
-            new CacheParser
+            new CacheParser(
+                $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -49,7 +56,8 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                     new Map('string', HeaderInterface::class)
                 )
             );
-        $attributes = (new CacheParser)->parse(
+        $clock = $this->createMock(TimeContinuumInterface::class);
+        $attributes = (new CacheParser($clock))->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -81,7 +89,8 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $attributes = (new CacheParser)->parse(
+        $clock = $this->createMock(TimeContinuumInterface::class);
+        $attributes = (new CacheParser($clock))->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -114,7 +123,22 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $attributes = (new CacheParser)->parse(
+        $clock = $this->createMock(TimeContinuumInterface::class);
+        $clock
+            ->expects($this->exactly(2))
+            ->method('now')
+            ->will(
+                $this->onConsecutiveCalls(
+                    $start = $this->createMock(PointInTimeInterface::class),
+                    $end = $this->createMock(PointInTimeInterface::class)
+                )
+            );
+        $end
+            ->expects($this->once())
+            ->method('elapsedSince')
+            ->with($start)
+            ->willReturn(new ElapsedPeriod(24));
+        $attributes = (new CacheParser($clock))->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -138,5 +162,6 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
             (new \DateTimeImmutable('+42 seconds')),
             $attribute->content()
         );
+        $this->assertSame(24, $attribute->parsingTime());
     }
 }

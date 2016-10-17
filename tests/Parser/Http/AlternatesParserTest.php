@@ -9,6 +9,11 @@ use Innmind\Crawler\{
     HttpResource\Attributes,
     ParserInterface
 };
+use Innmind\TimeContinuum\{
+    TimeContinuumInterface,
+    PointInTimeInterface,
+    ElapsedPeriod
+};
 use Innmind\UrlResolver\UrlResolver;
 use Innmind\Url\Url;
 use Innmind\Http\{
@@ -38,7 +43,8 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $parser = new AlternatesParser(
-            new UrlResolver
+            new UrlResolver,
+            $this->createMock(TimeContinuumInterface::class)
         );
 
         $this->assertInstanceOf(ParserInterface::class, $parser);
@@ -47,7 +53,8 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     public function testParseWhenNoLink()
     {
         $parser = new AlternatesParser(
-            new UrlResolver
+            new UrlResolver,
+            $this->createMock(TimeContinuumInterface::class)
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -76,7 +83,8 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     public function testParseWhenLinkNotACorrectlyParsedOne()
     {
         $parser = new AlternatesParser(
-            new UrlResolver
+            new UrlResolver,
+            $this->createMock(TimeContinuumInterface::class)
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -113,7 +121,8 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     public function testParse()
     {
         $parser = new AlternatesParser(
-            new UrlResolver
+            new UrlResolver,
+            $clock = $this->createMock(TimeContinuumInterface::class)
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -166,6 +175,26 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
+        $clock
+            ->expects($this->exactly(3))
+            ->method('now')
+            ->will(
+                $this->onConsecutiveCalls(
+                    $start = $this->createMock(PointInTimeInterface::class),
+                    $end1 = $this->createMock(PointInTimeInterface::class),
+                    $end2 = $this->createMock(PointInTimeInterface::class)
+                )
+            );
+        $end1
+            ->expects($this->once())
+            ->method('elapsedSince')
+            ->with($start)
+            ->willReturn(new ElapsedPeriod(24));
+        $end2
+            ->expects($this->once())
+            ->method('elapsedSince')
+            ->with($start)
+            ->willReturn(new ElapsedPeriod(42));
         $attributes = $parser->parse(
             new Request(
                 Url::fromString('http://example.com/foo/'),
@@ -197,9 +226,11 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
             ['http://example.com/en/foo/bar'],
             $content->get('en')->content()->toPrimitive()
         );
+        $this->assertSame(42, $content->get('en')->parsingTime());
         $this->assertSame(
             ['http://example.com/foo/bar', 'http://example.com/foo/baz'],
             $content->get('fr')->content()->toPrimitive()
         );
+        $this->assertSame(24, $content->get('fr')->parsingTime());
     }
 }

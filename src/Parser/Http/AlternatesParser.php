@@ -10,6 +10,7 @@ use Innmind\Crawler\{
     HttpResource\Attributes
 };
 use Innmind\UrlResolver\ResolverInterface;
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -28,10 +29,14 @@ use Innmind\Immutable\{
 final class AlternatesParser implements ParserInterface
 {
     private $resolver;
+    private $clock;
 
-    public function __construct(ResolverInterface $resolver)
-    {
+    public function __construct(
+        ResolverInterface $resolver,
+        TimeContinuumInterface $clock
+    ) {
         $this->resolver = $resolver;
+        $this->clock = $clock;
     }
 
     public function parse(
@@ -39,7 +44,7 @@ final class AlternatesParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = (int) round(microtime(true) * 1000);
+        $start = $this->clock->now();
 
         if (
             !$response->headers()->has('Link') ||
@@ -92,7 +97,11 @@ final class AlternatesParser implements ParserInterface
                                     return $links->add($link);
                                 }
                             ),
-                            (int) round(microtime(true) * 1000) - $start
+                            $this
+                                ->clock
+                                ->now()
+                                ->elapsedSince($start)
+                                ->milliseconds()
                         )
                     );
                 }

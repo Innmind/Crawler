@@ -13,16 +13,24 @@ use Innmind\Http\{
     Header\HeaderValueInterface,
     Header\CacheControlValue\SharedMaxAge
 };
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Immutable\MapInterface;
 
 final class CacheParser implements ParserInterface
 {
+    private $clock;
+
+    public function __construct(TimeContinuumInterface $clock)
+    {
+        $this->clock = $clock;
+    }
+
     public function parse(
         RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = (int) round(microtime(true) * 1000);
+        $start = $this->clock->now();
 
         if (!$response->headers()->has('Cache-Control')) {
             return $attributes;
@@ -50,7 +58,11 @@ final class CacheParser implements ParserInterface
                         $directives->current()->age()
                     )
                 ),
-                (int) round(microtime(true) * 1000) - $start
+                $this
+                    ->clock
+                    ->now()
+                    ->elapsedSince($start)
+                    ->milliseconds()
             )
         );
     }
