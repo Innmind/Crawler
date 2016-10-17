@@ -19,24 +19,24 @@ use Innmind\Immutable\{
 
 final class Crawler implements CrawlerInterface
 {
-    private $http;
+    private $transport;
     private $parsers;
 
     public function __construct(
-        TransportInterface $http,
+        TransportInterface $transport,
         SetInterface $parsers
     ) {
         if ((string) $parsers->type() !== ParserInterface::class) {
             throw new InvalidArgumentException;
         }
 
-        $this->http = $http;
+        $this->transport = $transport;
         $this->parsers = $parsers;
     }
 
     public function execute(RequestInterface $request): HttpResource
     {
-        $response = $this->http->fulfill($request);
+        $response = $this->transport->fulfill($request);
         $attributes = $this->parsers->reduce(
             new Map('string', AttributeInterface::class),
             function(Map $attributes, ParserInterface $parser) use ($request, $response): Map {
