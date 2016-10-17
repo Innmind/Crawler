@@ -52,7 +52,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         );
         $transport
             ->expects($this->once())
-            ->method('apply')
+            ->method('fulfill')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(ResponseInterface::class)
@@ -112,7 +112,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         );
         $transport
             ->expects($this->once())
-            ->method('apply')
+            ->method('fulfill')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(ResponseInterface::class)

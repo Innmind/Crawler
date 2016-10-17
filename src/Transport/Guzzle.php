@@ -28,7 +28,7 @@ final class Guzzle implements TransportInterface
         $this->translator = $translator;
     }
 
-    public function apply(RequestInterface $request): ResponseInterface
+    public function fulfill(RequestInterface $request): ResponseInterface
     {
         $options = [];
         $headers = [];

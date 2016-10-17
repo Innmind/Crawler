@@ -10,5 +10,5 @@ use Innmind\Http\Message\{
 
 interface TransportInterface
 {
-    public function apply(RequestInterface $request): ResponseInterface;
+    public function fulfill(RequestInterface $request): ResponseInterface;
 }

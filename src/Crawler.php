@@ -36,7 +36,7 @@ final class Crawler implements CrawlerInterface
 
     public function execute(RequestInterface $request): HttpResource
     {
-        $response = $this->http->apply($request);
+        $response = $this->http->fulfill($request);
         $attributes = $this->parsers->reduce(
             new Map('string', AttributeInterface::class),
             function(Map $attributes, ParserInterface $parser) use ($request, $response): Map {

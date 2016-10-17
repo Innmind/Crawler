@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface as Psr7ResponseInterface;
 
 class GuzzleTest extends \PHPUnit_Framework_TestCase
 {
-    public function testApply()
+    public function testFulfill()
     {
         $transport = new Guzzle(
             $client = $this->createMock(ClientInterface::class),
@@ -60,7 +60,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->method('getHeaders')
             ->willReturn([]);
 
-        $response = $transport->apply(
+        $response = $transport->fulfill(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -74,7 +74,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testApplyWithMethod()
+    public function testFulfillWithMethod()
     {
         $transport = new Guzzle(
             $client = $this->createMock(ClientInterface::class),
@@ -105,7 +105,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->method('getHeaders')
             ->willReturn([]);
 
-        $response = $transport->apply(
+        $response = $transport->fulfill(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('POST'),
@@ -118,7 +118,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testApplyWithHeaders()
+    public function testFulfillWithHeaders()
     {
         $transport = new Guzzle(
             $client = $this->createMock(ClientInterface::class),
@@ -151,7 +151,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->method('getHeaders')
             ->willReturn([]);
 
-        $response = $transport->apply(
+        $response = $transport->fulfill(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -176,7 +176,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testApplyWithPayload()
+    public function testFulfillWithPayload()
     {
         $transport = new Guzzle(
             $client = $this->createMock(ClientInterface::class),
@@ -209,7 +209,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->method('getHeaders')
             ->willReturn([]);
 
-        $response = $transport->apply(
+        $response = $transport->fulfill(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -222,7 +222,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testApplyCompletelyModifiedRequest()
+    public function testFulfillCompletelyModifiedRequest()
     {
         $transport = new Guzzle(
             $client = $this->createMock(ClientInterface::class),
@@ -256,7 +256,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
             ->method('getHeaders')
             ->willReturn([]);
 
-        $response = $transport->apply(
+        $response = $transport->fulfill(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('POST'),
