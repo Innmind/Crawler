@@ -32,7 +32,6 @@ final class Guzzle implements TransportInterface
     {
         $options = [];
         $headers = [];
-        $body = (string) $request->body();
 
         foreach ($request->headers() as $header) {
             $headers[$header->name()] = $header
