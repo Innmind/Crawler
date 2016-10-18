@@ -108,8 +108,13 @@ final class AlternatesParser implements ParserInterface
             );
 
         return $attributes->put(
-            'alternates',
-            new Attributes('alternates', $alternates)
+            self::key(),
+            new Attributes(self::key(), $alternates)
         );
+    }
+
+    public static function key(): string
+    {
+        return 'alternates';
     }
 }

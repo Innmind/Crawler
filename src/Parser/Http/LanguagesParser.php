@@ -43,9 +43,9 @@ final class LanguagesParser implements ParserInterface
         }
 
         return $attributes->put(
-            'languages',
+            self::key(),
             new Attribute(
-                'languages',
+                self::key(),
                 $response
                     ->headers()
                     ->get('Content-Language')
@@ -63,5 +63,10 @@ final class LanguagesParser implements ParserInterface
                     ->milliseconds()
             )
         );
+    }
+
+    public static function key(): string
+    {
+        return 'languages';
     }
 }

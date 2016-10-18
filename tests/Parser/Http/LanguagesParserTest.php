@@ -40,6 +40,11 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testKey()
+    {
+        $this->assertSame('languages', LanguagesParser::key());
+    }
+
     public function testDoesntParseWhenNoContentLanguage()
     {
         $parser = new LanguagesParser(

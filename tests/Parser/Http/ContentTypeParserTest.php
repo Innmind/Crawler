@@ -37,6 +37,11 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testKey()
+    {
+        $this->assertSame('content_type', ContentTypeParser::key());
+    }
+
     public function testDoesntParseWhenNoContentType()
     {
         $parser = new ContentTypeParser(

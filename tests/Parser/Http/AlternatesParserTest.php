@@ -50,6 +50,11 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ParserInterface::class, $parser);
     }
 
+    public function testKey()
+    {
+        $this->assertSame('alternates', AlternatesParser::key());
+    }
+
     public function testParseWhenNoLink()
     {
         $parser = new AlternatesParser(

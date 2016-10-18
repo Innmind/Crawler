@@ -43,6 +43,11 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testKey()
+    {
+        $this->assertSame('canonical', CanonicalParser::key());
+    }
+
     public function testDoesntParseWhenNoLink()
     {
         $parser = new CanonicalParser(

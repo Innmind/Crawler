@@ -58,9 +58,9 @@ final class CanonicalParser implements ParserInterface
         }
 
         return $attributes->put(
-            'canonical',
+            self::key(),
             new Attribute(
-                'canonical',
+                self::key(),
                 $this->resolver->resolve(
                     (string) $request->url(),
                     (string) $links->current()->url()
@@ -72,5 +72,10 @@ final class CanonicalParser implements ParserInterface
                     ->milliseconds()
             )
         );
+    }
+
+    public static function key(): string
+    {
+        return 'canonical';
     }
 }

@@ -21,4 +21,6 @@ interface ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface;
+
+    public static function key(): string;
 }

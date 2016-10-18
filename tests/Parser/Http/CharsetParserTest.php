@@ -35,6 +35,11 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testKey()
+    {
+        $this->assertSame('charset', CharsetParser::key());
+    }
+
     public function testDoesntParseWhenNoContentType()
     {
         $parser = new CharsetParser(

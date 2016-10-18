@@ -49,9 +49,9 @@ final class CacheParser implements ParserInterface
         }
 
         return $attributes->put(
-            'expires_at',
+            self::key(),
             new Attribute(
-                'expires_at',
+                self::key(),
                 (new \DateTimeImmutable)->modify(
                     sprintf(
                         '+%s seconds',
@@ -65,5 +65,10 @@ final class CacheParser implements ParserInterface
                     ->milliseconds()
             )
         );
+    }
+
+    public static function key(): string
+    {
+        return 'expires_at';
     }
 }

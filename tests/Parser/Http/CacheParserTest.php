@@ -46,6 +46,11 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testKey()
+    {
+        $this->assertSame('expires_at', CacheParser::key());
+    }
+
     public function testDoesntHaveCacheControl()
     {
         $response = $this->createMock(ResponseInterface::class);

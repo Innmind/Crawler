@@ -40,9 +40,9 @@ final class ContentTypeParser implements ParserInterface
         }
 
         return $attributes->put(
-            'content_type',
+            self::key(),
             new Attribute(
-                'content_type',
+                self::key(),
                 MediaType::fromString(
                     (string) $response
                         ->headers()
@@ -57,5 +57,10 @@ final class ContentTypeParser implements ParserInterface
                     ->milliseconds()
             )
         );
+    }
+
+    public static function key(): string
+    {
+        return 'content_type';
     }
 }

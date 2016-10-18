@@ -40,9 +40,9 @@ final class CharsetParser implements ParserInterface
         }
 
         return $attributes->put(
-            'charset',
+            self::key(),
             new Attribute(
-                'charset',
+                self::key(),
                 $header
                     ->values()
                     ->current()
@@ -56,5 +56,10 @@ final class CharsetParser implements ParserInterface
                     ->milliseconds()
             )
         );
+    }
+
+    public static function key(): string
+    {
+        return 'charset';
     }
 }
