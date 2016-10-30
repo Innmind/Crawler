@@ -59,7 +59,7 @@ final class AlternatesParser implements ParserInterface
             ->values()
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function (Map $links, LinkValue $header): Map {
+                function(Map $links, LinkValue $header): Map {
                     if (
                         $header->relationship() !== 'alternate' ||
                         !$header->parameters()->contains('hreflang')
@@ -73,11 +73,11 @@ final class AlternatesParser implements ParserInterface
                     );
                 }
             )
-            ->groupBy(function (UrlInterface $url, string $language): string {
+            ->groupBy(function(UrlInterface $url, string $language): string {
                 return $language;
             })
-            ->map(function (string $language, SequenceInterface $links) use ($request): SequenceInterface {
-                return $links->map(function (Pair $link) use ($request): string {
+            ->map(function(string $language, SequenceInterface $links) use ($request): SequenceInterface {
+                return $links->map(function(Pair $link) use ($request): string {
                     return $this->resolver->resolve(
                         (string) $request->url(),
                         (string) $link->key()
@@ -86,14 +86,14 @@ final class AlternatesParser implements ParserInterface
             })
             ->reduce(
                 new Map('string', AttributeInterface::class),
-                function (Map $languages, string $language, SequenceInterface $links) use ($start): Map {
+                function(Map $languages, string $language, SequenceInterface $links) use ($start): Map {
                     return $languages->put(
                         $language,
                         new Alternate(
                             $language,
                             $links->reduce(
                                 new Set('string'),
-                                function (Set $links, string $link): Set {
+                                function(Set $links, string $link): Set {
                                     return $links->add($link);
                                 }
                             ),

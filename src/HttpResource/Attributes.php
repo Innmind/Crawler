@@ -28,7 +28,7 @@ final class Attributes implements AttributesInterface
         $this->content = $attributes;
         $this->parsingTime = $attributes->reduce(
             0,
-            function (int $parsingTime, string $name, AttributeInterface $attribute): int {
+            function(int $parsingTime, string $name, AttributeInterface $attribute): int {
                 return $parsingTime += $attribute->parsingTime();
             }
         );
