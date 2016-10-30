@@ -15,7 +15,6 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue
 };
-use Innmind\Url\UrlInterface;
 use Innmind\Immutable\MapInterface;
 
 final class CanonicalParser implements ParserInterface
