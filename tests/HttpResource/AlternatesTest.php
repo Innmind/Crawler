@@ -28,6 +28,30 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($map, $alternates->content());
     }
 
+    public function testIterator()
+    {
+        $alternates = new Alternates(
+            (new Map('string', AttributeInterface::class))
+                ->put(
+                    'fr',
+                    $alternate = new Alternate(
+                        'fr',
+                        new Set('string'),
+                        0
+                    )
+                )
+        );
+
+        $this->assertSame($alternate, $alternates->current());
+        $this->assertSame('fr', $alternates->key());
+        $this->assertTrue($alternates->valid());
+        $this->assertNull($alternates->next());
+        $this->assertFalse($alternates->valid());
+        $this->assertNull($alternates->rewind());
+        $this->assertSame($alternate, $alternates->current());
+        $this->assertSame('fr', $alternates->key());
+    }
+
     /**
      * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
      */
