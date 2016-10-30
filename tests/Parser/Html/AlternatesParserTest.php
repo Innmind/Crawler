@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     Parser\Html\AlternatesParser,
     HttpResource\AttributeInterface,
-    HttpResource\Attributes,
+    HttpResource\Alternates,
     HttpResource\Attribute,
     ParserInterface,
     Parser\Http\ContentTypeParser
@@ -232,7 +232,7 @@ HTML
 
         $this->assertTrue($attributes->contains('alternates'));
         $alternates = $attributes->get('alternates');
-        $this->assertInstanceOf(Attributes::class, $alternates);
+        $this->assertInstanceOf(Alternates::class, $alternates);
         $content = $alternates->content();
         $this->assertCount(2, $content);
         $this->assertTrue($content->contains('en'));

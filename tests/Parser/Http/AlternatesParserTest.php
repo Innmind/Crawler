@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser\Http\AlternatesParser,
     HttpResource\AttributeInterface,
-    HttpResource\Attributes,
+    HttpResource\Alternates,
     ParserInterface
 };
 use Innmind\TimeContinuum\{
@@ -214,7 +214,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($attributes->contains('alternates'));
         $alternates = $attributes->get('alternates');
-        $this->assertInstanceOf(Attributes::class, $alternates);
+        $this->assertInstanceOf(Alternates::class, $alternates);
         $content = $alternates->content();
         $this->assertCount(2, $content);
         $this->assertTrue($content->contains('en'));

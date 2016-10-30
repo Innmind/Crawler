@@ -6,8 +6,8 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     ParserInterface,
     HttpResource\AttributeInterface,
-    HttpResource\Attribute,
-    HttpResource\Attributes
+    HttpResource\Alternate,
+    HttpResource\Alternates
 };
 use Innmind\Html\{
     Visitor\Elements,
@@ -112,7 +112,7 @@ final class AlternatesParser implements ParserInterface
                 function (Map $languages, string $language, SequenceInterface $links) use ($start): Map {
                     return $languages->put(
                         $language,
-                        new Attribute(
+                        new Alternate(
                             $language,
                             $links->reduce(
                                 new Set('string'),
@@ -132,7 +132,7 @@ final class AlternatesParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attributes(self::key(), $alternates)
+            new Alternates($alternates)
         );
     }
 
