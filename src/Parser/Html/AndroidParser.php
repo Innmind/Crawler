@@ -18,7 +18,7 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\http\Message\{
+use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
