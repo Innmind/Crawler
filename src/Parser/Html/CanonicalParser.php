@@ -5,7 +5,8 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     ParserInterface,
-    HttpResource\Attribute
+    HttpResource\Attribute,
+    UrlResolver
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -30,13 +31,16 @@ final class CanonicalParser implements ParserInterface
 
     private $reader;
     private $clock;
+    private $resolver;
 
     public function __construct(
         ReaderInterface $reader,
-        TimeContinuumInterface $clock
+        TimeContinuumInterface $clock,
+        UrlResolver $resolver
     ) {
         $this->reader = $reader;
         $this->clock = $clock;
+        $this->resolver = $resolver;
     }
 
     public function parse(
@@ -76,7 +80,11 @@ final class CanonicalParser implements ParserInterface
             self::key(),
             new Attribute(
                 self::key(),
-                $link->current()->href(),
+                $this->resolver->resolve(
+                    $request,
+                    $attributes,
+                    $link->current()->href()
+                ),
                 $this
                     ->clock
                     ->now()

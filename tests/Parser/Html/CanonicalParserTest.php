@@ -8,8 +8,10 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     ParserInterface,
     HttpResource\AttributeInterface,
-    HttpResource\Attribute
+    HttpResource\Attribute,
+    UrlResolver
 };
+use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
@@ -31,7 +33,10 @@ use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream
 };
-use Innmind\Url\UrlInterface;
+use Innmind\Url\{
+    UrlInterface,
+    Url
+};
 use Innmind\Immutable\{
     Map,
     MapInterface
@@ -52,7 +57,8 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            $this->clock = $this->createMock(TimeContinuumInterface::class),
+            new UrlResolver(new BaseResolver)
         );
     }
 
@@ -216,6 +222,10 @@ HTML
                     0
                 )
             );
+        $request
+            ->expects($this->once())
+            ->method('url')
+            ->willReturn(Url::fromString('http://github.com'));
         $response
             ->expects($this->once())
             ->method('body')
@@ -262,7 +272,7 @@ HTML
         $canonical = $attributes->get('canonical');
         $this->assertSame('canonical', $canonical->name());
         $this->assertInstanceOf(UrlInterface::class, $canonical->content());
-        $this->assertSame('/foo', (string) $canonical->content());
+        $this->assertSame('http://github.com/foo', (string) $canonical->content());
         $this->assertSame(42, $canonical->parsingTime());
     }
 }
