@@ -9,7 +9,8 @@ use Innmind\Crawler\{
 };
 use Innmind\Xml\{
     ReaderInterface,
-    NodeInterface
+    NodeInterface,
+    ElementInterface
 };
 use Innmind\Html\{
     Visitor\Elements,
@@ -63,11 +64,14 @@ final class AuthorParser implements ParserInterface
         }
 
         $meta = $metas
-            ->filter(function(NodeInterface $meta): bool {
+            ->filter(function(NodeInterface $node): bool {
+                return $node instanceof ElementInterface;
+            })
+            ->filter(function(ElementInterface $meta): bool {
                 return $meta->attributes()->contains('name') &&
                     $meta->attributes()->contains('content');
             })
-            ->filter(function(NodeInterface $meta): bool {
+            ->filter(function(ElementInterface $meta): bool {
                 $name = $meta
                     ->attributes()
                     ->get('name')
