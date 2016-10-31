@@ -39,9 +39,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     {
         $crawler = new Crawler(
             $transport = $this->createMock(TransportInterface::class),
-            (new Set(ParserInterface::class))->add(
-                $parser = $this->createMock(ParserInterface::class)
-            )
+            $parser = $this->createMock(ParserInterface::class)
         );
         $request = new Request(
             $url = Url::fromString('http://example.com'),
@@ -84,24 +82,11 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($attribute, $attributes->get('foo'));
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenInvalidParserSet()
-    {
-        new Crawler(
-            $this->createMock(TransportInterface::class),
-            new Set('object')
-        );
-    }
-
     public function testUseTheParsedMediaTypeForTheResource()
     {
         $crawler = new Crawler(
             $transport = $this->createMock(TransportInterface::class),
-            (new Set(ParserInterface::class))->add(
-                $parser = $this->createMock(ParserInterface::class)
-            )
+            $parser = $this->createMock(ParserInterface::class)
         );
         $request = new Request(
             Url::fromString('http://example.com'),

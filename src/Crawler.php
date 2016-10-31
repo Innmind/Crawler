@@ -12,38 +12,28 @@ use Innmind\Filesystem\MediaType\{
     MediaType,
     NullMediaType
 };
-use Innmind\Immutable\{
-    SetInterface,
-    Map
-};
+use Innmind\Immutable\Map;
 
 final class Crawler implements CrawlerInterface
 {
     private $transport;
-    private $parsers;
+    private $parser;
 
     public function __construct(
         TransportInterface $transport,
-        SetInterface $parsers
+        ParserInterface $parser
     ) {
-        if ((string) $parsers->type() !== ParserInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
         $this->transport = $transport;
-        $this->parsers = $parsers;
+        $this->parser = $parser;
     }
 
     public function execute(RequestInterface $request): HttpResource
     {
         $response = $this->transport->fulfill($request);
-        $attributes = $this->parsers->reduce(
-            new Map('string', AttributeInterface::class),
-            function(Map $attributes, ParserInterface $parser) use ($request, $response): Map {
-                return $attributes->merge(
-                    $parser->parse($request, $response, $attributes)
-                );
-            }
+        $attributes = $this->parser->parse(
+            $request,
+            $response,
+            new Map('string', AttributeInterface::class)
         );
 
         if ($attributes->contains('content_type')) {
