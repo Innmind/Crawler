@@ -5,9 +5,9 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     ParserInterface,
-    HttpResource\Attribute
+    HttpResource\Attribute,
+    UrlResolver
 };
-use Innmind\UrlResolver\ResolverInterface;
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
@@ -23,7 +23,7 @@ final class CanonicalParser implements ParserInterface
     private $clock;
 
     public function __construct(
-        ResolverInterface $resolver,
+        UrlResolver $resolver,
         TimeContinuumInterface $clock
     ) {
         $this->resolver = $resolver;
@@ -60,9 +60,10 @@ final class CanonicalParser implements ParserInterface
             self::key(),
             new Attribute(
                 self::key(),
-                $this->resolver->resolve(
-                    (string) $request->url(),
-                    (string) $links->current()->url()
+                (string) $this->resolver->resolve(
+                    $request,
+                    $attributes,
+                    $links->current()->url()
                 ),
                 $this
                     ->clock

@@ -6,9 +6,10 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     ParserInterface,
     Parser\Http\CanonicalParser,
-    HttpResource\AttributeInterface
+    HttpResource\AttributeInterface,
+    UrlResolver
 };
-use Innmind\UrlResolver\ResolverInterface;
+use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
@@ -32,14 +33,22 @@ use Innmind\Immutable\{
 
 class CanonicalParserTest extends \PHPUnit_Framework_TestCase
 {
+    private $parser;
+    private $clock;
+
+    public function setUp()
+    {
+        $this->parser = new CanonicalParser(
+            new UrlResolver(new BaseResolver),
+            $this->clock = $this->createMock(TimeContinuumInterface::class)
+        );
+    }
+
     public function testInterface()
     {
         $this->assertInstanceOf(
             ParserInterface::class,
-            new CanonicalParser(
-                $this->createMock(ResolverInterface::class),
-                $this->createMock(TimeContinuumInterface::class)
-            )
+            $this->parser
         );
     }
 
@@ -50,10 +59,6 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenNoLink()
     {
-        $parser = new CanonicalParser(
-            $this->createMock(ResolverInterface::class),
-            $this->createMock(TimeContinuumInterface::class)
-        );
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->expects($this->once())
@@ -69,17 +74,13 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         $request = $this->createMock(RequestInterface::class);
         $expected = new Map('string', AttributeInterface::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $this->parser->parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenLinkNotFullyParsed()
     {
-        $parser = new CanonicalParser(
-            $this->createMock(ResolverInterface::class),
-            $this->createMock(TimeContinuumInterface::class)
-        );
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
         $response
@@ -99,17 +100,13 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         $request = $this->createMock(RequestInterface::class);
         $expected = new Map('string', AttributeInterface::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $this->parser->parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenCanonicalLinkNotFound()
     {
-        $parser = new CanonicalParser(
-            $this->createMock(ResolverInterface::class),
-            $this->createMock(TimeContinuumInterface::class)
-        );
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
         $response
@@ -140,17 +137,13 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         $request = $this->createMock(RequestInterface::class);
         $expected = new Map('string', AttributeInterface::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $this->parser->parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenMultipleCanonicalLinksFound()
     {
-        $parser = new CanonicalParser(
-            $this->createMock(ResolverInterface::class),
-            $this->createMock(TimeContinuumInterface::class)
-        );
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
         $response
@@ -195,17 +188,13 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         $request = $this->createMock(RequestInterface::class);
         $expected = new Map('string', AttributeInterface::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $this->parser->parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testParse()
     {
-        $parser = new CanonicalParser(
-            $resolver = $this->createMock(ResolverInterface::class),
-            $clock = $this->createMock(TimeContinuumInterface::class)
-        );
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
         $response
@@ -240,7 +229,8 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $clock
+        $this
+            ->clock
             ->expects($this->exactly(2))
             ->method('now')
             ->will(
@@ -259,17 +249,9 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('url')
             ->willReturn(Url::fromString('http://example.com/whatever'));
-        $resolver
-            ->expects($this->once())
-            ->method('resolve')
-            ->with(
-                'http://example.com/whatever',
-                '/foo'
-            )
-            ->willReturn('http://example.com/foo');
         $expected = new Map('string', AttributeInterface::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $this->parser->parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);
