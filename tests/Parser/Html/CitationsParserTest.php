@@ -228,6 +228,7 @@ HTML
         $citations = $attributes->get('citations');
         $this->assertSame('citations', $citations->name());
         $this->assertInstanceOf(SetInterface::class, $citations->content());
+        $this->assertSame('string', (string) $citations->content()->type());
         $this->assertSame(['foo', 'bar'], $citations->content()->toPrimitive());
         $this->assertSame(42, $citations->parsingTime());
     }
