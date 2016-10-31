@@ -271,8 +271,7 @@ HTML
         $this->assertTrue($attributes->contains('canonical'));
         $canonical = $attributes->get('canonical');
         $this->assertSame('canonical', $canonical->name());
-        $this->assertInstanceOf(UrlInterface::class, $canonical->content());
-        $this->assertSame('http://github.com/foo', (string) $canonical->content());
+        $this->assertSame('http://github.com/foo', $canonical->content());
         $this->assertSame(42, $canonical->parsingTime());
     }
 }
