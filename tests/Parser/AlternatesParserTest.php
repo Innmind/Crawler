@@ -11,9 +11,10 @@ use Innmind\Crawler\{
     ParserInterface,
     HttpResource\AttributeInterface,
     HttpResource\Alternates,
-    HttpResource\Attribute
+    HttpResource\Attribute,
+    UrlResolver
 };
-use Innmind\UrlResolver\UrlResolver;
+use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\TimeContinuum\TimeContinuum\Earth;
 use Innmind\Html\{
     Reader\Reader,
@@ -54,7 +55,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->parser = new AlternatesParser(
             new HttpParser(
-                $resolver = new UrlResolver,
+                $resolver = new UrlResolver(new BaseResolver),
                 $clock = new Earth
             ),
             new HtmlParser(

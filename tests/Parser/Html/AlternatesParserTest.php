@@ -9,14 +9,15 @@ use Innmind\Crawler\{
     HttpResource\Alternates,
     HttpResource\Attribute,
     ParserInterface,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
+    UrlResolver
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
     ElapsedPeriod
 };
-use Innmind\UrlResolver\UrlResolver;
+use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\Url;
 use Innmind\Http\{
     Message\Request,
@@ -61,7 +62,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 )
             ),
             $this->clock = $this->createMock(TimeContinuumInterface::class),
-            new UrlResolver
+            new UrlResolver(new BaseResolver)
         );
     }
 

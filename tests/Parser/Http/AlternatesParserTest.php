@@ -7,14 +7,15 @@ use Innmind\Crawler\{
     Parser\Http\AlternatesParser,
     HttpResource\AttributeInterface,
     HttpResource\Alternates,
-    ParserInterface
+    ParserInterface,
+    UrlResolver
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
     ElapsedPeriod
 };
-use Innmind\UrlResolver\UrlResolver;
+use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\Url;
 use Innmind\Http\{
     Message\Request,
@@ -40,14 +41,20 @@ use Innmind\Immutable\{
 
 class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 {
+    private $parser;
+    private $clock;
+
+    public function setUp()
+    {
+        $this->parser = new AlternatesParser(
+            new UrlResolver(new BaseResolver),
+            $this->clock = $this->createMock(TimeContinuumInterface::class)
+        );
+    }
+
     public function testInterface()
     {
-        $parser = new AlternatesParser(
-            new UrlResolver,
-            $this->createMock(TimeContinuumInterface::class)
-        );
-
-        $this->assertInstanceOf(ParserInterface::class, $parser);
+        $this->assertInstanceOf(ParserInterface::class, $this->parser);
     }
 
     public function testKey()
@@ -57,11 +64,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseWhenNoLink()
     {
-        $parser = new AlternatesParser(
-            new UrlResolver,
-            $this->createMock(TimeContinuumInterface::class)
-        );
-
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->method('headers')
@@ -70,7 +72,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                     new Map('string', HeaderInterface::class)
                 )
             );
-        $attributes = $parser->parse(
+        $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -87,11 +89,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseWhenLinkNotACorrectlyParsedOne()
     {
-        $parser = new AlternatesParser(
-            new UrlResolver,
-            $this->createMock(TimeContinuumInterface::class)
-        );
-
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->method('headers')
@@ -108,7 +105,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $attributes = $parser->parse(
+        $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -125,11 +122,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new AlternatesParser(
-            new UrlResolver,
-            $clock = $this->createMock(TimeContinuumInterface::class)
-        );
-
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->method('headers')
@@ -180,7 +172,8 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $clock
+        $this
+            ->clock
             ->expects($this->exactly(3))
             ->method('now')
             ->will(
@@ -200,7 +193,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
             ->method('elapsedSince')
             ->with($start)
             ->willReturn(new ElapsedPeriod(42));
-        $attributes = $parser->parse(
+        $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),

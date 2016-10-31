@@ -7,7 +7,8 @@ use Innmind\Crawler\{
     ParserInterface,
     HttpResource\AttributeInterface,
     HttpResource\Alternate,
-    HttpResource\Alternates
+    HttpResource\Alternates,
+    UrlResolver
 };
 use Innmind\Html\{
     Visitor\Elements,
@@ -25,7 +26,6 @@ use Innmind\Http\Message\{
     ResponseInterface
 };
 use Innmind\Url\UrlInterface;
-use Innmind\UrlResolver\ResolverInterface;
 use Innmind\Immutable\{
     MapInterface,
     Map,
@@ -45,7 +45,7 @@ final class AlternatesParser implements ParserInterface
     public function __construct(
         ReaderInterface $reader,
         TimeContinuumInterface $clock,
-        ResolverInterface $resolver
+        UrlResolver $resolver
     ) {
         $this->reader = $reader;
         $this->clock = $clock;
@@ -99,11 +99,12 @@ final class AlternatesParser implements ParserInterface
             ->groupBy(function(UrlInterface $url, string $language) {
                 return $language;
             })
-            ->map(function(string $language, SequenceInterface $links) use ($request): SequenceInterface {
-                return $links->map(function(Pair $link) use ($request): string {
-                    return $this->resolver->resolve(
-                        (string) $request->url(),
-                        (string) $link->key()
+            ->map(function(string $language, SequenceInterface $links) use ($request, $attributes): SequenceInterface {
+                return $links->map(function(Pair $link) use ($request, $attributes): string {
+                    return (string) $this->resolver->resolve(
+                        $request,
+                        $attributes,
+                        $link->key()
                     );
                 });
             })
