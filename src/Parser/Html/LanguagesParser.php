@@ -17,8 +17,7 @@ use Innmind\Html\{
     Visitor\Element,
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException,
-    Element\Base
+    Exception\ElementNotFoundException
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{

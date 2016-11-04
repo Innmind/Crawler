@@ -31,7 +31,6 @@ use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream
 };
-use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     Map,
     MapInterface,
