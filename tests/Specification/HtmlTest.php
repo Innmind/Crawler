@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\Specification;
 
-use Innmind\Crawler\Specification\html;
+use Innmind\Crawler\Specification\Html;
 use Innmind\Filesystem\MediaType\MediaType;
 
 class HtmlTest extends \PHPUnit_Framework_TestCase

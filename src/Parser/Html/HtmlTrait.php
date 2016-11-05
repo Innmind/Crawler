@@ -9,7 +9,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Immutable\MapInterface;
 
-trait htmlTrait
+trait HtmlTrait
 {
     private function isHtml(MapInterface $attributes): bool
     {
