@@ -22,7 +22,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "innmind/url-resolver": "^2.0",
         "innmind/time-continuum": "^1.0",
-        "innmind/html": "^1.0",
+        "innmind/html": "^1.1",
         "innmind/colour": "^1.0"
     },
     "autoload": {
