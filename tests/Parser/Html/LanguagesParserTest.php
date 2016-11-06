@@ -394,6 +394,7 @@ HTML
         $languages = $attributes->get('languages');
         $this->assertSame('languages', $languages->name());
         $this->assertInstanceOf(SetInterface::class, $languages->content());
+        $this->assertSame('string', (string) $languages->content()->type());
         $this->assertSame(
             ['fr-FR', 'fr-CA'],
             $languages->content()->toPrimitive()

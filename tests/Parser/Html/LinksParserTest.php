@@ -32,7 +32,10 @@ use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream
 };
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    UrlInterface
+};
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Immutable\{
     Map,
@@ -221,6 +224,10 @@ HTML
         $links = $attributes->get('links');
         $this->assertSame('links', $links->name());
         $this->assertInstanceOf(SetInterface::class, $links->content());
+        $this->assertSame(
+            UrlInterface::class,
+            (string) $links->content()->type()
+        );
         $this->assertCount(6, $links->content());
         $this->assertSame(
             'http://example.com/first',
