@@ -154,6 +154,10 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
             $attributes->current()->content()
         );
         $this->assertSame(
+            'string',
+            (string) $attributes->current()->content()->type()
+        );
+        $this->assertSame(
             ['fr', 'en-US'],
             $attributes->current()->content()->toPrimitive()
         );
