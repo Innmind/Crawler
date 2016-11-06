@@ -25,7 +25,10 @@ use Innmind\Http\{
     Header\LinkValue,
     Header\ParameterInterface
 };
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    UrlInterface
+};
 use Innmind\Immutable\{
     Map,
     Set
@@ -257,9 +260,13 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $attributes);
         $this->assertSame('canonical', $attributes->key());
         $this->assertSame('canonical', $attributes->current()->name());
+        $this->assertInstanceOf(
+            UrlInterface::class,
+            $attributes->current()->content()
+        );
         $this->assertSame(
             'http://example.com/foo',
-            $attributes->current()->content()
+            (string) $attributes->current()->content()
         );
         $this->assertSame(42, $attributes->current()->parsingTime());
     }

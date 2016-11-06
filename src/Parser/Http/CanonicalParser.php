@@ -60,7 +60,7 @@ final class CanonicalParser implements ParserInterface
             self::key(),
             new Attribute(
                 self::key(),
-                (string) $this->resolver->resolve(
+                $this->resolver->resolve(
                     $request,
                     $attributes,
                     $links->current()->url()
