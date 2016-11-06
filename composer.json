@@ -23,7 +23,8 @@
         "innmind/url-resolver": "^2.0",
         "innmind/time-continuum": "^1.0",
         "innmind/html": "^1.1",
-        "innmind/colour": "^1.0"
+        "innmind/colour": "^1.0",
+        "innmind/math": "^2.1"
     },
     "autoload": {
         "psr-4": {
