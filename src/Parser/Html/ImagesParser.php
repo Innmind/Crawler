@@ -6,7 +6,8 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     ParserInterface,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
+    Visitor\RemoveDuplicatedUrls
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -33,7 +34,8 @@ use Innmind\Url\{
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Pair
+    Pair,
+    Set
 };
 
 final class ImagesParser implements ParserInterface
@@ -170,25 +172,24 @@ final class ImagesParser implements ParserInterface
 
     private function removeDuplicates(Map $images, Map $figures): Map
     {
-        $all = $images->reduce(
-            new Map('string', 'string'),
-            function(Map $all, UrlInterface $url, $description): Map {
-                return $all->put(
-                    (string) $url,
-                    $description
-                );
+        $urls = $figures->reduce(
+            new Set(UrlInterface::class),
+            function(Set $urls, UrlInterface $url): Set {
+                return $urls->add($url);
             }
         );
+        $urls = $images->reduce(
+            $urls,
+            function(Set $urls, UrlInterface $url): Set {
+                return $urls->add($url);
+            }
+        );
+        $urls = (new RemoveDuplicatedUrls)($urls);
 
         return $figures
-            ->reduce(
-                $all,
-                function(Map $all, UrlInterface $url, $description): Map {
-                    return $all->put(
-                        (string) $url,
-                        $description
-                    );
-                }
-            );
+            ->merge($images)
+            ->filter(function(UrlInterface $url) use ($urls): bool {
+                return $urls->contains($url);
+            });
     }
 }

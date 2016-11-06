@@ -248,7 +248,10 @@ HTML
         $images = $attributes->get('images');
         $this->assertSame('images', $images->name());
         $this->assertInstanceOf(MapInterface::class, $images->content());
-        $this->assertSame('string', (string) $images->content()->keyType());
+        $this->assertSame(
+            UrlInterface::class,
+            (string) $images->content()->keyType()
+        );
         $this->assertSame('string', (string) $images->content()->valueType());
         $map = $images->content();
         $this->assertCount(3, $map);
