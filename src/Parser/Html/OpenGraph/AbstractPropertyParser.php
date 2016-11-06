@@ -51,7 +51,7 @@ abstract class AbstractPropertyParser implements ParserInterface
         $this->property = 'og:'.$property;
     }
 
-     public function parse(
+    public function parse(
         RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
