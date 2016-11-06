@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\Exception\{
-    InvalidArgumentException,
-    CantMergeDifferentLanguagesException
+use Innmind\Crawler\{
+    Visitor\RemoveDuplicatedUrls,
+    Exception\InvalidArgumentException,
+    Exception\CantMergeDifferentLanguagesException
 };
+use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;
 
 final class Alternate implements AttributeInterface
@@ -18,11 +20,15 @@ final class Alternate implements AttributeInterface
         SetInterface $links,
         int $parsingTime
     ) {
-        if ((string) $links->type() !== 'string') {
+        if ((string) $links->type() !== UrlInterface::class) {
             throw new InvalidArgumentException;
         }
 
-        $this->attribute = new Attribute($language, $links, $parsingTime);
+        $this->attribute = new Attribute(
+            $language,
+            (new RemoveDuplicatedUrls)($links),
+            $parsingTime
+        );
     }
 
     public function name(): string

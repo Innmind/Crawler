@@ -18,7 +18,10 @@ use Innmind\TimeContinuum\{
     ElapsedPeriod
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    UrlInterface
+};
 use Innmind\Http\{
     Message\Request,
     Message\RequestInterface,
@@ -247,13 +250,26 @@ HTML
             $content->get('fr')->content()
         );
         $this->assertSame(
-            ['http://example.com/en/'],
-            $content->get('en')->content()->toPrimitive()
+            UrlInterface::class,
+            (string) $content->get('en')->content()->type()
+        );
+        $this->assertSame(
+            UrlInterface::class,
+            (string) $content->get('fr')->content()->type()
+        );
+        $this->assertSame(
+            'http://example.com/en/',
+            (string) $content->get('en')->content()->current()
         );
         $this->assertSame(42, $content->get('en')->parsingTime());
         $this->assertSame(
-            ['http://example.com/fr/', 'http://example.com/fr/foo/'],
-            $content->get('fr')->content()->toPrimitive()
+            'http://example.com/fr/',
+            (string) $content->get('fr')->content()->current()
+        );
+        $content->get('fr')->content()->next();
+        $this->assertSame(
+            'http://example.com/fr/foo/',
+            (string) $content->get('fr')->content()->current()
         );
         $this->assertSame(24, $content->get('fr')->parsingTime());
     }

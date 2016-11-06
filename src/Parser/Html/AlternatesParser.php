@@ -100,8 +100,8 @@ final class AlternatesParser implements ParserInterface
                 return $language;
             })
             ->map(function(string $language, SequenceInterface $links) use ($request, $attributes): SequenceInterface {
-                return $links->map(function(Pair $link) use ($request, $attributes): string {
-                    return (string) $this->resolver->resolve(
+                return $links->map(function(Pair $link) use ($request, $attributes): UrlInterface {
+                    return $this->resolver->resolve(
                         $request,
                         $attributes,
                         $link->key()
@@ -116,8 +116,8 @@ final class AlternatesParser implements ParserInterface
                         new Alternate(
                             $language,
                             $links->reduce(
-                                new Set('string'),
-                                function(Set $links, string $link): Set {
+                                new Set(UrlInterface::class),
+                                function(Set $links, UrlInterface $link): Set {
                                     return $links->add($link);
                                 }
                             ),

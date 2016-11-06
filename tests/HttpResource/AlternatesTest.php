@@ -9,6 +9,10 @@ use Innmind\Crawler\HttpResource\{
     AttributeInterface,
     AttributesInterface
 };
+use Innmind\Url\{
+    UrlInterface,
+    Url
+};
 use Innmind\Immutable\{
     Map,
     Set
@@ -36,7 +40,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'fr',
                     $alternate = new Alternate(
                         'fr',
-                        new Set('string'),
+                        new Set(UrlInterface::class),
                         0
                     )
                 )
@@ -74,7 +78,8 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'de',
                     new Alternate(
                         'de',
-                        (new Set('string'))->add('/de'),
+                        (new Set(UrlInterface::class))
+                            ->add($de = Url::fromString('/de')),
                         0
                     )
                 )
@@ -82,7 +87,8 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'en',
                     new Alternate(
                         'en',
-                        (new Set('string'))->add('/en'),
+                        (new Set(UrlInterface::class))
+                            ->add($en = Url::fromString('/en')),
                         0
                     )
                 )
@@ -93,7 +99,8 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'fr',
                     new Alternate(
                         'fr',
-                        (new Set('string'))->add('/fr'),
+                        (new Set(UrlInterface::class))
+                            ->add($fr = Url::fromString('/fr')),
                         0
                     )
                 )
@@ -101,7 +108,8 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'en',
                     new Alternate(
                         'en',
-                        (new Set('string'))->add('/en/bis'),
+                        (new Set(UrlInterface::class))
+                            ->add($bis = Url::fromString('/en/bis')),
                         0
                     )
                 )
@@ -117,15 +125,15 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
             $third->content()->keys()->toPrimitive()
         );
         $this->assertSame(
-            ['/de'],
+            [$de],
             $third->content()->get('de')->content()->toPrimitive()
         );
         $this->assertSame(
-            ['/en', '/en/bis'],
+            [$en, $bis],
             $third->content()->get('en')->content()->toPrimitive()
         );
         $this->assertSame(
-            ['/fr'],
+            [$fr],
             $third->content()->get('fr')->content()->toPrimitive()
         );
     }
