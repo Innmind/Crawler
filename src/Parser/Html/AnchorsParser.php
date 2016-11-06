@@ -69,13 +69,13 @@ final class AnchorsParser implements ParserInterface
                 return $node instanceof A;
             })
             ->filter(function(A $anchor): bool {
-                return (new Str((string) $anchor->href()))->match('~^/#~');
+                return (new Str((string) $anchor->href()))->match('~^#~');
             })
             ->reduce(
                 new Set('string'),
                 function(Set $anchors, A $anchor): Set {
                     return $anchors->add(
-                        substr((string) $anchor->href(), 2)
+                        substr((string) $anchor->href(), 1)
                     );
                 }
             );

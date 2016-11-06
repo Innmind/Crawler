@@ -98,7 +98,7 @@ final class LinksParser implements ParserInterface
                     return $a instanceof A;
                 })
                 ->filter(function(A $a): bool {
-                    return substr((string) $a, 0, 2) !== '/#';
+                    return substr((string) $a, 0, 1) !== '#';
                 })
                 ->reduce(
                     $links,
