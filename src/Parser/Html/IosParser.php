@@ -65,15 +65,11 @@ final class IosParser implements ParserInterface
             return $attributes;
         }
 
-        $meta = $metas
-            ->filter(function(NodeInterface $node): bool {
-                return $node instanceof ElementInterface;
-            })
-            ->filter(function(ElementInterface $meta): bool {
-                return $meta->attributes()->contains('name') &&
-                    $meta->attributes()->get('name')->value() === 'apple-itunes-app' &&
-                    $meta->attributes()->contains('content');
-            });
+        $meta = $metas->filter(function(ElementInterface $meta): bool {
+            return $meta->attributes()->contains('name') &&
+                $meta->attributes()->get('name')->value() === 'apple-itunes-app' &&
+                $meta->attributes()->contains('content');
+        });
 
         if ($meta->size() !== 1) {
             return $attributes;

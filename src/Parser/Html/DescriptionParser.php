@@ -64,9 +64,6 @@ final class DescriptionParser implements ParserInterface
         }
 
         $meta = $metas
-            ->filter(function(NodeInterface $node): bool {
-                return $node instanceof ElementInterface;
-            })
             ->filter(function(ElementInterface $meta): bool {
                 return $meta->attributes()->contains('name') &&
                     $meta->attributes()->contains('content');

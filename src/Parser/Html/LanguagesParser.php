@@ -74,9 +74,6 @@ final class LanguagesParser implements ParserInterface
                 $metas = (new Elements('meta'))(
                     (new Head)($document)
                 )
-                    ->filter(function(NodeInterface $node): bool {
-                        return $node instanceof ElementInterface;
-                    })
                     ->filter(function(ElementInterface $element): bool {
                         return $element->attributes()->contains('http-equiv') &&
                             $element->attributes()->contains('content');

@@ -60,13 +60,9 @@ final class CharsetParser implements ParserInterface
             return $attributes;
         }
 
-        $meta = $metas
-            ->filter(function(NodeInterface $node): bool {
-                return $node instanceof ElementInterface;
-            })
-            ->filter(function(ElementInterface $meta): bool {
-                return $meta->attributes()->contains('charset');
-            });
+        $meta = $metas->filter(function(ElementInterface $meta): bool {
+            return $meta->attributes()->contains('charset');
+        });
 
         if ($meta->size() !== 1) {
             return $attributes;

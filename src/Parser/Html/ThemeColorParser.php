@@ -63,9 +63,6 @@ final class ThemeColorParser implements ParserInterface
             $meta = (new Elements('meta'))(
                 (new Head)($document)
             )
-                ->filter(function(NodeInterface $node): bool {
-                    return $node instanceof ElementInterface;
-                })
                 ->filter(function(ElementInterface $meta): bool {
                     return $meta->attributes()->contains('name') &&
                         $meta->attributes()->contains('content');
