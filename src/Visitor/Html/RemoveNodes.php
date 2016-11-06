@@ -42,9 +42,9 @@ final class RemoveNodes
                         $child instanceof ElementInterface &&
                         $this->toRemove->contains($child->name())
                     ) {
-                        ++$removedChildren;
-
-                        return $node->removeChild($position);
+                        return $node->removeChild(
+                            $position - $removedChildren++
+                        );
                     }
 
                     return $node->replaceChild(

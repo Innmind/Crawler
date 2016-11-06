@@ -40,6 +40,11 @@ class RemoveNodesTest extends \PHPUnit_Framework_TestCase
         <article>
             <h1>whatever</h1>
             <script>some nasty javascript</script>
+            <h2>else</h2>
+            <script>some nasty javascript</script>
+            <h2>else</h2>
+            <script>some nasty javascript</script>
+            <h2>else</h2>
         </article>
     </div>
     <script></script>
@@ -56,7 +61,10 @@ HTML
 <html><body>
     <div>
         <article><h1>whatever</h1>
-            </article></div>
+            <h2>else</h2>
+            <h2>else</h2>
+            <h2>else</h2>
+        </article></div>
     <div>hey</div>
 </body></html>
 HTML;
