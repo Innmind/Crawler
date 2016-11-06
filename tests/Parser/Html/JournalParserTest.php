@@ -227,7 +227,7 @@ HTML
         $this->assertTrue($attributes->contains('journal'));
         $journal = $attributes->get('journal');
         $this->assertSame('journal', $journal->name());
-        $this->asserttrue($journal->content());
+        $this->assertTrue($journal->content());
         $this->assertSame(42, $journal->parsingTime());
     }
 }
