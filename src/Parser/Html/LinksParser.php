@@ -6,7 +6,8 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     ParserInterface,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
+    Visitor\RemoveDuplicatedUrls
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -110,26 +111,14 @@ final class LinksParser implements ParserInterface
             //pass
         }
 
-        $links = $links
-            ->map(function(UrlInterface $link) use ($request, $attributes): UrlInterface {
-                return $this->resolver->resolve(
-                    $request,
-                    $attributes,
-                    $link
-                );
-            })
-            ->reduce(
-                new Set('string'),
-                function(Set $links, UrlInterface $link): Set {
-                    return $links->add((string) $link);
-                }
-            )
-            ->reduce(
-                new Set(UrlInterface::class),
-                function(Set $links, string $link): Set {
-                    return $links->add(Url::fromString($link));
-                }
+        $links = $links->map(function(UrlInterface $link) use ($request, $attributes): UrlInterface {
+            return $this->resolver->resolve(
+                $request,
+                $attributes,
+                $link
             );
+        });
+        $links = (new RemoveDuplicatedUrls)($links);
 
         if ($links->size() === 0) {
             return $attributes;
