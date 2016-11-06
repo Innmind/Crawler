@@ -6,10 +6,60 @@
 | [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Crawler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Crawler/?branch=master) | [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Crawler/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Crawler/?branch=develop) |
 | [![Build Status](https://scrutinizer-ci.com/g/Innmind/Crawler/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Crawler/build-status/master) | [![Build Status](https://scrutinizer-ci.com/g/Innmind/Crawler/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Crawler/build-status/develop) |
 
-This tool allows you to extract a lot of usefu informations out of a web page (may it be html, an image, or anything else).
+This tool allows you to extract a lot of useful informations out of a web page (may it be html, an image, or anything else).
 
 ## Installation
 
 ```sh
 composer require innmind/crawler
 ```
+
+## Usage
+
+```php
+use Innmind\Crawler\{
+    Crawler,
+    Transport\Guzzle,
+    Parser\Http\ContentTypeParser
+};
+use Innmind\Http\{
+    Translator\Request\Psr7Translator,
+    Factory\Header\DefaultFactory,
+    Factory\HeaderFactoryInterface,
+    Message\Request,
+    Message\Method,
+    ProtocolVersion,
+    Headers,
+    Header\HeaderInterface
+};
+use Innmind\Url\Url;
+use Innmind\Filesystem\Stream\NullStream;
+use Innmind\Immutable\Map;
+use GuzzleHttp\Client as Http;
+
+$crawler = new Crawler(
+    new Guzzle(
+        new Http,
+        new Psr7Translator(
+            new DefaultFactory(
+                new Map('string', HeaderFactoryInterface::class)
+            )
+        )
+    ),
+    new ContentTypeParser
+);
+
+$resource = $crawler->execute(
+    new Request(
+        Url::fromString('https://en.wikipedia.org/wiki/H2g2'),
+        new Method('GET'),
+        new ProtocolVersion(2, 0),
+        new Headers(
+            new Map('string', HeaderInterface::class)
+        ),
+        new NullStream
+    )
+);
+```
+
+Here `$resource` is an instance of [`HttpResource`](src/HttpResource.php), with a single attribute available we only used the `ContentTypeParser` but there's [plenty more](src/Parser).
