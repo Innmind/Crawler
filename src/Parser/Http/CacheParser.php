@@ -13,7 +13,10 @@ use Innmind\Http\{
     Header\HeaderValueInterface,
     Header\CacheControlValue\SharedMaxAge
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\{
+    TimeContinuumInterface,
+    Period\Earth\Second
+};
 use Innmind\Immutable\MapInterface;
 
 final class CacheParser implements ParserInterface
@@ -52,12 +55,12 @@ final class CacheParser implements ParserInterface
             self::key(),
             new Attribute(
                 self::key(),
-                (new \DateTimeImmutable)->modify(
-                    sprintf(
-                        '+%s seconds',
-                        $directives->current()->age()
-                    )
-                ),
+                $this
+                    ->clock
+                    ->now()
+                    ->goForward(
+                        new Second($directives->current()->age())
+                    ),
                 $this
                     ->clock
                     ->now()

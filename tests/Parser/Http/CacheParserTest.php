@@ -11,7 +11,8 @@ use Innmind\Crawler\{
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
-    ElapsedPeriod
+    ElapsedPeriod,
+    Period\Earth\Second
 };
 use Innmind\Http\{
     Message\Request,
@@ -130,13 +131,23 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
             );
         $clock = $this->createMock(TimeContinuumInterface::class);
         $clock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('now')
             ->will(
                 $this->onConsecutiveCalls(
                     $start = $this->createMock(PointInTimeInterface::class),
+                    $directive = $this->createMock(PointInTimeInterface::class),
                     $end = $this->createMock(PointInTimeInterface::class)
                 )
+            );
+        $directive
+            ->expects($this->once())
+            ->method('goForward')
+            ->with($this->callback(function(Second $second) {
+                return $second->seconds() === 42;
+            }))
+            ->willReturn(
+                $expected = $this->createMock(PointInTimeInterface::class)
             );
         $end
             ->expects($this->once())
@@ -152,19 +163,19 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $notExpected = new Map('string', AttributeInterface::class)
         );
 
-        $this->assertNotSame($expected, $attributes);
+        $this->assertNotSame($notExpected, $attributes);
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(AttributeInterface::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $attribute = $attributes->get('expires_at');
         $this->assertSame('expires_at', $attribute->name());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $attribute->content());
-        $this->assertEquals(
-            (new \DateTimeImmutable('+42 seconds')),
+        $this->assertInstanceOf(PointInTimeInterface::class, $attribute->content());
+        $this->assertSame(
+            $expected,
             $attribute->content()
         );
         $this->assertSame(24, $attribute->parsingTime());
