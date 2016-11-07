@@ -15,20 +15,21 @@
         "issues": "http://github.com/Innmind/Crawler/issues"
     },
     "require": {
-        "php": ">=5.5",
-        "guzzlehttp/guzzle": "~5",
-        "symfony/event-dispatcher": "~2.7|~3.0",
-        "symfony/stopwatch": "~2.7|~3.0",
-        "jeremykendall/php-domain-parser": "^3.0",
-        "symfony/dom-crawler": "~2.7|~3.0",
-        "symfony/css-selector": "~2.7|~3.0",
-        "innmind/url-resolver": "^1.0",
-        "innmind/math": "^1.0"
+        "php": "~7.0",
+        "innmind/immutable": "^1.9",
+        "innmind/http": "~1.3",
+        "innmind/filesystem": "^1.3",
+        "guzzlehttp/guzzle": "^6.2",
+        "innmind/url-resolver": "^2.0",
+        "innmind/time-continuum": "^1.0",
+        "innmind/html": "^1.1",
+        "innmind/colour": "^1.0",
+        "innmind/math": "^2.1"
     },
     "autoload": {
-        "psr-0": {
-            "Innmind\\Crawler": ""
+        "psr-4": {
+            "Innmind\\Crawler\\": "src/",
+            "Tests\\Innmind\\Crawler\\": "tests/"
         }
-    },
-    "target-dir": "Innmind/Crawler"
+    }
 }
