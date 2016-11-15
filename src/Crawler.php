@@ -8,6 +8,7 @@ use Innmind\Crawler\{
     Exception\InvalidArgumentException
 };
 use Innmind\Http\Message\RequestInterface;
+use Innmind\HttpTransport\TransportInterface;
 use Innmind\Filesystem\MediaType\{
     MediaType,
     NullMediaType
