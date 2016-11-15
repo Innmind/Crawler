@@ -24,7 +24,8 @@
         "innmind/time-continuum": "^1.0",
         "innmind/html": "^1.1",
         "innmind/colour": "^1.0",
-        "innmind/math": "^2.1"
+        "innmind/math": "^2.1",
+        "innmind/http-transport": "^1.0"
     },
     "autoload": {
         "psr-4": {

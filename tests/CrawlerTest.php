@@ -6,7 +6,6 @@ namespace Tests\Innmind\Crawler;
 use Innmind\Crawler\{
     Crawler,
     CrawlerInterface,
-    TransportInterface,
     ParserInterface,
     HttpResource,
     HttpResource\Attribute,
@@ -20,6 +19,7 @@ use Innmind\Http\{
     ProtocolVersion,
     Header\HeaderInterface
 };
+use Innmind\HttpTransport\TransportInterface;
 use Innmind\Filesystem\{
     StreamInterface,
     MediaType\NullMediaType,
