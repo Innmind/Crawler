@@ -19,7 +19,6 @@ composer require innmind/crawler
 ```php
 use Innmind\Crawler\{
     Crawler,
-    Transport\Guzzle,
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
@@ -32,13 +31,14 @@ use Innmind\Http\{
     Headers,
     Header\HeaderInterface
 };
+use Innmind\HttpTransport\GuzzleTransport;
 use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\NullStream;
 use Innmind\Immutable\Map;
 use GuzzleHttp\Client as Http;
 
 $crawler = new Crawler(
-    new Guzzle(
+    new GuzzleTransport(
         new Http,
         new Psr7Translator(
             new DefaultFactory(
