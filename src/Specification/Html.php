@@ -7,10 +7,7 @@ use Innmind\Filesystem\{
     MediaTypeInterface,
     MediaType\MediaType
 };
-use Innmind\Immutable\{
-    StringPrimitive as Str,
-    Set
-};
+use Innmind\Immutable\Set;
 
 final class Html
 {

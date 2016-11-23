@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Crawler\{
-    HttpResource\AttributeInterface,
-    Exception\InvalidArgumentException
-};
+use Innmind\Crawler\HttpResource\AttributeInterface;
 use Innmind\Http\Message\RequestInterface;
 use Innmind\HttpTransport\TransportInterface;
 use Innmind\Filesystem\MediaType\{
