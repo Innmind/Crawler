@@ -22,7 +22,7 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
-    Translator\Request\Psr7Translator,
+    Translator\Response\Psr7Translator,
     Factory\Header\DefaultFactory,
     Factory\HeaderFactoryInterface,
     Message\Request,
