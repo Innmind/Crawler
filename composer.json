@@ -32,5 +32,8 @@
             "Innmind\\Crawler\\": "src/",
             "Tests\\Innmind\\Crawler\\": "tests/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.6"
     }
 }
