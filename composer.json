@@ -29,7 +29,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Innmind\\Crawler\\": "src/",
+            "Innmind\\Crawler\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\Innmind\\Crawler\\": "tests/"
         }
     },
