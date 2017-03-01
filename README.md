@@ -23,7 +23,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Http\{
     Translator\Response\Psr7Translator,
-    Factory\Header\DefaultFactory,
+    Factory\Header\Factories,
     Factory\HeaderFactoryInterface,
     Message\Request,
     Message\Method,
@@ -41,9 +41,7 @@ $crawler = new Crawler(
     new GuzzleTransport(
         new Http,
         new Psr7Translator(
-            new DefaultFactory(
-                new Map('string', HeaderFactoryInterface::class)
-            )
+            Factories::default()
         )
     ),
     new ContentTypeParser
