@@ -15,7 +15,6 @@ use Innmind\Crawler\{
     UrlResolver
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\TimeContinuum\TimeContinuum\Earth;
 use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
@@ -55,8 +54,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->parser = new AlternatesParser(
             new HttpParser(
-                $resolver = new UrlResolver(new BaseResolver),
-                $clock = new Earth
+                $resolver = new UrlResolver(new BaseResolver)
             ),
             new HtmlParser(
                 new Reader(
@@ -66,7 +64,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                         )
                     )
                 ),
-                $clock,
                 $resolver
             )
         );
@@ -149,8 +146,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 
@@ -219,8 +215,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 

@@ -7,7 +7,6 @@ use Innmind\Crawler\{
     ParserInterface,
     HttpResource\Attribute
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -21,20 +20,11 @@ use Innmind\Immutable\{
 
 final class LanguagesParser implements ParserInterface
 {
-    private $clock;
-
-    public function __construct(TimeContinuumInterface $clock)
-    {
-        $this->clock = $clock;
-    }
-
     public function parse(
         RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (
             !$response->headers()->has('Content-Language') ||
             !$response->headers()->get('Content-Language') instanceof ContentLanguage
@@ -55,12 +45,7 @@ final class LanguagesParser implements ParserInterface
                         function(Set $carry, ContentLanguageValue $language): Set {
                             return $carry->add((string) $language);
                         }
-                    ),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
+                    )
             )
         );
     }

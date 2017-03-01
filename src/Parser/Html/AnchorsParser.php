@@ -17,7 +17,6 @@ use Innmind\Html\{
     Exception\ElementNotFoundException,
     Element\A
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -33,14 +32,10 @@ final class AnchorsParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(ReaderInterface $reader)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -48,8 +43,6 @@ final class AnchorsParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -82,15 +75,7 @@ final class AnchorsParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $anchors,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $anchors)
         );
     }
 

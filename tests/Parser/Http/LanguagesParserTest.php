@@ -8,11 +8,6 @@ use Innmind\Crawler\{
     Parser\Http\LanguagesParser,
     HttpResource\AttributeInterface
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -34,9 +29,7 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             ParserInterface::class,
-            new LanguagesParser(
-                $this->createMock(TimeContinuumInterface::class)
-            )
+            new LanguagesParser
         );
     }
 
@@ -47,9 +40,7 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenNoContentLanguage()
     {
-        $parser = new LanguagesParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new LanguagesParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -72,9 +63,7 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenContentLanguageNotFullyParsed()
     {
-        $parser = new LanguagesParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new LanguagesParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
@@ -101,9 +90,7 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new LanguagesParser(
-            $clock = $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new LanguagesParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
@@ -128,20 +115,6 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $expected = new Map('string', AttributeInterface::class);
-        $clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -161,6 +134,5 @@ class LanguagesParserTest extends \PHPUnit_Framework_TestCase
             ['fr', 'en-US'],
             $attributes->current()->content()->toPrimitive()
         );
-        $this->assertSame(42, $attributes->current()->parsingTime());
     }
 }

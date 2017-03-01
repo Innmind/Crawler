@@ -24,8 +24,7 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
             AttributeInterface::class,
             $alternate = new Alternate(
                 'fr',
-                new Set(UrlInterface::class),
-                42
+                new Set(UrlInterface::class)
             )
         );
         $this->assertSame('fr', $alternate->name());
@@ -34,7 +33,6 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
             UrlInterface::class,
             (string) $alternate->content()->type()
         );
-        $this->assertSame(42, $alternate->parsingTime());
     }
 
     /**
@@ -42,7 +40,7 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenInvalidLinks()
     {
-        new Alternate('fr', new Set('int'), 42);
+        new Alternate('fr', new Set('int'));
     }
 
     /**
@@ -50,8 +48,8 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenMergingDifferentLanguages()
     {
-        (new Alternate('fr', new Set(UrlInterface::class), 42))->merge(
-            new Alternate('en', new Set(UrlInterface::class), 42)
+        (new Alternate('fr', new Set(UrlInterface::class)))->merge(
+            new Alternate('en', new Set(UrlInterface::class))
         );
     }
 
@@ -59,13 +57,11 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
     {
         $first = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($foo = Url::fromString('/foo')),
-            42
+            (new Set(UrlInterface::class))->add($foo = Url::fromString('/foo'))
         );
         $second = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($bar = Url::fromString('/bar')),
-            42
+            (new Set(UrlInterface::class))->add($bar = Url::fromString('/bar'))
         );
 
         $third = $first->merge($second);
@@ -75,6 +71,5 @@ class AlternateTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($second, $third);
         $this->assertSame('fr', $third->name());
         $this->assertSame([$foo, $bar], $third->content()->toPrimitive());
-        $this->assertSame(84, $third->parsingTime());
     }
 }

@@ -10,7 +10,6 @@ use Innmind\Crawler\{
     HttpResource\Alternates,
     UrlResolver
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -29,14 +28,10 @@ use Innmind\Immutable\{
 final class AlternatesParser implements ParserInterface
 {
     private $resolver;
-    private $clock;
 
-    public function __construct(
-        UrlResolver $resolver,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(UrlResolver $resolver)
+    {
         $this->resolver = $resolver;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -44,8 +39,6 @@ final class AlternatesParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (
             !$response->headers()->has('Link') ||
             !$response->headers()->get('Link') instanceof Link
@@ -89,7 +82,7 @@ final class AlternatesParser implements ParserInterface
             })
             ->reduce(
                 new Map('string', AttributeInterface::class),
-                function(Map $languages, string $language, MapInterface $links) use ($start): Map {
+                function(Map $languages, string $language, MapInterface $links): Map {
                     return $languages->put(
                         $language,
                         new Alternate(
@@ -99,12 +92,7 @@ final class AlternatesParser implements ParserInterface
                                 function(Set $links, UrlInterface $link): Set {
                                     return $links->add($link);
                                 }
-                            ),
-                            $this
-                                ->clock
-                                ->now()
-                                ->elapsedSince($start)
-                                ->milliseconds()
+                            )
                         )
                     );
                 }

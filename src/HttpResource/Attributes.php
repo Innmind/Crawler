@@ -10,7 +10,6 @@ final class Attributes implements AttributesInterface
 {
     private $name;
     private $content;
-    private $parsingTime;
 
     public function __construct(
         string $name,
@@ -26,12 +25,6 @@ final class Attributes implements AttributesInterface
 
         $this->name = $name;
         $this->content = $attributes;
-        $this->parsingTime = $attributes->reduce(
-            0,
-            function(int $parsingTime, string $name, AttributeInterface $attribute): int {
-                return $parsingTime += $attribute->parsingTime();
-            }
-        );
     }
 
     public function name(): string
@@ -42,11 +35,6 @@ final class Attributes implements AttributesInterface
     public function content(): MapInterface
     {
         return $this->content;
-    }
-
-    public function parsingTime(): int
-    {
-        return $this->parsingTime;
     }
 
     public function current()

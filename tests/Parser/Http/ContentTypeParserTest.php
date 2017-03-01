@@ -8,11 +8,6 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     HttpResource\AttributeInterface
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Filesystem\MediaTypeInterface;
 use Innmind\Http\{
     Message\RequestInterface,
@@ -31,9 +26,7 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             ParserInterface::class,
-            new ContentTypeParser(
-                $this->createMock(TimeContinuumInterface::class)
-            )
+            new ContentTypeParser
         );
     }
 
@@ -44,9 +37,7 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $parser = new ContentTypeParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new ContentTypeParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -69,9 +60,7 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
-        $parser = new ContentTypeParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new ContentTypeParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
@@ -98,9 +87,7 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new ContentTypeParser(
-            $clock = $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new ContentTypeParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $headers = $this->createMock(HeadersInterface::class);
@@ -127,20 +114,6 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
                 )
             );
         $expected = new Map('string', AttributeInterface::class);
-        $clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -153,6 +126,5 @@ class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
             $attributes->current()->content()
         );
         $this->assertSame('text/bar', (string) $attributes->current()->content());
-        $this->assertSame(42, $attributes->current()->parsingTime());
     }
 }

@@ -17,7 +17,6 @@ use Innmind\Html\{
     Visitor\Head,
     Exception\ElementNotFoundException
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -36,14 +35,10 @@ final class ThemeColorParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(ReaderInterface $reader)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -51,8 +46,6 @@ final class ThemeColorParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -97,15 +90,7 @@ final class ThemeColorParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $colour,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $colour)
         );
     }
 

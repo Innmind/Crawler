@@ -18,11 +18,6 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslators
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -39,7 +34,6 @@ use Innmind\Immutable\{
 class DescriptionParserTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -50,8 +44,7 @@ class DescriptionParserTest extends \PHPUnit_Framework_TestCase
                         HtmlTranslators::defaults()
                     )
                 )
-            ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -92,8 +85,7 @@ class DescriptionParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -115,8 +107,7 @@ class DescriptionParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -142,8 +133,7 @@ class DescriptionParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -178,8 +168,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -196,21 +185,6 @@ HTML
 </html>
 HTML
             ));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -230,7 +204,6 @@ HTML
         $description = $attributes->get('description');
         $this->assertSame('description', $description->name());
         $this->assertSame('lorem ipsum foo', $description->content());
-        $this->assertSame(42, $description->parsingTime());
     }
 
     public function testParseVeryLongDescription()
@@ -242,8 +215,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -260,21 +232,6 @@ HTML
 </html>
 HTML
             ));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -297,6 +254,5 @@ HTML
             'lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vestibulum accumsan massa et sollicitudin. Donec luctus felis sem, in volutpat nisi po...',
             $description->content()
         );
-        $this->assertSame(42, $description->parsingTime());
     }
 }

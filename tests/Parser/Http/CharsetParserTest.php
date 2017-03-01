@@ -8,11 +8,6 @@ use Innmind\Crawler\{
     Parser\Http\CharsetParser,
     HttpResource\AttributeInterface
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -31,7 +26,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             ParserInterface::class,
-            new CharsetParser($this->createMock(TimeContinuumInterface::class))
+            new CharsetParser
         );
     }
 
@@ -42,9 +37,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $parser = new CharsetParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new CharsetParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -67,9 +60,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
-        $parser = new CharsetParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new CharsetParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -97,9 +88,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesntParseWhenNoCharset()
     {
-        $parser = new CharsetParser(
-            $this->createMock(TimeContinuumInterface::class)
-        );
+        $parser = new CharsetParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -135,23 +124,7 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new CharsetParser(
-            $clock = $this->createMock(TimeContinuumInterface::class)
-        );
-        $clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
+        $parser = new CharsetParser;
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -191,6 +164,5 @@ class CharsetParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('charset', $attributes->key());
         $this->assertSame('charset', $attributes->current()->name());
         $this->assertSame('utf-8', $attributes->current()->content());
-        $this->assertSame(42, $attributes->current()->parsingTime());
     }
 }

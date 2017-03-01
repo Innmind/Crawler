@@ -18,11 +18,6 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslators
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -40,7 +35,6 @@ use Innmind\Immutable\{
 class ContentParserTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -51,8 +45,7 @@ class ContentParserTest extends \PHPUnit_Framework_TestCase
                         HtmlTranslators::defaults()
                     )
                 )
-            ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -93,8 +86,7 @@ class ContentParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -116,8 +108,7 @@ class ContentParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -146,29 +137,13 @@ class ContentParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
             ->willReturn(Stream::fromPath($fixture));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -189,7 +164,6 @@ class ContentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('content', $content->name());
         $this->assertTrue(is_string($content->content()));
         $this->assertFalse(empty($content->content()));
-        $this->assertSame(42, $content->parsingTime());
     }
 
     public function fixtures(): array

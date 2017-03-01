@@ -21,7 +21,6 @@ use Innmind\Html\{
     Element\Link,
     Element\A
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -40,16 +39,11 @@ final class LinksParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $resolver;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock,
-        UrlResolver $resolver
-    ) {
+    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->resolver = $resolver;
     }
 
@@ -58,8 +52,6 @@ final class LinksParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -126,15 +118,7 @@ final class LinksParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $links,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $links)
         );
     }
 

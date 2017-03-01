@@ -8,7 +8,6 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     UrlResolver
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -20,14 +19,10 @@ use Innmind\Immutable\MapInterface;
 final class CanonicalParser implements ParserInterface
 {
     private $resolver;
-    private $clock;
 
-    public function __construct(
-        UrlResolver $resolver,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(UrlResolver $resolver)
+    {
         $this->resolver = $resolver;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -35,8 +30,6 @@ final class CanonicalParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (
             !$response->headers()->has('Link') ||
             !$response->headers()->get('Link') instanceof Link
@@ -64,12 +57,7 @@ final class CanonicalParser implements ParserInterface
                     $request,
                     $attributes,
                     $links->current()->url()
-                ),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
+                )
             )
         );
     }

@@ -22,7 +22,6 @@ use Innmind\Html\{
     Exception\ElementNotFoundException,
     Element\Img
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -43,16 +42,11 @@ final class ImagesParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $resolver;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock,
-        UrlResolver $resolver
-    ) {
+    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->resolver = $resolver;
     }
 
@@ -61,8 +55,6 @@ final class ImagesParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -100,15 +92,7 @@ final class ImagesParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $images,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $images)
         );
     }
 

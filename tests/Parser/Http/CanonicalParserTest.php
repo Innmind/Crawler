@@ -10,11 +10,6 @@ use Innmind\Crawler\{
     UrlResolver
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\{
     Message\ResponseInterface,
     Message\RequestInterface,
@@ -37,13 +32,11 @@ use Innmind\Immutable\{
 class CanonicalParserTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
         $this->parser = new CanonicalParser(
-            new UrlResolver(new BaseResolver),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            new UrlResolver(new BaseResolver)
         );
     }
 
@@ -232,21 +225,6 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
         $request = $this->createMock(RequestInterface::class);
         $request
             ->expects($this->once())
@@ -268,6 +246,5 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
             'http://example.com/foo',
             (string) $attributes->current()->content()
         );
-        $this->assertSame(42, $attributes->current()->parsingTime());
     }
 }

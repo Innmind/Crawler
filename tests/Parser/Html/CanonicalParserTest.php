@@ -20,11 +20,6 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslators
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -45,7 +40,6 @@ use Innmind\Immutable\{
 class CanonicalParserTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -57,7 +51,6 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class),
             new UrlResolver(new BaseResolver)
         );
     }
@@ -99,8 +92,7 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -122,8 +114,7 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -149,8 +140,7 @@ class CanonicalParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -183,8 +173,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -218,8 +207,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $request
@@ -238,21 +226,6 @@ HTML
 </html>
 HTML
             ));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -273,6 +246,5 @@ HTML
         $this->assertSame('canonical', $canonical->name());
         $this->assertInstanceOf(UrlInterface::class, $canonical->content());
         $this->assertSame('http://github.com/foo', (string) $canonical->content());
-        $this->assertSame(42, $canonical->parsingTime());
     }
 }

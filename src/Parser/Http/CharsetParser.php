@@ -7,7 +7,6 @@ use Innmind\Crawler\{
     ParserInterface,
     HttpResource\Attribute
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface,
@@ -17,20 +16,11 @@ use Innmind\Immutable\MapInterface;
 
 final class CharsetParser implements ParserInterface
 {
-    private $clock;
-
-    public function __construct(TimeContinuumInterface $clock)
-    {
-        $this->clock = $clock;
-    }
-
     public function parse(
         RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (
             !$response->headers()->has('Content-Type') ||
             !($header = $response->headers()->get('Content-Type')) instanceof ContentType ||
@@ -48,12 +38,7 @@ final class CharsetParser implements ParserInterface
                     ->current()
                     ->parameters()
                     ->get('charset')
-                    ->value(),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
+                    ->value()
             )
         );
     }

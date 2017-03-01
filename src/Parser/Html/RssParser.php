@@ -30,16 +30,11 @@ final class RssParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $resolver;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock,
-        UrlResolver $resolver
-    ) {
+    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->resolver = $resolver;
     }
 
@@ -48,8 +43,6 @@ final class RssParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -84,12 +77,7 @@ final class RssParser implements ParserInterface
                     $request,
                     $attributes,
                     $links->current()->href()
-                ),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
+                )
             )
         );
     }

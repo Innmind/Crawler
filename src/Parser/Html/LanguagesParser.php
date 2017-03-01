@@ -19,7 +19,6 @@ use Innmind\Html\{
     Visitor\Head,
     Exception\ElementNotFoundException
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -35,14 +34,10 @@ final class LanguagesParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(ReaderInterface $reader)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -50,7 +45,6 @@ final class LanguagesParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
         $languages = null;
 
         if (!$this->isHtml($attributes)) {
@@ -108,15 +102,7 @@ final class LanguagesParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $languages,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $languages)
         );
     }
 

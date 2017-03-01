@@ -10,11 +10,6 @@ use Innmind\Crawler\{
     ParserInterface,
     UrlResolver
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\{
     Url,
@@ -45,13 +40,11 @@ use Innmind\Immutable\{
 class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
         $this->parser = new AlternatesParser(
-            new UrlResolver(new BaseResolver),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            new UrlResolver(new BaseResolver)
         );
     }
 
@@ -175,27 +168,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                         )
                 )
             );
-        $this
-            ->clock
-            ->expects($this->exactly(3))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end1 = $this->createMock(PointInTimeInterface::class),
-                    $end2 = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end1
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(24));
-        $end2
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
         $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com/foo/'),
@@ -235,7 +207,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
             'http://example.com/en/foo/bar',
             (string) $content->get('en')->content()->current()
         );
-        $this->assertSame(42, $content->get('en')->parsingTime());
         $this->assertSame(
             'http://example.com/foo/bar',
             (string) $content->get('fr')->content()->current()
@@ -245,6 +216,5 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
             'http://example.com/foo/baz',
             (string) $content->get('fr')->content()->current()
         );
-        $this->assertSame(24, $content->get('fr')->parsingTime());
     }
 }

@@ -37,11 +37,6 @@ final class Alternates implements AttributesInterface
         return $this->attributes->content();
     }
 
-    public function parsingTime(): int
-    {
-        return $this->attributes->parsingTime();
-    }
-
     public function current()
     {
         return $this->attributes->current();
