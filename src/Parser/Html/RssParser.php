@@ -18,7 +18,6 @@ use Innmind\Html\{
     Exception\ElementNotFoundException,
     Element\Link
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
