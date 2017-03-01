@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Crawler\HttpResource\AttributeInterface;
+use Innmind\Crawler\{
+    HttpResource\AttributeInterface,
+    Parser\Http\ContentTypeParser
+};
 use Innmind\Http\Message\RequestInterface;
 use Innmind\HttpTransport\TransportInterface;
 use Innmind\Filesystem\MediaType\{
@@ -34,9 +37,9 @@ final class Crawler implements CrawlerInterface
             new Map('string', AttributeInterface::class)
         );
 
-        if ($attributes->contains('content_type')) {
+        if ($attributes->contains(ContentTypeParser::key())) {
             $mediaType = MediaType::fromString(
-                (string) $attributes->get('content_type')->content()
+                (string) $attributes->get(ContentTypeParser::key())->content()
             );
         } else {
             $mediaType = new NullMediaType;
