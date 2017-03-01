@@ -31,8 +31,9 @@ use Innmind\Immutable\{
     Map,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class ThemeColorParserTest extends \PHPUnit_Framework_TestCase
+class ThemeColorParserTest extends TestCase
 {
     private $parser;
 

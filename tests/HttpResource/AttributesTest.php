@@ -10,8 +10,9 @@ use Innmind\Crawler\HttpResource\{
     AttributeInterface
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class AttributesTest extends \PHPUnit_Framework_TestCase
+class AttributesTest extends TestCase
 {
     public function testInterface()
     {

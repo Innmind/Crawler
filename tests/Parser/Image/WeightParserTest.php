@@ -19,8 +19,9 @@ use Innmind\Filesystem\{
     MediaType\MediaType
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class WeightParserTest extends \PHPUnit_Framework_TestCase
+class WeightParserTest extends TestCase
 {
     private $parser;
 

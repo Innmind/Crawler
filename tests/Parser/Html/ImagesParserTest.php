@@ -37,8 +37,9 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class ImagesParserTest extends \PHPUnit_Framework_TestCase
+class ImagesParserTest extends TestCase
 {
     private $parser;
 

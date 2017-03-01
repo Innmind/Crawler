@@ -16,8 +16,9 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\Stream;
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class FindContentNodeTest extends \PHPUnit_Framework_TestCase
+class FindContentNodeTest extends TestCase
 {
     public function testFind()
     {

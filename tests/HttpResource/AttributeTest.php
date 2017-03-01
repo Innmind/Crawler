@@ -7,8 +7,9 @@ use Innmind\Crawler\HttpResource\{
     Attribute,
     AttributeInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class AttributeTest extends \PHPUnit_Framework_TestCase
+class AttributeTest extends TestCase
 {
     public function testInterface()
     {

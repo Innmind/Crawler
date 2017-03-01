@@ -22,8 +22,9 @@ use Innmind\Immutable\{
     Set,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class LanguagesParserTest extends \PHPUnit_Framework_TestCase
+class LanguagesParserTest extends TestCase
 {
     public function testInterface()
     {

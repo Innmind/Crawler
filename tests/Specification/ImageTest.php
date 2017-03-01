@@ -5,8 +5,9 @@ namespace Tests\Innmind\Crawler\Specification;
 
 use Innmind\Crawler\Specification\Image;
 use Innmind\Filesystem\MediaType\MediaType;
+use PHPUnit\Framework\TestCase;
 
-class ImageTest extends \PHPUnit_Framework_TestCase
+class ImageTest extends TestCase
 {
     /**
      * @dataProvider cases

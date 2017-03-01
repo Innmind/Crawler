@@ -17,8 +17,9 @@ use Innmind\Immutable\{
     Map,
     Set
 };
+use PHPUnit\Framework\TestCase;
 
-class AlternatesTest extends \PHPUnit_Framework_TestCase
+class AlternatesTest extends TestCase
 {
     public function testInterface()
     {

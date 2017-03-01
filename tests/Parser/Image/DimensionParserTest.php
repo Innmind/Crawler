@@ -20,8 +20,9 @@ use Innmind\Filesystem\{
     MediaType\MediaType
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class DimensionParserTest extends \PHPUnit_Framework_TestCase
+class DimensionParserTest extends TestCase
 {
     private $parser;
 

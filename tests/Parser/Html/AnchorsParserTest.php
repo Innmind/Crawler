@@ -31,8 +31,9 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class AnchorsParserTest extends \PHPUnit_Framework_TestCase
+class AnchorsParserTest extends TestCase
 {
     private $parser;
 

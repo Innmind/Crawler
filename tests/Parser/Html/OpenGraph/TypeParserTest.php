@@ -30,8 +30,9 @@ use Innmind\Immutable\{
     Map,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class TypeParserTest extends \PHPUnit_Framework_TestCase
+class TypeParserTest extends TestCase
 {
     private $parser;
 

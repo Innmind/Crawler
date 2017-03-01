@@ -45,8 +45,9 @@ use Innmind\Immutable\{
     Map,
     Set
 };
+use PHPUnit\Framework\TestCase;
 
-class AlternatesParserTest extends \PHPUnit_Framework_TestCase
+class AlternatesParserTest extends TestCase
 {
     private $parser;
 

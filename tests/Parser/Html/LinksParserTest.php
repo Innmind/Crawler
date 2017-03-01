@@ -37,8 +37,9 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class LinksParserTest extends \PHPUnit_Framework_TestCase
+class LinksParserTest extends TestCase
 {
     private $parser;
 

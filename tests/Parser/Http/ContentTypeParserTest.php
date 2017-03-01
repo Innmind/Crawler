@@ -19,8 +19,9 @@ use Innmind\Http\{
     Header\ParameterInterface
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class ContentTypeParserTest extends \PHPUnit_Framework_TestCase
+class ContentTypeParserTest extends TestCase
 {
     public function testInterface()
     {

@@ -36,8 +36,9 @@ use Innmind\Immutable\{
     Map,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class RssParserTest extends \PHPUnit_Framework_TestCase
+class RssParserTest extends TestCase
 {
     private $parser;
 

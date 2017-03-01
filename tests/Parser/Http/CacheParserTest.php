@@ -34,8 +34,9 @@ use Innmind\Immutable\{
     Set,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class CaheParserTest extends \PHPUnit_Framework_TestCase
+class CaheParserTest extends TestCase
 {
     public function testInterface()
     {

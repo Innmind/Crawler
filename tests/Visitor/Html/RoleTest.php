@@ -16,8 +16,9 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\SetInterface;
+use PHPUnit\Framework\TestCase;
 
-class RoleTest extends \PHPUnit_Framework_TestCase
+class RoleTest extends TestCase
 {
     public function testInterface()
     {

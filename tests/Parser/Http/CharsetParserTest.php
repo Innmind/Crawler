@@ -19,8 +19,9 @@ use Innmind\Http\{
     Header\Parameter
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class CharsetParserTest extends \PHPUnit_Framework_TestCase
+class CharsetParserTest extends TestCase
 {
     public function testInterface()
     {

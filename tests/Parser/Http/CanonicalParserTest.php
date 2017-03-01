@@ -28,8 +28,9 @@ use Innmind\Immutable\{
     Map,
     Set
 };
+use PHPUnit\Framework\TestCase;
 
-class CanonicalParserTest extends \PHPUnit_Framework_TestCase
+class CanonicalParserTest extends TestCase
 {
     private $parser;
 
