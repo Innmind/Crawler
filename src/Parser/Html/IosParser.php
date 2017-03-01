@@ -24,7 +24,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str
+    Str
 };
 
 final class IosParser implements ParserInterface
@@ -78,11 +78,11 @@ final class IosParser implements ParserInterface
         $content = $meta->current()->attributes()->get('content')->value();
         $content = (new Str($content));
 
-        if (!$content->match(self::PATTERN)) {
+        if (!$content->matches(self::PATTERN)) {
             return $attributes;
         }
 
-        $matches = $content->getMatches(self::PATTERN);
+        $matches = $content->capture(self::PATTERN);
 
         return $attributes->put(
             self::key(),

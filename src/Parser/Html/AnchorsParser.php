@@ -25,7 +25,7 @@ use Innmind\Http\Message\{
 use Innmind\Immutable\{
     MapInterface,
     Set,
-    StringPrimitive as Str
+    Str
 };
 
 final class AnchorsParser implements ParserInterface
@@ -69,7 +69,7 @@ final class AnchorsParser implements ParserInterface
                 return $node instanceof A;
             })
             ->filter(function(A $anchor): bool {
-                return (new Str((string) $anchor->href()))->match('~^#~');
+                return (new Str((string) $anchor->href()))->matches('~^#~');
             })
             ->reduce(
                 new Set('string'),

@@ -26,7 +26,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str,
+    Str,
     Set
 };
 
@@ -133,7 +133,7 @@ final class LanguagesParser implements ParserInterface
         foreach ($languages as $language) {
             $language = (new Str($language))->trim();
 
-            if ($language->match('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
+            if ($language->matches('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
                 $set = $set->add((string) $language);
             }
         }

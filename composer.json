@@ -16,16 +16,16 @@
     },
     "require": {
         "php": "~7.0",
-        "innmind/immutable": "^1.9",
-        "innmind/http": "~1.3",
-        "innmind/filesystem": "^1.3",
+        "innmind/immutable": "~2.1",
+        "innmind/http": "~2.0",
+        "innmind/filesystem": "~2.0",
         "guzzlehttp/guzzle": "^6.2",
-        "innmind/url-resolver": "^2.0",
+        "innmind/url-resolver": "~3.0",
         "innmind/time-continuum": "^1.0",
-        "innmind/html": "^1.1",
-        "innmind/colour": "^1.0",
-        "innmind/math": "^2.1",
-        "innmind/http-transport": "^1.0"
+        "innmind/html": "~2.0",
+        "innmind/colour": "~2.0",
+        "innmind/math": "~3.0",
+        "innmind/http-transport": "~2.0"
     },
     "autoload": {
         "psr-4": {

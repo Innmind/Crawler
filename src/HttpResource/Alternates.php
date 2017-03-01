@@ -72,8 +72,7 @@ final class Alternates implements AttributesInterface
         $languages = $this
             ->content()
             ->keys()
-            ->append($alternates->content()->keys())
-            ->distinct()
+            ->merge($alternates->content()->keys())
             ->reduce(
                 new Map('string', AttributeInterface::class),
                 function(Map $all, string $language) use ($alternates): Map {

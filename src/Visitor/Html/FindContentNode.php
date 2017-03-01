@@ -14,7 +14,7 @@ use Innmind\Xml\{
 use Innmind\Math\Quantile\Quantile;
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str
+    Str
 };
 
 final class FindContentNode

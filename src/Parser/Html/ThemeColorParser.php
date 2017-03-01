@@ -28,7 +28,7 @@ use Innmind\Colour\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str
+    Str
 };
 
 final class ThemeColorParser implements ParserInterface

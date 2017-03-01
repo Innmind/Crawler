@@ -24,7 +24,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str
+    Str
 };
 
 final class AuthorParser implements ParserInterface
