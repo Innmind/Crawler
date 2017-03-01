@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Crawler/issues"
     },
     "require": {
-        "php": "~7.0",
+        "php": "~7.1",
         "innmind/immutable": "~2.1",
         "innmind/http": "~2.0",
         "innmind/filesystem": "~2.0",
