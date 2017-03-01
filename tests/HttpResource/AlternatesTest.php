@@ -17,8 +17,9 @@ use Innmind\Immutable\{
     Map,
     Set
 };
+use PHPUnit\Framework\TestCase;
 
-class AlternatesTest extends \PHPUnit_Framework_TestCase
+class AlternatesTest extends TestCase
 {
     public function testInterface()
     {
@@ -40,8 +41,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     'fr',
                     $alternate = new Alternate(
                         'fr',
-                        new Set(UrlInterface::class),
-                        0
+                        new Set(UrlInterface::class)
                     )
                 )
         );
@@ -79,8 +79,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     new Alternate(
                         'de',
                         (new Set(UrlInterface::class))
-                            ->add($de = Url::fromString('/de')),
-                        0
+                            ->add($de = Url::fromString('/de'))
                     )
                 )
                 ->put(
@@ -88,8 +87,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     new Alternate(
                         'en',
                         (new Set(UrlInterface::class))
-                            ->add($en = Url::fromString('/en')),
-                        0
+                            ->add($en = Url::fromString('/en'))
                     )
                 )
         );
@@ -100,8 +98,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     new Alternate(
                         'fr',
                         (new Set(UrlInterface::class))
-                            ->add($fr = Url::fromString('/fr')),
-                        0
+                            ->add($fr = Url::fromString('/fr'))
                     )
                 )
                 ->put(
@@ -109,8 +106,7 @@ class AlternatesTest extends \PHPUnit_Framework_TestCase
                     new Alternate(
                         'en',
                         (new Set(UrlInterface::class))
-                            ->add($bis = Url::fromString('/en/bis')),
-                        0
+                            ->add($bis = Url::fromString('/en/bis'))
                     )
                 )
         );

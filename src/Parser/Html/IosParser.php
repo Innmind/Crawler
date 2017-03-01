@@ -17,14 +17,13 @@ use Innmind\Html\{
     Visitor\Head,
     Exception\ElementNotFoundException
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
 use Innmind\Immutable\{
     MapInterface,
-    StringPrimitive as Str
+    Str
 };
 
 final class IosParser implements ParserInterface
@@ -34,14 +33,10 @@ final class IosParser implements ParserInterface
     const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
 
     private $reader;
-    private $clock;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(ReaderInterface $reader)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
     }
 
     public function parse(
@@ -49,8 +44,6 @@ final class IosParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -78,23 +71,15 @@ final class IosParser implements ParserInterface
         $content = $meta->current()->attributes()->get('content')->value();
         $content = (new Str($content));
 
-        if (!$content->match(self::PATTERN)) {
+        if (!$content->matches(self::PATTERN)) {
             return $attributes;
         }
 
-        $matches = $content->getMatches(self::PATTERN);
+        $matches = $content->capture(self::PATTERN);
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                (string) $matches['uri'],
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), (string) $matches->get('uri'))
         );
     }
 

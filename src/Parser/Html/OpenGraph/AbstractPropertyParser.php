@@ -18,7 +18,6 @@ use Innmind\Html\{
     Visitor\Head,
     Exception\ElementNotFoundException
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -34,12 +33,10 @@ abstract class AbstractPropertyParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $property;
 
     public function __construct(
         ReaderInterface $reader,
-        TimeContinuumInterface $clock,
         string $property
     ) {
         if (empty($property)) {
@@ -47,7 +44,6 @@ abstract class AbstractPropertyParser implements ParserInterface
         }
 
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->property = 'og:'.$property;
     }
 
@@ -56,8 +52,6 @@ abstract class AbstractPropertyParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -93,15 +87,7 @@ abstract class AbstractPropertyParser implements ParserInterface
 
         return $attributes->put(
             static::key(),
-            new Attribute(
-                static::key(),
-                $this->parseValues($values),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(static::key(), $this->parseValues($values))
         );
     }
 

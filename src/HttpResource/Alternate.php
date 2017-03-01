@@ -17,8 +17,7 @@ final class Alternate implements AttributeInterface
 
     public function __construct(
         string $language,
-        SetInterface $links,
-        int $parsingTime
+        SetInterface $links
     ) {
         if ((string) $links->type() !== UrlInterface::class) {
             throw new InvalidArgumentException;
@@ -26,8 +25,7 @@ final class Alternate implements AttributeInterface
 
         $this->attribute = new Attribute(
             $language,
-            (new RemoveDuplicatedUrls)($links),
-            $parsingTime
+            (new RemoveDuplicatedUrls)($links)
         );
     }
 
@@ -41,11 +39,6 @@ final class Alternate implements AttributeInterface
         return $this->attribute->content();
     }
 
-    public function parsingTime(): int
-    {
-        return $this->attribute->parsingTime();
-    }
-
     public function merge(self $alternate): self
     {
         if ($this->name() !== $alternate->name()) {
@@ -56,8 +49,7 @@ final class Alternate implements AttributeInterface
             $this->name(),
             $this->content()->merge(
                 $alternate->content()
-            ),
-            $this->parsingTime() + $alternate->parsingTime()
+            )
         );
     }
 }

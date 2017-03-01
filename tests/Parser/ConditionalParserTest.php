@@ -12,8 +12,9 @@ use Innmind\Http\Message\{
     ResponseInterface
 };
 use Innmind\Immutable\MapInterface;
+use PHPUnit\Framework\TestCase;
 
-class ConditionalParserTest extends \PHPUnit_Framework_TestCase
+class ConditionalParserTest extends TestCase
 {
     public function testInterface()
     {

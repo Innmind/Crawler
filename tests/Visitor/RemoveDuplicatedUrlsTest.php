@@ -12,8 +12,9 @@ use Innmind\Immutable\{
     SetInterface,
     Set
 };
+use PHPUnit\Framework\TestCase;
 
-class RemoveDuplicatedUrlsTest extends \PHPUnit_Framework_TestCase
+class RemoveDuplicatedUrlsTest extends TestCase
 {
     public function testInterface()
     {

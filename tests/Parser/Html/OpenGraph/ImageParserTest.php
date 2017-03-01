@@ -10,11 +10,6 @@ use Innmind\Crawler\{
     ParserInterface,
     Parser\Http\ContentTypeParser
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface
@@ -37,11 +32,11 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class ImageParserTest extends \PHPUnit_Framework_TestCase
+class ImageParserTest extends TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -52,8 +47,7 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
                         HtmlTranslators::defaults()
                     )
                 )
-            ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -91,8 +85,7 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -117,8 +110,7 @@ class ImageParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 
@@ -154,25 +146,9 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $this->createMock(RequestInterface::class),
@@ -209,6 +185,5 @@ HTML
             'http://ia.media-imdb.com/images/rock2.jpg',
             (string) $preview->content()->current()
         );
-        $this->assertSame(42, $preview->parsingTime());
     }
 }

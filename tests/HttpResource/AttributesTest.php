@@ -10,32 +10,22 @@ use Innmind\Crawler\HttpResource\{
     AttributeInterface
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class AttributesTest extends \PHPUnit_Framework_TestCase
+class AttributesTest extends TestCase
 {
     public function testInterface()
     {
         $attributes = new Attributes(
             'foo',
             $content = (new Map('string', AttributeInterface::class))
-                ->put('bar', new Attribute('bar', 42, 24))
-                ->put('baz', new Attribute('baz', 'idk', 66))
+                ->put('bar', new Attribute('bar', 42))
+                ->put('baz', new Attribute('baz', 'idk'))
         );
 
         $this->assertInstanceOf(AttributesInterface::class, $attributes);
         $this->assertSame('foo', $attributes->name());
         $this->assertSame($content, $attributes->content());
-        $this->assertSame(90, $attributes->parsingTime());
-    }
-
-    public function testEmptyAttributes()
-    {
-        $attributes = new Attributes(
-            'foo',
-            new Map('string', AttributeInterface::class)
-        );
-
-        $this->assertSame(0, $attributes->parsingTime());
     }
 
     /**
@@ -65,8 +55,8 @@ class AttributesTest extends \PHPUnit_Framework_TestCase
         $attributes = new Attributes(
             'foo',
             $content = (new Map('string', AttributeInterface::class))
-                ->put('bar', new Attribute('bar', 42, 24))
-                ->put('baz', new Attribute('baz', 'idk', 66))
+                ->put('bar', new Attribute('bar', 42))
+                ->put('baz', new Attribute('baz', 'idk'))
         );
 
         $this->assertSame($content->get('bar'), $attributes->current());

@@ -7,17 +7,17 @@ use Innmind\Crawler\HttpResource\{
     Attribute,
     AttributeInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class AttributeTest extends \PHPUnit_Framework_TestCase
+class AttributeTest extends TestCase
 {
     public function testInterface()
     {
-        $attribute = new Attribute('foo', 42, 24);
+        $attribute = new Attribute('foo', 42);
 
         $this->assertInstanceOf(AttributeInterface::class, $attribute);
         $this->assertSame('foo', $attribute->name());
         $this->assertSame(42, $attribute->content());
-        $this->assertSame(24, $attribute->parsingTime());
     }
 
     /**
@@ -25,14 +25,6 @@ class AttributeTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenEmptyName()
     {
-        new Attribute('', 42, 24);
-    }
-
-    /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenParsingTimeIsNegative()
-    {
-        new Attribute('foo', 42, -24);
+        new Attribute('', 42);
     }
 }

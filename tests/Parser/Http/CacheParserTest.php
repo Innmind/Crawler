@@ -34,8 +34,9 @@ use Innmind\Immutable\{
     Set,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class CaheParserTest extends \PHPUnit_Framework_TestCase
+class CaheParserTest extends TestCase
 {
     public function testInterface()
     {
@@ -131,13 +132,11 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
             );
         $clock = $this->createMock(TimeContinuumInterface::class);
         $clock
-            ->expects($this->exactly(3))
+            ->expects($this->once())
             ->method('now')
             ->will(
                 $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $directive = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
+                    $directive = $this->createMock(PointInTimeInterface::class)
                 )
             );
         $directive
@@ -149,11 +148,6 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn(
                 $expected = $this->createMock(PointInTimeInterface::class)
             );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(24));
         $attributes = (new CacheParser($clock))->parse(
             new Request(
                 Url::fromString('http://example.com'),
@@ -178,6 +172,5 @@ class CaheParserTest extends \PHPUnit_Framework_TestCase
             $expected,
             $attribute->content()
         );
-        $this->assertSame(24, $attribute->parsingTime());
     }
 }

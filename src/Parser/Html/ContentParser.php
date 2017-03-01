@@ -21,7 +21,6 @@ use Innmind\Html\{
     Exception\ElementNotFoundException,
     Element\Link
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -37,15 +36,11 @@ final class ContentParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $toIgnore;
 
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
+    public function __construct(ReaderInterface $reader)
+    {
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->toIgnore = (new Set('string'))
             ->add('script')
             ->add('style');
@@ -56,8 +51,6 @@ final class ContentParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -108,15 +101,7 @@ final class ContentParser implements ParserInterface
 
         return $attributes->put(
             self::key(),
-            new Attribute(
-                self::key(),
-                $text,
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
-            )
+            new Attribute(self::key(), $text)
         );
     }
 

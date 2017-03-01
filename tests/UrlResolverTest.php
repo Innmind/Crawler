@@ -16,8 +16,9 @@ use Innmind\Url\{
     Url
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class UrlResolverTest extends \PHPUnit_Framework_TestCase
+class UrlResolverTest extends TestCase
 {
     public function testResolveFromRequestUrl()
     {

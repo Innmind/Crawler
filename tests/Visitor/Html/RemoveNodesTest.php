@@ -15,8 +15,9 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Set;
+use PHPUnit\Framework\TestCase;
 
-class RemoveNodesTest extends \PHPUnit_Framework_TestCase
+class RemoveNodesTest extends TestCase
 {
     public function testInterface()
     {

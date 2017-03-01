@@ -10,11 +10,6 @@ use Innmind\Crawler\{
     ParserInterface,
     Parser\Http\ContentTypeParser
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\{
     Message\RequestInterface,
     Message\ResponseInterface
@@ -24,17 +19,15 @@ use Innmind\Filesystem\{
     MediaType\MediaType
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class WeightParserTest extends \PHPUnit_Framework_TestCase
+class WeightParserTest extends TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
-        $this->parser = new WeightParser(
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
-        );
+        $this->parser = new WeightParser;
     }
 
     public function testInterface()
@@ -74,8 +67,7 @@ class WeightParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -97,8 +89,7 @@ class WeightParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('image/png'),
-                    0
+                    MediaType::fromString('image/png')
                 )
             );
         $response
@@ -130,8 +121,7 @@ class WeightParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('image/jpg'),
-                    0
+                    MediaType::fromString('image/jpg')
                 )
             );
         $response
@@ -148,21 +138,6 @@ class WeightParserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('size')
             ->willReturn(66);
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -175,6 +150,5 @@ class WeightParserTest extends \PHPUnit_Framework_TestCase
         $weight = $attributes->get('weight');
         $this->assertSame('weight', $weight->name());
         $this->assertSame(66, $weight->content());
-        $this->assertSame(42, $weight->parsingTime());
     }
 }

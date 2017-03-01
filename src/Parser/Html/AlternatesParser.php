@@ -20,7 +20,6 @@ use Innmind\Xml\{
     ReaderInterface,
     NodeInterface
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -39,16 +38,13 @@ final class AlternatesParser implements ParserInterface
     use HtmlTrait;
 
     private $reader;
-    private $clock;
     private $resolver;
 
     public function __construct(
         ReaderInterface $reader,
-        TimeContinuumInterface $clock,
         UrlResolver $resolver
     ) {
         $this->reader = $reader;
-        $this->clock = $clock;
         $this->resolver = $resolver;
     }
 
@@ -57,8 +53,6 @@ final class AlternatesParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isHtml($attributes)) {
             return $attributes;
         }
@@ -99,33 +93,30 @@ final class AlternatesParser implements ParserInterface
             ->groupBy(function(UrlInterface $url, string $language) {
                 return $language;
             })
-            ->map(function(string $language, SequenceInterface $links) use ($request, $attributes): SequenceInterface {
-                return $links->map(function(Pair $link) use ($request, $attributes): UrlInterface {
-                    return $this->resolver->resolve(
+            ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
+                return $links->map(function(UrlInterface $link, string $language) use ($request, $attributes): Pair {
+                    $link = $this->resolver->resolve(
                         $request,
                         $attributes,
-                        $link->key()
+                        $link
                     );
+
+                    return new Pair($link, $language);
                 });
             })
             ->reduce(
                 new Map('string', AttributeInterface::class),
-                function(Map $languages, string $language, SequenceInterface $links) use ($start): Map {
+                function(Map $languages, string $language, MapInterface $links): Map {
                     return $languages->put(
                         $language,
                         new Alternate(
                             $language,
-                            $links->reduce(
+                            $links->keys()->reduce(
                                 new Set(UrlInterface::class),
                                 function(Set $links, UrlInterface $link): Set {
                                     return $links->add($link);
                                 }
-                            ),
-                            $this
-                                ->clock
-                                ->now()
-                                ->elapsedSince($start)
-                                ->milliseconds()
+                            )
                         )
                     );
                 }

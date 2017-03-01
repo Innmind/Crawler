@@ -13,7 +13,6 @@ use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Immutable\{
     MapInterface,
     Map
@@ -23,20 +22,11 @@ final class DimensionParser implements ParserInterface
 {
     use ImageTrait;
 
-    private $clock;
-
-    public function __construct(TimeContinuumInterface $clock)
-    {
-        $this->clock = $clock;
-    }
-
     public function parse(
         RequestInterface $request,
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$this->isImage($attributes)) {
             return $attributes;
         }
@@ -44,12 +34,6 @@ final class DimensionParser implements ParserInterface
         $infos = getimagesizefromstring(
             (string) $response->body()
         );
-
-        $time = $this
-            ->clock
-            ->now()
-            ->elapsedSince($start)
-            ->milliseconds();
 
         return $attributes->put(
             self::key(),
@@ -60,16 +44,14 @@ final class DimensionParser implements ParserInterface
                         'width',
                         new Attribute(
                             'width',
-                            $infos[0],
-                            $time
+                            $infos[0]
                         )
                     )
                     ->put(
                         'height',
                         new Attribute(
                             'height',
-                            $infos[1],
-                            $time
+                            $infos[1]
                         )
                     )
             )

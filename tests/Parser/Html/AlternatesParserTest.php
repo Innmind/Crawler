@@ -12,11 +12,6 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     UrlResolver
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\{
     Url,
@@ -48,11 +43,11 @@ use Innmind\Immutable\{
     Set,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class AlternatesParserTest extends \PHPUnit_Framework_TestCase
+class AlternatesParserTest extends TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -64,7 +59,6 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class),
             new UrlResolver(new BaseResolver)
         );
     }
@@ -103,8 +97,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -129,8 +122,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 
@@ -157,8 +149,7 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 
@@ -192,33 +183,12 @@ class AlternatesParserTest extends \PHPUnit_Framework_TestCase
 HTML
                 )
             );
-        $this->clock
-            ->expects($this->exactly(3))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end1 = $this->createMock(PointInTimeInterface::class),
-                    $end2 = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end1
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(24));
-        $end2
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
         $attributes = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
 
@@ -261,7 +231,6 @@ HTML
             'http://example.com/en/',
             (string) $content->get('en')->content()->current()
         );
-        $this->assertSame(42, $content->get('en')->parsingTime());
         $this->assertSame(
             'http://example.com/fr/',
             (string) $content->get('fr')->content()->current()
@@ -271,6 +240,5 @@ HTML
             'http://example.com/fr/foo/',
             (string) $content->get('fr')->content()->current()
         );
-        $this->assertSame(24, $content->get('fr')->parsingTime());
     }
 }

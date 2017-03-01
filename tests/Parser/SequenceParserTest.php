@@ -12,8 +12,9 @@ use Innmind\Http\Message\{
     ResponseInterface
 };
 use Innmind\Immutable\MapInterface;
+use PHPUnit\Framework\TestCase;
 
-class SequenceParserTest extends \PHPUnit_Framework_TestCase
+class SequenceParserTest extends TestCase
 {
     public function testInterface()
     {

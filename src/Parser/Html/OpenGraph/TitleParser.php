@@ -9,11 +9,9 @@ use Innmind\Immutable\SetInterface;
 
 final class TitleParser extends AbstractPropertyParser
 {
-    public function __construct(
-        ReaderInterface $reader,
-        TimeContinuumInterface $clock
-    ) {
-        parent::__construct($reader, $clock, self::key());
+    public function __construct(ReaderInterface $reader)
+    {
+        parent::__construct($reader, self::key());
     }
 
     protected function parseValues(SetInterface $values)

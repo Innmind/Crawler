@@ -18,11 +18,6 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslators
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -36,11 +31,11 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class AnchorsParserTest extends \PHPUnit_Framework_TestCase
+class AnchorsParserTest extends TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -51,8 +46,7 @@ class AnchorsParserTest extends \PHPUnit_Framework_TestCase
                         HtmlTranslators::defaults()
                     )
                 )
-            ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -93,8 +87,7 @@ class AnchorsParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -116,8 +109,7 @@ class AnchorsParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -143,8 +135,7 @@ class AnchorsParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -162,21 +153,6 @@ class AnchorsParserTest extends \PHPUnit_Framework_TestCase
 </html>
 HTML
             ));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -201,6 +177,5 @@ HTML
             ['bar', 'baz'],
             $anchors->content()->toPrimitive()
         );
-        $this->assertSame(42, $anchors->parsingTime());
     }
 }

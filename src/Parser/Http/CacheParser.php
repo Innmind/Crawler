@@ -33,8 +33,6 @@ final class CacheParser implements ParserInterface
         ResponseInterface $response,
         MapInterface $attributes
     ): MapInterface {
-        $start = $this->clock->now();
-
         if (!$response->headers()->has('Cache-Control')) {
             return $attributes;
         }
@@ -60,12 +58,7 @@ final class CacheParser implements ParserInterface
                     ->now()
                     ->goForward(
                         new Second($directives->current()->age())
-                    ),
-                $this
-                    ->clock
-                    ->now()
-                    ->elapsedSince($start)
-                    ->milliseconds()
+                    )
             )
         );
     }

@@ -18,11 +18,6 @@ use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
 };
-use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod
-};
 use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream
@@ -35,11 +30,11 @@ use Innmind\Immutable\{
     Map,
     MapInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class TitleParserTest extends \PHPUnit_Framework_TestCase
+class TitleParserTest extends TestCase
 {
     private $parser;
-    private $clock;
 
     public function setUp()
     {
@@ -50,8 +45,7 @@ class TitleParserTest extends \PHPUnit_Framework_TestCase
                         HtmlTranslators::defaults()
                     )
                 )
-            ),
-            $this->clock = $this->createMock(TimeContinuumInterface::class)
+            )
         );
     }
 
@@ -92,8 +86,7 @@ class TitleParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/csv'),
-                    0
+                    MediaType::fromString('text/csv')
                 )
             );
 
@@ -115,8 +108,7 @@ class TitleParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
@@ -145,29 +137,13 @@ class TitleParserTest extends \PHPUnit_Framework_TestCase
                 ContentTypeParser::key(),
                 new Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html'),
-                    0
+                    MediaType::fromString('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream($html));
-        $this
-            ->clock
-            ->expects($this->exactly(2))
-            ->method('now')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $start = $this->createMock(PointInTimeInterface::class),
-                    $end = $this->createMock(PointInTimeInterface::class)
-                )
-            );
-        $end
-            ->expects($this->once())
-            ->method('elapsedSince')
-            ->with($start)
-            ->willReturn(new ElapsedPeriod(42));
 
         $attributes = $this->parser->parse(
             $request,
@@ -184,7 +160,6 @@ class TitleParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame('title', $attributes->get('title')->name());
         $this->assertSame($title, $attributes->get('title')->content());
-        $this->assertSame(42, $attributes->get('title')->parsingTime());
     }
 
     public function cases()

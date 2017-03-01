@@ -5,8 +5,9 @@ namespace Tests\Innmind\Crawler\Specification;
 
 use Innmind\Crawler\Specification\Html;
 use Innmind\Filesystem\MediaType\MediaType;
+use PHPUnit\Framework\TestCase;
 
-class HtmlTest extends \PHPUnit_Framework_TestCase
+class HtmlTest extends TestCase
 {
     /**
      * @dataProvider cases
