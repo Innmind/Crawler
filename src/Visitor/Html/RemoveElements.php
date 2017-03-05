@@ -10,7 +10,7 @@ use Innmind\Xml\{
 };
 use Innmind\Immutable\SetInterface;
 
-final class RemoveNodes
+final class RemoveElements
 {
     private $toRemove;
 

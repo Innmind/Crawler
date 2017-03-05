@@ -6,7 +6,7 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     ParserInterface,
     HttpResource\Attribute,
-    Visitor\Html\RemoveNodes,
+    Visitor\Html\RemoveElements,
     Visitor\Html\RemoveComments,
     Visitor\Html\FindContentNode,
     Visitor\Html\Role
@@ -57,7 +57,7 @@ final class ContentParser implements ParserInterface
         }
 
         $document = $this->reader->read($response->body());
-        $document = (new RemoveNodes($this->toIgnore))($document);
+        $document = (new RemoveElements($this->toIgnore))($document);
         $document = (new RemoveComments)($document);
 
         try {

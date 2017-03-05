@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Visitor\Html\RemoveNodes;
+use Innmind\Crawler\Visitor\Html\RemoveElements;
 use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
@@ -17,11 +17,11 @@ use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
-class RemoveNodesTest extends TestCase
+class RemoveElementsTest extends TestCase
 {
     public function testInterface()
     {
-        $visitor = new RemoveNodes(
+        $visitor = new RemoveElements(
             (new Set('string'))->add('script')
         );
 
@@ -80,6 +80,6 @@ HTML;
      */
     public function testThrowWhenInvalidNames()
     {
-        new RemoveNodes(new Set('int'));
+        new RemoveElements(new Set('int'));
     }
 }
