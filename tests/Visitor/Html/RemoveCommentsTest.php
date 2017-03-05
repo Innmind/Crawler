@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Visitor\Html\RemoveNodes;
+use Innmind\Crawler\Visitor\Html\RemoveComments;
 use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
@@ -14,16 +14,13 @@ use Innmind\Xml\{
     Translator\NodeTranslators
 };
 use Innmind\Filesystem\Stream\StringStream;
-use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
-class RemoveNodesTest extends TestCase
+class RemoveCommentsTest extends TestCase
 {
     public function testInterface()
     {
-        $visitor = new RemoveNodes(
-            (new Set('string'))->add('script')
-        );
+        $visitor = new RemoveComments;
 
         $reader = new Reader(
             new NodeTranslator(
@@ -47,6 +44,7 @@ class RemoveNodesTest extends TestCase
             <script>some nasty javascript</script>
             <h2>else</h2>
         </article>
+        <!-- some comment -->
     </div>
     <script></script>
     <div>hey</div>
@@ -62,24 +60,16 @@ HTML
 <html><body>
     <div>
         <article><h1>whatever</h1>
-            <h2>else</h2>
-            <h2>else</h2>
-            <h2>else</h2>
+            <script>some nasty javascript</script><h2>else</h2>
+            <script>some nasty javascript</script><h2>else</h2>
+            <script>some nasty javascript</script><h2>else</h2>
         </article></div>
-    <div>hey</div>
+    <script></script><div>hey</div>
 </body></html>
 HTML;
 
         $this->assertNotSame($html, $cleaned);
         $this->assertInstanceOf(NodeInterface::class, $cleaned);
         $this->assertSame($expected, (string) $cleaned);
-    }
-
-    /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenInvalidNames()
-    {
-        new RemoveNodes(new Set('int'));
     }
 }
