@@ -11,7 +11,10 @@ use Innmind\Xml\{
     NodeInterface,
     Visitor\Text
 };
-use Innmind\Math\Quantile\Quantile;
+use Innmind\Math\{
+    Quantile\Quantile,
+    Regression\Dataset
+};
 use Innmind\Immutable\{
     MapInterface,
     Str
@@ -53,14 +56,18 @@ final class FindContentNode
                 return $dispersion;
             }
         );
-        $quantile = new Quantile($dispersion);
+        $quantile = new Quantile(Dataset::fromArray($dispersion));
         $lookup = [];
 
         //select qartiles that have more words than the average nodes
         for ($i = 1; $i < 5; $i++) {
-            $diff = $quantile->quartile($i)->value() - $quantile->quartile($i - 1)->value();
+            $diff = $quantile
+                ->quartile($i)
+                ->value()
+                ->subtract($quantile->quartile($i - 1)->value())
+                ->value();
 
-            if ($diff >= $quantile->mean()) {
+            if ($diff >= $quantile->mean()->value()) {
                 $lookup[] = $i;
             }
         }
@@ -70,7 +77,7 @@ final class FindContentNode
         }
 
         //select the minimum amount of words that needs to be in nodes
-        $min = $quantile->quartile(min($lookup))->value();
+        $min = $quantile->quartile(min($lookup))->value()->value();
 
         $nodes = $nodes->filter(function(int $position) use ($min, $dispersion): bool {
             return $dispersion[$position] >= $min;

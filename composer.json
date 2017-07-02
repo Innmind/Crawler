@@ -24,7 +24,7 @@
         "innmind/time-continuum": "^1.0",
         "innmind/html": "~2.0",
         "innmind/colour": "~2.0",
-        "innmind/math": "~3.0",
+        "innmind/math": "~4.0",
         "innmind/http-transport": "~2.0"
     },
     "autoload": {
