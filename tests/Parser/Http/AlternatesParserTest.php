@@ -117,6 +117,41 @@ class AlternatesParserTest extends TestCase
         $this->assertSame($expected, $attributes);
     }
 
+    public function testParseWhenNoAlternate()
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response
+            ->method('headers')
+            ->willReturn(
+                new Headers(
+                    (new Map('string', HeaderInterface::class))
+                        ->put(
+                            'link',
+                            new Link(
+                                (new Set(HeaderValueInterface::class))
+                                    ->add(new LinkValue(
+                                        Url::fromString('/foo/bar'),
+                                        'prev'
+                                    ))
+                            )
+                        )
+                )
+            );
+        $attributes = $this->parser->parse(
+            new Request(
+                Url::fromString('http://example.com/foo/'),
+                new Method('GET'),
+                new ProtocolVersion(1, 1),
+                new Headers(new Map('string', HeaderInterface::class)),
+                new StringStream('')
+            ),
+            $response,
+            $expected = new Map('string', AttributeInterface::class)
+        );
+
+        $this->assertSame($expected, $attributes);
+    }
+
     public function testParse()
     {
         $response = $this->createMock(ResponseInterface::class);
