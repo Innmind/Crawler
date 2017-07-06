@@ -46,7 +46,7 @@ final class AlternatesParser implements ParserInterface
             return $attributes;
         }
 
-        $alternates = $response
+        $links = $response
             ->headers()
             ->get('Link')
             ->values()
@@ -65,7 +65,13 @@ final class AlternatesParser implements ParserInterface
                         $header->parameters()->get('hreflang')->value()
                     );
                 }
-            )
+            );
+
+        if ($links->size() === 0) {
+            return $attributes;
+        }
+
+        $alternates = $links
             ->groupBy(function(UrlInterface $url, string $language): string {
                 return $language;
             })
