@@ -46,4 +46,20 @@ class FindContentNodeTest extends TestCase
             $node->attributes()->get('class')->value()
         );
     }
+
+    public function testDoesntFailWhenCursorNotAtStart()
+    {
+        $expected = $this->createMock(NodeInterface::class);
+        $expected
+            ->expects($this->once())
+            ->method('hasChildren')
+            ->willReturn(false);
+        $map = (new Map('int', NodeInterface::class))
+            ->put(0, $expected);
+        $map->next();
+
+        $node = (new FindContentNode)($map);
+
+        $this->assertSame($expected, $node);
+    }
 }

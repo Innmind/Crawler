@@ -34,6 +34,8 @@ final class FindContentNode
             throw new InvalidArgumentException;
         }
 
+        $nodes->rewind();
+
         if ($nodes->size() === 1) {
             if (!$nodes->current()->hasChildren()) {
                 return $nodes->current();
