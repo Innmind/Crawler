@@ -68,6 +68,9 @@ final class AuthorParser implements ParserInterface
                     ->value();
 
                 return (string) (new Str($name))->toLower() === 'author';
+            })
+            ->filter(static function(ElementInterface $meta): bool {
+                return !empty($meta->attributes()->get('content')->value());
             });
 
         if ($meta->size() !== 1) {

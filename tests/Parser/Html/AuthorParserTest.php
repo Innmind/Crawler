@@ -160,6 +160,42 @@ HTML
         $this->assertSame($expected, $attributes);
     }
 
+    public function testDoesntParseWhenEmptyAuthor()
+    {
+        $request = $this->createMock(RequestInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
+        $expected = (new Map('string', AttributeInterface::class))
+            ->put(
+                ContentTypeParser::key(),
+                new Attribute(
+                    ContentTypeParser::key(),
+                    MediaType::fromString('text/html')
+                )
+            );
+        $response
+            ->expects($this->once())
+            ->method('body')
+            ->willReturn(new StringStream(<<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="og:type" content="website" />
+    <meta name="og:locale" content="fr_FR" />
+    <meta name="AuThOr" content="" />
+</head>
+</html>
+HTML
+            ));
+
+        $attributes = $this->parser->parse(
+            $request,
+            $response,
+            $expected
+        );
+
+        $this->assertSame($expected, $attributes);
+    }
+
     public function testParse()
     {
         $request = $this->createMock(RequestInterface::class);
