@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
+use Innmind\Crawler\Exception\InvalidOpenGraphAttributeException;
 use Innmind\Xml\ReaderInterface;
 use Innmind\Url\{
     Url,
@@ -22,12 +23,22 @@ final class ImageParser extends AbstractPropertyParser
 
     protected function parseValues(SetInterface $values)
     {
-        return $values->reduce(
-            new Set(UrlInterface::class),
-            function(Set $urls, string $url): Set {
-                return $urls->add(Url::fromString($url));
-            }
-        );
+        $urls = $values
+            ->filter(static function(string $url): bool {
+                return !empty($url);
+            })
+            ->reduce(
+                new Set(UrlInterface::class),
+                function(Set $urls, string $url): Set {
+                    return $urls->add(Url::fromString($url));
+                }
+            );
+
+        if ($urls->size() === 0) {
+            throw new InvalidOpenGraphAttributeException;
+        }
+
+        return $urls;
     }
 
     public static function key(): string

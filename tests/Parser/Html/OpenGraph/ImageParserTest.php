@@ -123,6 +123,41 @@ class ImageParserTest extends TestCase
         $this->assertSame($expected, $attributes);
     }
 
+    public function testDoesntParseWhenEmptyMeta()
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response
+            ->expects($this->once())
+            ->method('body')
+            ->willReturn(new StringStream(<<<HTML
+<html>
+<head>
+    <meta property="og:title" content="The Rock" />
+    <meta property="og:type" content="video.movie" />
+    <meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
+    <meta property="og:image" content="" />
+</head>
+</html>
+HTML
+        ));
+        $expected = (new Map('string', AttributeInterface::class))
+            ->put(
+                ContentTypeParser::key(),
+                new Attribute(
+                    ContentTypeParser::key(),
+                    MediaType::fromString('text/html')
+                )
+            );
+
+        $attributes = $this->parser->parse(
+            $this->createMock(RequestInterface::class),
+            $response,
+            $expected
+        );
+
+        $this->assertSame($expected, $attributes);
+    }
+
     public function testParse()
     {
         $response = $this->createMock(ResponseInterface::class);
