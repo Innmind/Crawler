@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Exception\InvalidArgumentException,
     Exception\InvalidOpenGraphAttributeException,
-    HttpResource\Attribute,
+    HttpResource\Attribute\Attribute,
     Parser\Html\HtmlTrait
 };
 use Innmind\Xml\{
@@ -29,7 +29,7 @@ use Innmind\Immutable\{
     SetInterface
 };
 
-abstract class AbstractPropertyParser implements ParserInterface
+abstract class AbstractPropertyParser implements Parser
 {
     use HtmlTrait;
 

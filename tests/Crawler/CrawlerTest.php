@@ -1,15 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Crawler;
+namespace Tests\Innmind\Crawler\Crawler;
 
 use Innmind\Crawler\{
-    Crawler,
-    CrawlerInterface,
-    ParserInterface,
+    Crawler\Crawler,
+    Crawler as CrawlerInterface,
+    Parser,
     HttpResource,
-    HttpResource\Attribute,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -40,7 +39,7 @@ class CrawlerTest extends TestCase
     {
         $crawler = new Crawler(
             $transport = $this->createMock(Transport::class),
-            $parser = $this->createMock(ParserInterface::class)
+            $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             $url = Url::fromString('http://example.com'),
@@ -64,8 +63,8 @@ class CrawlerTest extends TestCase
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', AttributeInterface::class))
-                    ->put('foo', $attribute = new Attribute('foo', 42, 24))
+                (new Map('string', Attribute::class))
+                    ->put('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
             );
 
         $resource = $crawler->execute($request);
@@ -78,7 +77,7 @@ class CrawlerTest extends TestCase
         $attributes = $resource->attributes();
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
-        $this->assertSame(AttributeInterface::class, (string) $attributes->valueType());
+        $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $this->assertSame($attribute, $attributes->get('foo'));
     }
@@ -87,7 +86,7 @@ class CrawlerTest extends TestCase
     {
         $crawler = new Crawler(
             $transport = $this->createMock(Transport::class),
-            $parser = $this->createMock(ParserInterface::class)
+            $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             Url::fromString('http://example.com'),
@@ -111,10 +110,10 @@ class CrawlerTest extends TestCase
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', AttributeInterface::class))
+                (new Map('string', Attribute::class))
                     ->put(
                         'content_type',
-                        new Attribute('content_type', 'application/json', 24)
+                        new Attribute\Attribute('content_type', 'application/json', 24)
                     )
             );
 

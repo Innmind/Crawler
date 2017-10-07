@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Http\{
     Message\Request,
@@ -19,7 +19,7 @@ use Innmind\TimeContinuum\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class CacheParser implements ParserInterface
+final class CacheParser implements Parser
 {
     private $clock;
 

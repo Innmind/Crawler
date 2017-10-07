@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Crawler;
 
 use Innmind\Crawler\{
-    HttpResource\AttributeInterface,
+    HttpResource\Attribute,
     Exception\InvalidArgumentException
 };
 use Innmind\Url\UrlInterface;
@@ -32,7 +32,7 @@ final class HttpResource implements File
     ) {
         if (
             (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== AttributeInterface::class
+            (string) $attributes->valueType() !== Attribute::class
         ) {
             throw new InvalidArgumentException;
         }
@@ -66,7 +66,7 @@ final class HttpResource implements File
     }
 
     /**
-     * @return MapInterface<string, AttributeInterface>
+     * @return MapInterface<string, Attribute>
      */
     public function attributes(): MapInterface
     {

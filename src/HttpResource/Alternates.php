@@ -9,18 +9,18 @@ use Innmind\Immutable\{
     MapInterface
 };
 
-final class Alternates implements AttributesInterface
+final class Alternates implements Attributes
 {
     private $attributes;
 
     public function __construct(MapInterface $alternates)
     {
-        $this->attributes = new Attributes(
+        $this->attributes = new Attributes\Attributes(
             'alternates',
             $alternates
         );
 
-        $alternates->foreach(function(string $language, AttributeInterface $alternate) {
+        $alternates->foreach(function(string $language, Attribute $alternate) {
             if (!$alternate instanceof Alternate) {
                 throw new InvalidArgumentException;
             }
@@ -69,7 +69,7 @@ final class Alternates implements AttributesInterface
             ->keys()
             ->merge($alternates->content()->keys())
             ->reduce(
-                new Map('string', AttributeInterface::class),
+                new Map('string', Attribute::class),
                 function(Map $all, string $language) use ($alternates): Map {
                     if (!$this->content()->contains($language)) {
                         return $all->put(

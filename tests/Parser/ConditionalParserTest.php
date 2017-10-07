@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
     Parser\ConditionalParser,
-    ParserInterface
+    Parser
 };
 use Innmind\Http\Message\{
     Request,
@@ -19,7 +19,7 @@ class ConditionalParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new ConditionalParser
         );
     }
@@ -31,9 +31,9 @@ class ConditionalParserTest extends TestCase
 
     public function testParse()
     {
-        $parser1 = $this->createMock(ParserInterface::class);
-        $parser2 = $this->createMock(ParserInterface::class);
-        $parser3 = $this->createMock(ParserInterface::class);
+        $parser1 = $this->createMock(Parser::class);
+        $parser2 = $this->createMock(Parser::class);
+        $parser3 = $this->createMock(Parser::class);
         $parser = new ConditionalParser($parser1, $parser2, $parser3);
 
         $request = $this->createMock(Request::class);

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -27,7 +27,7 @@ use Innmind\Immutable\{
     Str
 };
 
-final class AnchorsParser implements ParserInterface
+final class AnchorsParser implements Parser
 {
     use HtmlTrait;
 

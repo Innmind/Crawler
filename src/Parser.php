@@ -9,7 +9,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\MapInterface;
 
-interface ParserInterface
+interface Parser
 {
     /**
      * @param MapInterface<string, AttributeInterface> $attributes

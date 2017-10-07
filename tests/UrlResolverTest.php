@@ -5,7 +5,6 @@ namespace Tests\Innmind\Crawler;
 
 use Innmind\Crawler\{
     UrlResolver,
-    HttpResource\AttributeInterface,
     HttpResource\Attribute,
     Parser\Html\BaseParser
 };
@@ -31,7 +30,7 @@ class UrlResolverTest extends TestCase
 
         $url = $resolver->resolve(
             $request,
-            new Map('string', AttributeInterface::class),
+            new Map('string', Attribute::class),
             Url::fromString('/foo')
         );
 
@@ -50,10 +49,10 @@ class UrlResolverTest extends TestCase
 
         $url = $resolver->resolve(
             $request,
-            (new Map('string', AttributeInterface::class))
+            (new Map('string', Attribute::class))
                 ->put(
                     BaseParser::key(),
-                    new Attribute(
+                    new Attribute\Attribute(
                         BaseParser::key(),
                         Url::fromString('http://sub.github.com'),
                         0

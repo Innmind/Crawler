@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\CharsetParser,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Http\{
     Message\Request,
@@ -25,7 +25,7 @@ class CharsetParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new CharsetParser
         );
     }
@@ -51,7 +51,7 @@ class CharsetParserTest extends TestCase
             ->method('has')
             ->with('Content-Type')
             ->willReturn(false);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -79,7 +79,7 @@ class CharsetParserTest extends TestCase
             ->method('get')
             ->with('Content-Type')
             ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -115,7 +115,7 @@ class CharsetParserTest extends TestCase
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -155,7 +155,7 @@ class CharsetParserTest extends TestCase
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 

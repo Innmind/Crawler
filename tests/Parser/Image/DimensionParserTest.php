@@ -5,10 +5,9 @@ namespace Tests\Innmind\Crawler\Parser\Image;
 
 use Innmind\Crawler\{
     Parser\Image\DimensionParser,
-    HttpResource\AttributeInterface,
     HttpResource\Attribute,
     HttpResource\Attributes,
-    ParserInterface,
+    Parser,
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
@@ -32,7 +31,7 @@ class DimensionParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
@@ -46,7 +45,7 @@ class DimensionParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse(
             $request,
@@ -61,10 +60,10 @@ class DimensionParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/csv')
                 )
@@ -83,10 +82,10 @@ class DimensionParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $notExpected = (new Map('string', AttributeInterface::class))
+        $notExpected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('image/jpg')
                 )

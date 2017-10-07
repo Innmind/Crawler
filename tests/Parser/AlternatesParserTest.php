@@ -8,8 +8,7 @@ use Innmind\Crawler\{
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Http\ContentTypeParser,
     Parser\Html\AlternatesParser as HtmlParser,
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
     HttpResource\Alternates,
     HttpResource\Attribute,
     UrlResolver
@@ -68,7 +67,7 @@ class AlternatesParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
@@ -107,7 +106,7 @@ class AlternatesParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            new Map('string', AttributeInterface::class)
+            new Map('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));
@@ -136,10 +135,10 @@ HTML
                 )
             );
 
-        $attributes = (new Map('string', AttributeInterface::class))
+        $attributes = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -204,10 +203,10 @@ HTML
 HTML
                 )
             );
-        $attributes = (new Map('string', AttributeInterface::class))
+        $attributes = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )

@@ -5,9 +5,9 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser\Http\AlternatesParser,
-    HttpResource\AttributeInterface,
+    HttpResource\Attribute,
     HttpResource\Alternates,
-    ParserInterface,
+    Parser,
     UrlResolver
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
@@ -47,7 +47,7 @@ class AlternatesParserTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parser);
     }
 
     public function testKey()
@@ -70,7 +70,7 @@ class AlternatesParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -102,7 +102,7 @@ class AlternatesParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -136,7 +136,7 @@ class AlternatesParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -202,7 +202,7 @@ class AlternatesParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            new Map('string', AttributeInterface::class)
+            new Map('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));

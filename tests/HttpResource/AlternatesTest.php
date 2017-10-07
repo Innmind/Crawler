@@ -6,8 +6,8 @@ namespace Tests\Innmind\Crawler\HttpResource;
 use Innmind\Crawler\HttpResource\{
     Alternates,
     Alternate,
-    AttributeInterface,
-    AttributesInterface
+    Attribute,
+    Attributes
 };
 use Innmind\Url\{
     UrlInterface,
@@ -24,9 +24,9 @@ class AlternatesTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            AttributesInterface::class,
+            Attributes::class,
             $alternates = new Alternates(
-                $map = new Map('string', AttributeInterface::class)
+                $map = new Map('string', Attribute::class)
             )
         );
         $this->assertSame('alternates', $alternates->name());
@@ -36,7 +36,7 @@ class AlternatesTest extends TestCase
     public function testIterator()
     {
         $alternates = new Alternates(
-            (new Map('string', AttributeInterface::class))
+            (new Map('string', Attribute::class))
                 ->put(
                     'fr',
                     $alternate = new Alternate(
@@ -62,10 +62,10 @@ class AlternatesTest extends TestCase
     public function testThrowWhenNotOnlyAlternates()
     {
         new Alternates(
-            (new Map('string', AttributeInterface::class))
+            (new Map('string', Attribute::class))
                 ->put(
                     'fr',
-                    $this->createMock(AttributeInterface::class)
+                    $this->createMock(Attribute::class)
                 )
         );
     }
@@ -73,7 +73,7 @@ class AlternatesTest extends TestCase
     public function testMerge()
     {
         $first = new Alternates(
-            (new Map('string', AttributeInterface::class))
+            (new Map('string', Attribute::class))
                 ->put(
                     'de',
                     new Alternate(
@@ -92,7 +92,7 @@ class AlternatesTest extends TestCase
                 )
         );
         $second = new Alternates(
-            (new Map('string', AttributeInterface::class))
+            (new Map('string', Attribute::class))
                 ->put(
                     'fr',
                     new Alternate(

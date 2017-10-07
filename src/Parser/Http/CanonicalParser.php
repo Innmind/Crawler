@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver
 };
 use Innmind\Http\{
@@ -16,7 +16,7 @@ use Innmind\Http\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class CanonicalParser implements ParserInterface
+final class CanonicalParser implements Parser
 {
     private $resolver;
 

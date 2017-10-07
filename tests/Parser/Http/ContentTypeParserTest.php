@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\ContentTypeParser,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Filesystem\MediaType;
 use Innmind\Http\{
@@ -25,7 +25,7 @@ class ContentTypeParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new ContentTypeParser
         );
     }
@@ -51,7 +51,7 @@ class ContentTypeParserTest extends TestCase
             ->method('has')
             ->with('Content-Type')
             ->willReturn(false);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -78,7 +78,7 @@ class ContentTypeParserTest extends TestCase
             ->method('get')
             ->with('Content-Type')
             ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -112,7 +112,7 @@ class ContentTypeParserTest extends TestCase
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 

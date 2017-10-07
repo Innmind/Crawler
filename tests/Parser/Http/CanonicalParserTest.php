@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\CanonicalParser,
-    HttpResource\AttributeInterface,
+    HttpResource\Attribute,
     UrlResolver
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
@@ -39,7 +39,7 @@ class CanonicalParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
@@ -64,7 +64,7 @@ class CanonicalParserTest extends TestCase
             ->with('Link')
             ->willReturn(false);
         $request = $this->createMock(Request::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
 
@@ -90,7 +90,7 @@ class CanonicalParserTest extends TestCase
             ->with('Link')
             ->willReturn($this->createMock(Header::class));
         $request = $this->createMock(Request::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
 
@@ -123,7 +123,7 @@ class CanonicalParserTest extends TestCase
                 )
             );
         $request = $this->createMock(Request::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
 
@@ -164,7 +164,7 @@ class CanonicalParserTest extends TestCase
                 )
             );
         $request = $this->createMock(Request::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
 
@@ -205,7 +205,7 @@ class CanonicalParserTest extends TestCase
             ->expects($this->once())
             ->method('url')
             ->willReturn(Url::fromString('http://example.com/whatever'));
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
 

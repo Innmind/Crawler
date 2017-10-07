@@ -11,7 +11,7 @@ use Innmind\Crawler\{
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;
 
-final class Alternate implements AttributeInterface
+final class Alternate implements Attribute
 {
     private $attribute;
 
@@ -23,7 +23,7 @@ final class Alternate implements AttributeInterface
             throw new InvalidArgumentException;
         }
 
-        $this->attribute = new Attribute(
+        $this->attribute = new Attribute\Attribute(
             $language,
             (new RemoveDuplicatedUrls)($links)
         );

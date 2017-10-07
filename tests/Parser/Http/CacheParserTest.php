@@ -5,8 +5,8 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser\Http\CacheParser,
-    ParserInterface,
-    HttpResource\AttributeInterface
+    Parser,
+    HttpResource\Attribute
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
@@ -39,7 +39,7 @@ class CaheParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new CacheParser(
                 $this->createMock(TimeContinuumInterface::class)
             )
@@ -67,7 +67,7 @@ class CaheParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -99,7 +99,7 @@ class CaheParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -149,13 +149,13 @@ class CaheParserTest extends TestCase
                 new StringStream('')
             ),
             $response,
-            $notExpected = new Map('string', AttributeInterface::class)
+            $notExpected = new Map('string', Attribute::class)
         );
 
         $this->assertNotSame($notExpected, $attributes);
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
-        $this->assertSame(AttributeInterface::class, (string) $attributes->valueType());
+        $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $attribute = $attributes->get('expires_at');
         $this->assertSame('expires_at', $attribute->name());

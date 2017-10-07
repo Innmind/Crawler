@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\HttpResource\{
     Alternate,
-    AttributeInterface
+    Attribute
 };
 use Innmind\Url\{
     UrlInterface,
@@ -22,7 +22,7 @@ class AlternateTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            AttributeInterface::class,
+            Attribute::class,
             $alternate = new Alternate(
                 'fr',
                 new Set(UrlInterface::class)

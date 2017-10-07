@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
     Parser\SequenceParser,
-    ParserInterface
+    Parser
 };
 use Innmind\Http\Message\{
     Request,
@@ -19,7 +19,7 @@ class SequenceParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new SequenceParser
         );
     }
@@ -31,8 +31,8 @@ class SequenceParserTest extends TestCase
 
     public function testParse()
     {
-        $parser1 = $this->createMock(ParserInterface::class);
-        $parser2 = $this->createMock(ParserInterface::class);
+        $parser1 = $this->createMock(Parser::class);
+        $parser2 = $this->createMock(Parser::class);
         $parser = new SequenceParser($parser1, $parser2);
 
         $request = $this->createMock(Request::class);

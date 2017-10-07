@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Image;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Http\Message\{
     Request,
@@ -13,7 +13,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class WeightParser implements ParserInterface
+final class WeightParser implements Parser
 {
     use ImageTrait;
 

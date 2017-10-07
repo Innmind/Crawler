@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
+    HttpResource\Attribute,
     HttpResource\Alternate,
     HttpResource\Alternates,
     UrlResolver
@@ -25,7 +25,7 @@ use Innmind\Immutable\{
     Pair
 };
 
-final class AlternatesParser implements ParserInterface
+final class AlternatesParser implements Parser
 {
     private $resolver;
 
@@ -87,7 +87,7 @@ final class AlternatesParser implements ParserInterface
                 });
             })
             ->reduce(
-                new Map('string', AttributeInterface::class),
+                new Map('string', Attribute::class),
                 function(Map $languages, string $language, MapInterface $links): Map {
                     return $languages->put(
                         $language,

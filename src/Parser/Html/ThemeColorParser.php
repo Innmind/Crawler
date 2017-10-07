@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -30,7 +30,7 @@ use Innmind\Immutable\{
     Str
 };
 
-final class ThemeColorParser implements ParserInterface
+final class ThemeColorParser implements Parser
 {
     use HtmlTrait;
 

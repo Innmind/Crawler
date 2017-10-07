@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Html\AlternatesParser as HtmlParser
 };
@@ -14,7 +14,7 @@ use Innmind\http\Message\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class AlternatesParser implements ParserInterface
+final class AlternatesParser implements Parser
 {
     private $http;
     private $html;

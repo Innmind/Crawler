@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\LanguagesParser,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Http\{
     Message\Request,
@@ -27,7 +27,7 @@ class LanguagesParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new LanguagesParser
         );
     }
@@ -53,7 +53,7 @@ class LanguagesParserTest extends TestCase
             ->method('has')
             ->with('Content-Language')
             ->willReturn(false);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -80,7 +80,7 @@ class LanguagesParserTest extends TestCase
             ->method('get')
             ->with('Content-Language')
             ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -112,7 +112,7 @@ class LanguagesParserTest extends TestCase
                     new ContentLanguageValue('en-US')
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 

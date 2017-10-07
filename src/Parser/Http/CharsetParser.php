@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Http\{
     Message\Request,
@@ -14,7 +14,7 @@ use Innmind\Http\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class CharsetParser implements ParserInterface
+final class CharsetParser implements Parser
 {
     public function parse(
         Request $request,

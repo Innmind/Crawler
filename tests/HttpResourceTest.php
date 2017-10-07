@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler;
 
 use Innmind\Crawler\{
     HttpResource,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\{
@@ -23,7 +23,7 @@ class HttpResourceTest extends TestCase
         $resource = new HttpResource(
             $url = Url::fromString('http://example.com/foo'),
             $mediaType = MediaType::fromString('application/json'),
-            $attributes = new Map('string', AttributeInterface::class),
+            $attributes = new Map('string', Attribute::class),
             $content = new StringStream('')
         );
 
@@ -53,7 +53,7 @@ class HttpResourceTest extends TestCase
         $resource = new HttpResource(
             Url::fromString('http://example.com'),
             MediaType::fromString('application/json'),
-            new Map('string', AttributeInterface::class),
+            new Map('string', Attribute::class),
             new StringStream('')
         );
 

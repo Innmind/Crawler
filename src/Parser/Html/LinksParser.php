@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver,
     Visitor\RemoveDuplicatedUrls
 };
@@ -34,7 +34,7 @@ use Innmind\Immutable\{
     Set
 };
 
-final class LinksParser implements ParserInterface
+final class LinksParser implements Parser
 {
     use HtmlTrait;
 

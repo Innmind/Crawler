@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Http\{
     Message\Request,
@@ -18,7 +18,7 @@ use Innmind\Immutable\{
     Set
 };
 
-final class LanguagesParser implements ParserInterface
+final class LanguagesParser implements Parser
 {
     public function parse(
         Request $request,

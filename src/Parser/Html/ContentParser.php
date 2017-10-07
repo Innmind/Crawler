@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     Visitor\Html\RemoveElements,
     Visitor\Html\RemoveComments,
     Visitor\Html\FindContentNode,
@@ -32,7 +32,7 @@ use Innmind\Immutable\{
     Map
 };
 
-final class ContentParser implements ParserInterface
+final class ContentParser implements Parser
 {
     use HtmlTrait;
 

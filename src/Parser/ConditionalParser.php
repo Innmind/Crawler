@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Parser;
 
-use Innmind\Crawler\ParserInterface;
+use Innmind\Crawler\Parser;
 use Innmind\Http\Message\{
     Request,
     Response
@@ -13,12 +13,12 @@ use Innmind\Immutable\MapInterface;
 /**
  * Iterate over all parsers until one modifies the attributes
  */
-final class ConditionalParser implements ParserInterface
+final class ConditionalParser implements Parser
 {
     private $parsers;
     private $length;
 
-    public function __construct(ParserInterface ...$parsers)
+    public function __construct(Parser ...$parsers)
     {
         $this->parsers = $parsers;
         $this->length = count($parsers);

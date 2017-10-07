@@ -5,10 +5,9 @@ namespace Tests\Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser\Html\AlternatesParser,
-    HttpResource\AttributeInterface,
-    HttpResource\Alternates,
     HttpResource\Attribute,
-    ParserInterface,
+    HttpResource\Alternates,
+    Parser,
     Parser\Http\ContentTypeParser,
     UrlResolver
 };
@@ -64,7 +63,7 @@ class AlternatesParserTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parser);
     }
 
     public function testKey()
@@ -76,7 +75,7 @@ class AlternatesParserTest extends TestCase
     {
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(Response::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse(
             $request,
@@ -91,10 +90,10 @@ class AlternatesParserTest extends TestCase
     {
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/csv')
                 )
@@ -116,10 +115,10 @@ class AlternatesParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
-        $expected = (new Map('string', AttributeInterface::class))
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -143,10 +142,10 @@ class AlternatesParserTest extends TestCase
             ->willReturn(
                 new StringStream('<html><head><link rel="alternate" href="ios-app://294047850/lmfr/" /></head></html>')
             );
-        $expected = (new Map('string', AttributeInterface::class))
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -182,10 +181,10 @@ class AlternatesParserTest extends TestCase
 HTML
                 )
             );
-        $attributes = (new Map('string', AttributeInterface::class))
+        $attributes = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )

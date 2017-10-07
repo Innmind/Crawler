@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver
 };
 use Innmind\Xml\{
@@ -24,7 +24,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class CanonicalParser implements ParserInterface
+final class CanonicalParser implements Parser
 {
     use HtmlTrait;
 
