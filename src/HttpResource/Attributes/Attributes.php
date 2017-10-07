@@ -6,7 +6,7 @@ namespace Innmind\Crawler\HttpResource\Attributes;
 use Innmind\Crawler\{
     HttpResource\Attributes as AttributesInterface,
     HttpResource\Attribute,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 use Innmind\Immutable\MapInterface;
 
@@ -19,12 +19,18 @@ final class Attributes implements AttributesInterface
         string $name,
         MapInterface $attributes
     ) {
+        if (empty($name)) {
+            throw new DomainException;
+        }
+
         if (
-            empty($name) ||
             (string) $attributes->keyType() !== 'string' ||
             (string) $attributes->valueType() !== Attribute::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type MapInterface<string, %s>',
+                Attribute::class
+            ));
         }
 
         $this->name = $name;

@@ -28,7 +28,7 @@ class AttributesTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException Innmind\Crawler\Exception\DomainException
      */
     public function testThrowWhenEmptyName()
     {
@@ -39,7 +39,8 @@ class AttributesTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 2 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>
      */
     public function testThrowWhenInvalidAttributeMap()
     {

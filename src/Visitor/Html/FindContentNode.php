@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Exception\{
-    ContentTooDispersed,
-    InvalidArgumentException
-};
+use Innmind\Crawler\Exception\ContentTooDispersed;
 use Innmind\Xml\{
     NodeInterface,
     Visitor\Text
@@ -31,7 +28,10 @@ final class FindContentNode
             (string) $nodes->keyType() !== 'int' ||
             (string) $nodes->valueType() !== NodeInterface::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 1 must be of type MapInterface<int, %s>',
+                NodeInterface::class
+            ));
         }
 
         $nodes->rewind();

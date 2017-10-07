@@ -37,7 +37,8 @@ class AlternateTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessae Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>
      */
     public function testThrowWhenInvalidLinks()
     {

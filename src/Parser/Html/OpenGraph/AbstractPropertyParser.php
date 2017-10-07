@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
 use Innmind\Crawler\{
     Parser,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
     Exception\InvalidOpenGraphAttribute,
     HttpResource\Attribute\Attribute,
     Parser\Html\HtmlTrait
@@ -41,7 +41,7 @@ abstract class AbstractPropertyParser implements Parser
         string $property
     ) {
         if (empty($property)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->reader = $reader;

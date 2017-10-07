@@ -5,7 +5,7 @@ namespace Innmind\Crawler\HttpResource\Attribute;
 
 use Innmind\Crawler\{
     HttpResource\Attribute as AttributeInterface,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 
 final class Attribute implements AttributeInterface
@@ -16,7 +16,7 @@ final class Attribute implements AttributeInterface
     public function __construct(string $name, $content)
     {
         if (empty($name)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->name = $name;

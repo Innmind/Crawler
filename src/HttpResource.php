@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Crawler\{
-    HttpResource\Attribute,
-    Exception\InvalidArgumentException
-};
+use Innmind\Crawler\HttpResource\Attribute;
 use Innmind\Url\UrlInterface;
 use Innmind\Filesystem\{
     File,
@@ -34,7 +31,10 @@ final class HttpResource implements File
             (string) $attributes->keyType() !== 'string' ||
             (string) $attributes->valueType() !== Attribute::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 3 must be of type MapInterface<string, %s>',
+                Attribute::class
+            ));
         }
 
         $name = basename((string) $url->path());

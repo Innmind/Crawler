@@ -5,7 +5,6 @@ namespace Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
-    Exception\InvalidArgumentException,
     Exception\CantMergeDifferentLanguages
 };
 use Innmind\Url\UrlInterface;
@@ -20,7 +19,10 @@ final class Alternate implements Attribute
         SetInterface $links
     ) {
         if ((string) $links->type() !== UrlInterface::class) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type SetInterface<%s>',
+                UrlInterface::class
+            ));
         }
 
         $this->attribute = new Attribute\Attribute(

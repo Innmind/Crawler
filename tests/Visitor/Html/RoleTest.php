@@ -63,7 +63,7 @@ HTML
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException Innmind\Crawler\Exception\DomainException
      */
     public function testThrowWhenEmptyRole()
     {

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Exception\InvalidArgumentException;
 use Innmind\Xml\{
     NodeInterface,
     ElementInterface
@@ -17,7 +16,7 @@ final class RemoveElements
     public function __construct(SetInterface $toRemove)
     {
         if ((string) $toRemove->type() !== 'string') {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 1 must be of type SetInterface<string>');
         }
 
         $this->toRemove = $toRemove;
