@@ -6,7 +6,7 @@ namespace Innmind\Crawler\HttpResource;
 use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
     Exception\InvalidArgumentException,
-    Exception\CantMergeDifferentLanguagesException
+    Exception\CantMergeDifferentLanguages
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;
@@ -42,7 +42,7 @@ final class Alternate implements Attribute
     public function merge(self $alternate): self
     {
         if ($this->name() !== $alternate->name()) {
-            throw new CantMergeDifferentLanguagesException;
+            throw new CantMergeDifferentLanguages;
         }
 
         return new self(

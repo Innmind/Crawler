@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Exception\{
-    ContentTooDispersedException,
+    ContentTooDispersed,
     InvalidArgumentException
 };
 use Innmind\Xml\{
@@ -43,7 +43,7 @@ final class FindContentNode
 
             try {
                 return $this($nodes->current()->children());
-            } catch (ContentTooDispersedException $e) {
+            } catch (ContentTooDispersed $e) {
                 return $nodes->current();
             }
         }
@@ -75,7 +75,7 @@ final class FindContentNode
         }
 
         if (empty($lookup)) {
-            throw new ContentTooDispersedException;
+            throw new ContentTooDispersed;
         }
 
         //select the minimum amount of words that needs to be in nodes

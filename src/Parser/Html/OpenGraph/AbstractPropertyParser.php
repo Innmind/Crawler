@@ -6,7 +6,7 @@ namespace Innmind\Crawler\Parser\Html\OpenGraph;
 use Innmind\Crawler\{
     Parser,
     Exception\InvalidArgumentException,
-    Exception\InvalidOpenGraphAttributeException,
+    Exception\InvalidOpenGraphAttribute,
     HttpResource\Attribute\Attribute,
     Parser\Html\HtmlTrait
 };
@@ -91,7 +91,7 @@ abstract class AbstractPropertyParser implements Parser
                 static::key(),
                 new Attribute(static::key(), $this->parseValues($values))
             );
-        } catch (InvalidOpenGraphAttributeException $e) {
+        } catch (InvalidOpenGraphAttribute $e) {
             return $attributes;
         }
     }

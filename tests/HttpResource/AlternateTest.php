@@ -45,7 +45,7 @@ class AlternateTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguagesException
+     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguages
      */
     public function testThrowWhenMergingDifferentLanguages()
     {

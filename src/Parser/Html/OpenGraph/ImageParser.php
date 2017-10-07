@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
-use Innmind\Crawler\Exception\InvalidOpenGraphAttributeException;
+use Innmind\Crawler\Exception\InvalidOpenGraphAttribute;
 use Innmind\Xml\ReaderInterface;
 use Innmind\Url\{
     Url,
@@ -35,7 +35,7 @@ final class ImageParser extends AbstractPropertyParser
             );
 
         if ($urls->size() === 0) {
-            throw new InvalidOpenGraphAttributeException;
+            throw new InvalidOpenGraphAttribute;
         }
 
         return $urls;
