@@ -28,7 +28,6 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set,
     Map
 };
 
@@ -37,14 +36,10 @@ final class ContentParser implements Parser
     use HtmlTrait;
 
     private $reader;
-    private $toIgnore;
 
     public function __construct(ReaderInterface $reader)
     {
         $this->reader = $reader;
-        $this->toIgnore = (new Set('string'))
-            ->add('script')
-            ->add('style');
     }
 
     public function parse(
@@ -57,7 +52,7 @@ final class ContentParser implements Parser
         }
 
         $document = $this->reader->read($response->body());
-        $document = (new RemoveElements($this->toIgnore))($document);
+        $document = (new RemoveElements('script', 'style'))($document);
         $document = (new RemoveComments)($document);
 
         try {

@@ -14,16 +14,13 @@ use Innmind\Xml\{
     Translator\NodeTranslators
 };
 use Innmind\Filesystem\Stream\StringStream;
-use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class RemoveElementsTest extends TestCase
 {
     public function testInterface()
     {
-        $visitor = new RemoveElements(
-            (new Set('string'))->add('script')
-        );
+        $visitor = new RemoveElements('script');
 
         $reader = new Reader(
             new NodeTranslator(
@@ -73,14 +70,5 @@ HTML;
         $this->assertNotSame($html, $cleaned);
         $this->assertInstanceOf(NodeInterface::class, $cleaned);
         $this->assertSame($expected, (string) $cleaned);
-    }
-
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 must be of type SetInterface<string>
-     */
-    public function testThrowWhenInvalidNames()
-    {
-        new RemoveElements(new Set('int'));
     }
 }
