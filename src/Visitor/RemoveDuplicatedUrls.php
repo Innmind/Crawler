@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor;
 
-use Innmind\Crawler\Exception\InvalidArgumentException;
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     SetInterface,
@@ -21,7 +20,10 @@ final class RemoveDuplicatedUrls
     public function __invoke(SetInterface $urls): SetInterface
     {
         if ((string) $urls->type() !== UrlInterface::class) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 1 must be of type SetInterface<%s>',
+                UrlInterface::class
+            ));
         }
 
         return $urls

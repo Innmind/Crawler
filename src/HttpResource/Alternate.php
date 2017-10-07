@@ -5,13 +5,12 @@ namespace Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
-    Exception\InvalidArgumentException,
-    Exception\CantMergeDifferentLanguagesException
+    Exception\CantMergeDifferentLanguages
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;
 
-final class Alternate implements AttributeInterface
+final class Alternate implements Attribute
 {
     private $attribute;
 
@@ -20,10 +19,13 @@ final class Alternate implements AttributeInterface
         SetInterface $links
     ) {
         if ((string) $links->type() !== UrlInterface::class) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type SetInterface<%s>',
+                UrlInterface::class
+            ));
         }
 
-        $this->attribute = new Attribute(
+        $this->attribute = new Attribute\Attribute(
             $language,
             (new RemoveDuplicatedUrls)($links)
         );
@@ -42,7 +44,7 @@ final class Alternate implements AttributeInterface
     public function merge(self $alternate): self
     {
         if ($this->name() !== $alternate->name()) {
-            throw new CantMergeDifferentLanguagesException;
+            throw new CantMergeDifferentLanguages;
         }
 
         return new self(

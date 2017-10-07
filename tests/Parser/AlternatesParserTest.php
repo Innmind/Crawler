@@ -8,8 +8,7 @@ use Innmind\Crawler\{
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Http\ContentTypeParser,
     Parser\Html\AlternatesParser as HtmlParser,
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
     HttpResource\Alternates,
     HttpResource\Attribute,
     UrlResolver
@@ -24,16 +23,14 @@ use Innmind\Xml\Translator\{
     NodeTranslators
 };
 use Innmind\Http\{
-    Message\ResponseInterface,
-    Message\Request,
-    Message\Method,
-    Headers,
-    ProtocolVersion,
-    Header\HeaderInterface,
-    Header\HeaderValueInterface,
+    Message\Response,
+    Message\Request\Request,
+    Message\Method\Method,
+    Headers\Headers,
+    ProtocolVersion\ProtocolVersion,
+    Header,
     Header\Link,
     Header\LinkValue,
-    Header\ParameterInterface,
     Header\Parameter
 };
 use Innmind\Url\Url;
@@ -41,10 +38,7 @@ use Innmind\Filesystem\{
     Stream\StringStream,
     MediaType\MediaType
 };
-use Innmind\Immutable\{
-    Map,
-    Set
-};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
@@ -73,32 +67,31 @@ class AlternatesParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
 
     public function testParseFromHeaders()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'link',
                             new Link(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new LinkValue(
-                                        Url::fromString('/en/foo/bar'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'en')
-                                            )
-                                    ))
+                                new LinkValue(
+                                    Url::fromString('/en/foo/bar'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'en')
+                                        )
+                                )
                             )
                         )
                 )
@@ -109,11 +102,11 @@ class AlternatesParserTest extends TestCase
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            new Map('string', AttributeInterface::class)
+            new Map('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));
@@ -125,7 +118,7 @@ class AlternatesParserTest extends TestCase
 
     public function testParseFromHtml()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('body')
             ->willReturn(
@@ -142,10 +135,10 @@ HTML
                 )
             );
 
-        $attributes = (new Map('string', AttributeInterface::class))
+        $attributes = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -156,7 +149,7 @@ HTML
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
@@ -173,25 +166,24 @@ HTML
 
     public function testMergeResults()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'link',
                             new Link(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new LinkValue(
-                                        Url::fromString('/en/foo/bar'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'en')
-                                            )
-                                    ))
+                                new LinkValue(
+                                    Url::fromString('/en/foo/bar'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'en')
+                                        )
+                                )
                             )
                         )
                 )
@@ -211,10 +203,10 @@ HTML
 HTML
                 )
             );
-        $attributes = (new Map('string', AttributeInterface::class))
+        $attributes = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -225,7 +217,7 @@ HTML
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,

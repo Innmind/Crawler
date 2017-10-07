@@ -1,31 +1,30 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Crawler;
+namespace Tests\Innmind\Crawler\Crawler;
 
 use Innmind\Crawler\{
-    Crawler,
-    CrawlerInterface,
-    ParserInterface,
+    Crawler\Crawler,
+    Crawler as CrawlerInterface,
+    Parser,
     HttpResource,
-    HttpResource\Attribute,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Http\{
-    Message\Request,
-    Message\ResponseInterface,
-    Message\Method,
-    Headers,
-    ProtocolVersion,
-    Header\HeaderInterface
+    Message\Request\Request,
+    Message\Response,
+    Message\Method\Method,
+    Headers\Headers,
+    ProtocolVersion\ProtocolVersion,
+    Header
 };
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\{
-    StreamInterface,
     MediaType\NullMediaType,
     MediaType\MediaType,
     Stream\StringStream
 };
+use Innmind\Stream\Readable;
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Set,
@@ -39,14 +38,14 @@ class CrawlerTest extends TestCase
     public function testInterface()
     {
         $crawler = new Crawler(
-            $transport = $this->createMock(TransportInterface::class),
-            $parser = $this->createMock(ParserInterface::class)
+            $transport = $this->createMock(Transport::class),
+            $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             $url = Url::fromString('http://example.com'),
             new Method('GET'),
             new ProtocolVersion(1, 1),
-            new Headers(new Map('string', HeaderInterface::class)),
+            new Headers(new Map('string', Header::class)),
             new StringStream('')
         );
         $transport
@@ -54,18 +53,18 @@ class CrawlerTest extends TestCase
             ->method('fulfill')
             ->with($request)
             ->willReturn(
-                $response = $this->createMock(ResponseInterface::class)
+                $response = $this->createMock(Response::class)
             );
         $response
             ->method('body')
-            ->willReturn($content = $this->createMock(StreamInterface::class));
+            ->willReturn($content = $this->createMock(Readable::class));
         $parser
             ->expects($this->once())
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', AttributeInterface::class))
-                    ->put('foo', $attribute = new Attribute('foo', 42, 24))
+                (new Map('string', Attribute::class))
+                    ->put('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
             );
 
         $resource = $crawler->execute($request);
@@ -78,7 +77,7 @@ class CrawlerTest extends TestCase
         $attributes = $resource->attributes();
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
-        $this->assertSame(AttributeInterface::class, (string) $attributes->valueType());
+        $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $this->assertSame($attribute, $attributes->get('foo'));
     }
@@ -86,14 +85,14 @@ class CrawlerTest extends TestCase
     public function testUseTheParsedMediaTypeForTheResource()
     {
         $crawler = new Crawler(
-            $transport = $this->createMock(TransportInterface::class),
-            $parser = $this->createMock(ParserInterface::class)
+            $transport = $this->createMock(Transport::class),
+            $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             Url::fromString('http://example.com'),
             new Method('GET'),
             new ProtocolVersion(1, 1),
-            new Headers(new Map('string', HeaderInterface::class)),
+            new Headers(new Map('string', Header::class)),
             new StringStream('')
         );
         $transport
@@ -101,20 +100,20 @@ class CrawlerTest extends TestCase
             ->method('fulfill')
             ->with($request)
             ->willReturn(
-                $response = $this->createMock(ResponseInterface::class)
+                $response = $this->createMock(Response::class)
             );
         $response
             ->method('body')
-            ->willReturn($this->createMock(StreamInterface::class));
+            ->willReturn($this->createMock(Readable::class));
         $parser
             ->expects($this->once())
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', AttributeInterface::class))
+                (new Map('string', Attribute::class))
                     ->put(
                         'content_type',
-                        new Attribute('content_type', 'application/json', 24)
+                        new Attribute\Attribute('content_type', 'application/json', 24)
                     )
             );
 

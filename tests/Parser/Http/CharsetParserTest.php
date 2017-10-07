@@ -4,18 +4,17 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\CharsetParser,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
-    HeadersInterface,
-    Header\HeaderInterface,
+    Message\Request,
+    Message\Response,
+    Headers,
+    Header,
     Header\ContentType,
     Header\ContentTypeValue,
-    Header\ParameterInterface,
     Header\Parameter
 };
 use Innmind\Immutable\Map;
@@ -26,7 +25,7 @@ class CharsetParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new CharsetParser
         );
     }
@@ -39,20 +38,20 @@ class CharsetParserTest extends TestCase
     public function testDoesntParseWhenNoContentType()
     {
         $parser = new CharsetParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
             ->method('has')
             ->with('Content-Type')
             ->willReturn(false);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -62,13 +61,13 @@ class CharsetParserTest extends TestCase
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
         $parser = new CharsetParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
@@ -79,8 +78,8 @@ class CharsetParserTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('Content-Type')
-            ->willReturn($this->createMock(HeaderInterface::class));
-        $expected = new Map('string', AttributeInterface::class);
+            ->willReturn($this->createMock(Header::class));
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -90,13 +89,13 @@ class CharsetParserTest extends TestCase
     public function testDoesntParseWhenNoCharset()
     {
         $parser = new CharsetParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
@@ -112,11 +111,11 @@ class CharsetParserTest extends TestCase
                     new ContentTypeValue(
                         'foo',
                         'bar',
-                        new Map('string', ParameterInterface::class)
+                        new Map('string', Parameter::class)
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -126,13 +125,13 @@ class CharsetParserTest extends TestCase
     public function testParse()
     {
         $parser = new CharsetParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
@@ -148,15 +147,15 @@ class CharsetParserTest extends TestCase
                     new ContentTypeValue(
                         'foo',
                         'bar',
-                        (new Map('string', ParameterInterface::class))
+                        (new Map('string', Parameter::class))
                             ->put(
                                 'charset',
-                                new Parameter('charset', 'utf-8')
+                                new Parameter\Parameter('charset', 'utf-8')
                             )
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 

@@ -3,21 +3,17 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Crawler\{
-    HttpResource\AttributeInterface,
-    Exception\InvalidArgumentException
-};
+use Innmind\Crawler\HttpResource\Attribute;
 use Innmind\Url\UrlInterface;
 use Innmind\Filesystem\{
-    FileInterface,
-    MediaTypeInterface,
-    StreamInterface,
-    Name,
-    NameInterface
+    File,
+    MediaType,
+    Name
 };
+use Innmind\Stream\Readable;
 use Innmind\Immutable\MapInterface;
 
-final class HttpResource implements FileInterface
+final class HttpResource implements File
 {
     private $url;
     private $name;
@@ -27,20 +23,23 @@ final class HttpResource implements FileInterface
 
     public function __construct(
         UrlInterface $url,
-        MediaTypeInterface $mediaType,
+        MediaType $mediaType,
         MapInterface $attributes,
-        StreamInterface $content
+        Readable $content
     ) {
         if (
             (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== AttributeInterface::class
+            (string) $attributes->valueType() !== Attribute::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 3 must be of type MapInterface<string, %s>',
+                Attribute::class
+            ));
         }
 
         $name = basename((string) $url->path());
         $this->url = $url;
-        $this->name = new Name(empty($name) ? 'index' : $name);
+        $this->name = new Name\Name(empty($name) ? 'index' : $name);
         $this->mediaType = $mediaType;
         $this->attributes = $attributes;
         $this->content = $content;
@@ -51,23 +50,23 @@ final class HttpResource implements FileInterface
         return $this->url;
     }
 
-    public function name(): NameInterface
+    public function name(): Name
     {
         return $this->name;
     }
 
-    public function mediaType(): MediaTypeInterface
+    public function mediaType(): MediaType
     {
         return $this->mediaType;
     }
 
-    public function content(): StreamInterface
+    public function content(): Readable
     {
         return $this->content;
     }
 
     /**
-     * @return MapInterface<string, AttributeInterface>
+     * @return MapInterface<string, Attribute>
      */
     public function attributes(): MapInterface
     {

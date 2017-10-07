@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -18,8 +18,8 @@ use Innmind\Html\{
     Element\A
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -27,7 +27,7 @@ use Innmind\Immutable\{
     Str
 };
 
-final class AnchorsParser implements ParserInterface
+final class AnchorsParser implements Parser
 {
     use HtmlTrait;
 
@@ -39,8 +39,8 @@ final class AnchorsParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

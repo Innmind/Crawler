@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     Visitor\Html\RemoveElements,
     Visitor\Html\RemoveComments,
     Visitor\Html\FindContentNode,
@@ -23,33 +23,28 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set,
     Map
 };
 
-final class ContentParser implements ParserInterface
+final class ContentParser implements Parser
 {
     use HtmlTrait;
 
     private $reader;
-    private $toIgnore;
 
     public function __construct(ReaderInterface $reader)
     {
         $this->reader = $reader;
-        $this->toIgnore = (new Set('string'))
-            ->add('script')
-            ->add('style');
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {
@@ -57,7 +52,7 @@ final class ContentParser implements ParserInterface
         }
 
         $document = $this->reader->read($response->body());
-        $document = (new RemoveElements($this->toIgnore))($document);
+        $document = (new RemoveElements('script', 'style'))($document);
         $document = (new RemoveComments)($document);
 
         try {

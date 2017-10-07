@@ -4,27 +4,26 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Image;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
-    HttpResource\Attributes,
-    HttpResource\AttributeInterface
+    Parser,
+    HttpResource\Attributes\Attributes,
+    HttpResource\Attribute
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
     Map
 };
 
-final class DimensionParser implements ParserInterface
+final class DimensionParser implements Parser
 {
     use ImageTrait;
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isImage($attributes)) {
@@ -39,17 +38,17 @@ final class DimensionParser implements ParserInterface
             self::key(),
             new Attributes(
                 self::key(),
-                (new Map('string', AttributeInterface::class))
+                (new Map('string', Attribute::class))
                     ->put(
                         'width',
-                        new Attribute(
+                        new Attribute\Attribute(
                             'width',
                             $infos[0]
                         )
                     )
                     ->put(
                         'height',
-                        new Attribute(
+                        new Attribute\Attribute(
                             'height',
                             $infos[1]
                         )

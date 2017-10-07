@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
+    HttpResource\Attribute,
     HttpResource\Alternate,
     HttpResource\Alternates,
     UrlResolver
@@ -21,8 +21,8 @@ use Innmind\Xml\{
     NodeInterface
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -33,7 +33,7 @@ use Innmind\Immutable\{
     Set
 };
 
-final class AlternatesParser implements ParserInterface
+final class AlternatesParser implements Parser
 {
     use HtmlTrait;
 
@@ -49,8 +49,8 @@ final class AlternatesParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {
@@ -105,7 +105,7 @@ final class AlternatesParser implements ParserInterface
                 });
             })
             ->reduce(
-                new Map('string', AttributeInterface::class),
+                new Map('string', Attribute::class),
                 function(Map $languages, string $language, MapInterface $links): Map {
                     return $languages->put(
                         $language,

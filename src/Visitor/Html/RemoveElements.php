@@ -3,24 +3,19 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Exception\InvalidArgumentException;
 use Innmind\Xml\{
     NodeInterface,
     ElementInterface
 };
-use Innmind\Immutable\SetInterface;
+use Innmind\Immutable\Sequence;
 
 final class RemoveElements
 {
     private $toRemove;
 
-    public function __construct(SetInterface $toRemove)
+    public function __construct(string ...$toRemove)
     {
-        if ((string) $toRemove->type() !== 'string') {
-            throw new InvalidArgumentException;
-        }
-
-        $this->toRemove = $toRemove;
+        $this->toRemove = new Sequence(...$toRemove);
     }
 
     public function __invoke(NodeInterface $node): NodeInterface

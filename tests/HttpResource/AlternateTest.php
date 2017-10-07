@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\HttpResource\{
     Alternate,
-    AttributeInterface
+    Attribute
 };
 use Innmind\Url\{
     UrlInterface,
@@ -22,7 +22,7 @@ class AlternateTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            AttributeInterface::class,
+            Attribute::class,
             $alternate = new Alternate(
                 'fr',
                 new Set(UrlInterface::class)
@@ -37,7 +37,8 @@ class AlternateTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessae Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>
      */
     public function testThrowWhenInvalidLinks()
     {
@@ -45,7 +46,7 @@ class AlternateTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguagesException
+     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguages
      */
     public function testThrowWhenMergingDifferentLanguages()
     {

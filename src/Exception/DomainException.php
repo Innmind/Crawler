@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Exception;
 
-class RuntimeException extends \RuntimeException implements Exception
+class DomainException extends \DomainException implements Exception
 {
 }

@@ -5,8 +5,7 @@ namespace Tests\Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser\Html\TitleParser,
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
     HttpResource\Attribute,
     Parser\Http\ContentTypeParser
 };
@@ -23,8 +22,8 @@ use Innmind\Filesystem\{
     Stream\StringStream
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     Map,
@@ -52,7 +51,7 @@ class TitleParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
@@ -64,9 +63,9 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse(
             $request,
@@ -79,12 +78,12 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/csv')
                 )
@@ -101,12 +100,12 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNothingFound()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -130,12 +129,12 @@ class TitleParserTest extends TestCase
      */
     public function testParseH1($title, $html)
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $notExpected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $notExpected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -155,7 +154,7 @@ class TitleParserTest extends TestCase
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
-            AttributeInterface::class,
+            Attribute::class,
             (string) $attributes->valueType()
         );
         $this->assertSame('title', $attributes->get('title')->name());

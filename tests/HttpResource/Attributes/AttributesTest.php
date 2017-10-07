@@ -1,13 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Crawler\HttpResource;
+namespace Tests\Innmind\Crawler\HttpResource\Attributes;
 
 use Innmind\Crawler\HttpResource\{
-    Attributes,
-    AttributesInterface,
-    Attribute,
-    AttributeInterface
+    Attributes\Attributes,
+    Attributes as AttributesInterface,
+    Attribute
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -18,9 +17,9 @@ class AttributesTest extends TestCase
     {
         $attributes = new Attributes(
             'foo',
-            $content = (new Map('string', AttributeInterface::class))
-                ->put('bar', new Attribute('bar', 42))
-                ->put('baz', new Attribute('baz', 'idk'))
+            $content = (new Map('string', Attribute::class))
+                ->put('bar', new Attribute\Attribute('bar', 42))
+                ->put('baz', new Attribute\Attribute('baz', 'idk'))
         );
 
         $this->assertInstanceOf(AttributesInterface::class, $attributes);
@@ -29,18 +28,19 @@ class AttributesTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException Innmind\Crawler\Exception\DomainException
      */
     public function testThrowWhenEmptyName()
     {
         new Attributes(
             '',
-            new Map('string', AttributeInterface::class)
+            new Map('string', Attribute::class)
         );
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 2 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>
      */
     public function testThrowWhenInvalidAttributeMap()
     {
@@ -54,9 +54,9 @@ class AttributesTest extends TestCase
     {
         $attributes = new Attributes(
             'foo',
-            $content = (new Map('string', AttributeInterface::class))
-                ->put('bar', new Attribute('bar', 42))
-                ->put('baz', new Attribute('baz', 'idk'))
+            $content = (new Map('string', Attribute::class))
+                ->put('bar', new Attribute\Attribute('bar', 42))
+                ->put('baz', new Attribute\Attribute('baz', 'idk'))
         );
 
         $this->assertSame($content->get('bar'), $attributes->current());

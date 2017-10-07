@@ -37,7 +37,8 @@ class RemoveDuplicatedUrlsTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 must be of type SetInterface<Innmind\Url\UrlInterface>
      */
     public function testThrowWhenInvalidSet()
     {

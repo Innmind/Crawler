@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Xml\{
     ReaderInterface,
@@ -18,15 +18,15 @@ use Innmind\Html\{
     Exception\ElementNotFoundException
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
     Set
 };
 
-final class CitationsParser implements ParserInterface
+final class CitationsParser implements Parser
 {
     use HtmlTrait;
 
@@ -38,8 +38,8 @@ final class CitationsParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

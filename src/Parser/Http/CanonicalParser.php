@@ -4,19 +4,19 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
+    Message\Request,
+    Message\Response,
     Header\Link,
     Header\LinkValue
 };
 use Innmind\Immutable\MapInterface;
 
-final class CanonicalParser implements ParserInterface
+final class CanonicalParser implements Parser
 {
     private $resolver;
 
@@ -26,8 +26,8 @@ final class CanonicalParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (

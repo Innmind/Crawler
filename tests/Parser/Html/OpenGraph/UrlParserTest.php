@@ -5,14 +5,13 @@ namespace Tests\Innmind\Crawler\Parser\Html\OpenGraph;
 
 use Innmind\Crawler\{
     Parser\Html\OpenGraph\UrlParser,
-    HttpResource\AttributeInterface,
     HttpResource\Attribute,
-    ParserInterface,
+    Parser,
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface
+    Message\Request,
+    Message\Response
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
@@ -52,7 +51,7 @@ class UrlParserTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parser);
     }
 
     public function testKey()
@@ -62,9 +61,9 @@ class UrlParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse(
             $request,
@@ -77,12 +76,12 @@ class UrlParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/csv')
                 )
@@ -99,22 +98,22 @@ class UrlParserTest extends TestCase
 
     public function testDoesntParseWhenNoHead()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
-        $expected = (new Map('string', AttributeInterface::class))
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
             );
 
         $attributes = $this->parser->parse(
-            $this->createMock(RequestInterface::class),
+            $this->createMock(Request::class),
             $response,
             $expected
         );
@@ -124,7 +123,7 @@ class UrlParserTest extends TestCase
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -139,17 +138,17 @@ class UrlParserTest extends TestCase
 </html>
 HTML
             ));
-        $notExpected = (new Map('string', AttributeInterface::class))
+        $notExpected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
             );
 
         $attributes = $this->parser->parse(
-            $this->createMock(RequestInterface::class),
+            $this->createMock(Request::class),
             $response,
             $notExpected
         );
@@ -158,7 +157,7 @@ HTML
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
-            AttributeInterface::class,
+            Attribute::class,
             (string) $attributes->valueType()
         );
         $this->assertCount(2, $attributes);

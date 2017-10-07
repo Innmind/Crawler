@@ -4,19 +4,18 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
+    Parser,
     Parser\Http\ContentTypeParser,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
-use Innmind\Filesystem\MediaTypeInterface;
+use Innmind\Filesystem\MediaType;
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
-    HeadersInterface,
-    Header\HeaderInterface,
+    Message\Request,
+    Message\Response,
+    Headers,
+    Header,
     Header\ContentType,
-    Header\ContentTypeValue,
-    Header\ParameterInterface
+    Header\ContentTypeValue
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +25,7 @@ class ContentTypeParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new ContentTypeParser
         );
     }
@@ -39,20 +38,20 @@ class ContentTypeParserTest extends TestCase
     public function testDoesntParseWhenNoContentType()
     {
         $parser = new ContentTypeParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
             ->method('has')
             ->with('Content-Type')
             ->willReturn(false);
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -62,9 +61,9 @@ class ContentTypeParserTest extends TestCase
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
         $parser = new ContentTypeParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
@@ -78,8 +77,8 @@ class ContentTypeParserTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('Content-Type')
-            ->willReturn($this->createMock(HeaderInterface::class));
-        $expected = new Map('string', AttributeInterface::class);
+            ->willReturn($this->createMock(Header::class));
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -89,9 +88,9 @@ class ContentTypeParserTest extends TestCase
     public function testParse()
     {
         $parser = new ContentTypeParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(3))
             ->method('headers')
@@ -109,12 +108,11 @@ class ContentTypeParserTest extends TestCase
                 new ContentType(
                     new ContentTypeValue(
                         'text',
-                        'bar',
-                        new Map('string', ParameterInterface::class)
+                        'bar'
                     )
                 )
             );
-        $expected = new Map('string', AttributeInterface::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $parser->parse($request, $response, $expected);
 
@@ -123,7 +121,7 @@ class ContentTypeParserTest extends TestCase
         $this->assertSame('content_type', $attributes->key());
         $this->assertSame('content_type', $attributes->current()->name());
         $this->assertInstanceOf(
-            MediaTypeInterface::class,
+            MediaType::class,
             $attributes->current()->content()
         );
         $this->assertSame('text/bar', (string) $attributes->current()->content());

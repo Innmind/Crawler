@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Exception\{
-    ContentTooDispersedException,
-    InvalidArgumentException
-};
+use Innmind\Crawler\Exception\ContentTooDispersed;
 use Innmind\Xml\{
     NodeInterface,
     Visitor\Text
@@ -31,7 +28,10 @@ final class FindContentNode
             (string) $nodes->keyType() !== 'int' ||
             (string) $nodes->valueType() !== NodeInterface::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 1 must be of type MapInterface<int, %s>',
+                NodeInterface::class
+            ));
         }
 
         $nodes->rewind();
@@ -43,7 +43,7 @@ final class FindContentNode
 
             try {
                 return $this($nodes->current()->children());
-            } catch (ContentTooDispersedException $e) {
+            } catch (ContentTooDispersed $e) {
                 return $nodes->current();
             }
         }
@@ -75,7 +75,7 @@ final class FindContentNode
         }
 
         if (empty($lookup)) {
-            throw new ContentTooDispersedException;
+            throw new ContentTooDispersed;
         }
 
         //select the minimum amount of words that needs to be in nodes

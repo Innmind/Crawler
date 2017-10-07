@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Exception\InvalidArgumentException;
+use Innmind\Crawler\Exception\DomainException;
 use Innmind\Xml\{
     NodeInterface,
     ElementInterface
@@ -23,7 +23,7 @@ final class Role
     public function __construct(string $role)
     {
         if (empty($role)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->role = $role;

@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute
+    Parser,
+    HttpResource\Attribute\Attribute
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
-    Header\HeaderValueInterface,
+    Message\Request,
+    Message\Response,
+    Header\Value,
     Header\CacheControlValue\SharedMaxAge
 };
 use Innmind\TimeContinuum\{
@@ -19,7 +19,7 @@ use Innmind\TimeContinuum\{
 };
 use Innmind\Immutable\MapInterface;
 
-final class CacheParser implements ParserInterface
+final class CacheParser implements Parser
 {
     private $clock;
 
@@ -29,8 +29,8 @@ final class CacheParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$response->headers()->has('Cache-Control')) {
@@ -41,7 +41,7 @@ final class CacheParser implements ParserInterface
             ->headers()
             ->get('Cache-Control')
             ->values()
-            ->filter(function(HeaderValueInterface $value): bool {
+            ->filter(function(Value $value): bool {
                 return $value instanceof SharedMaxAge;
             });
 

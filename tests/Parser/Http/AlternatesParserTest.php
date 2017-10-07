@@ -5,9 +5,9 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser\Http\AlternatesParser,
-    HttpResource\AttributeInterface,
+    HttpResource\Attribute,
     HttpResource\Alternates,
-    ParserInterface,
+    Parser,
     UrlResolver
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
@@ -16,16 +16,13 @@ use Innmind\Url\{
     UrlInterface
 };
 use Innmind\Http\{
-    Message\Request,
-    Message\ResponseInterface,
-    Message\Method,
-    Headers,
-    ProtocolVersion,
-    Header\HeaderInterface,
-    Header\Header,
-    Header\HeaderValue,
-    Header\HeaderValueInterface,
-    Header\ParameterInterface,
+    Message\Request\Request,
+    Message\Response,
+    Message\Method\Method,
+    Headers\Headers,
+    ProtocolVersion\ProtocolVersion,
+    Header,
+    Header\Value\Value,
     Header\Parameter,
     Header\Link,
     Header\LinkValue
@@ -33,7 +30,6 @@ use Innmind\Http\{
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
-    Set,
     SetInterface
 };
 use PHPUnit\Framework\TestCase;
@@ -51,7 +47,7 @@ class AlternatesParserTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parser);
     }
 
     public function testKey()
@@ -61,24 +57,20 @@ class AlternatesParserTest extends TestCase
 
     public function testParseWhenNoLink()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
-            ->willReturn(
-                new Headers(
-                    new Map('string', HeaderInterface::class)
-                )
-            );
+            ->willReturn(new Headers);
         $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -86,18 +78,17 @@ class AlternatesParserTest extends TestCase
 
     public function testParseWhenLinkNotACorrectlyParsedOne()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'link',
-                            new Header(
+                            new Header\Header(
                                 'Link',
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new HeaderValue('</foo/bar>; rel="index"'))
+                                new Value('</foo/bar>; rel="index"')
                             )
                         )
                 )
@@ -107,11 +98,11 @@ class AlternatesParserTest extends TestCase
                 Url::fromString('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -119,20 +110,19 @@ class AlternatesParserTest extends TestCase
 
     public function testParseWhenNoAlternate()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'link',
                             new Link(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new LinkValue(
-                                        Url::fromString('/foo/bar'),
-                                        'prev'
-                                    ))
+                                new LinkValue(
+                                    Url::fromString('/foo/bar'),
+                                    'prev'
+                                )
                             )
                         )
                 )
@@ -142,11 +132,11 @@ class AlternatesParserTest extends TestCase
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -154,52 +144,51 @@ class AlternatesParserTest extends TestCase
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'link',
                             new Link(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new LinkValue(
-                                        Url::fromString('/foo/bar'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'fr')
-                                            )
-                                    ))
-                                    ->add(new LinkValue(
-                                        Url::fromString('bar'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'fr')
-                                            )
-                                    ))
-                                    ->add(new LinkValue(
-                                        Url::fromString('baz'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'fr')
-                                            )
-                                    ))
-                                    ->add(new LinkValue(
-                                        Url::fromString('/en/foo/bar'),
-                                        'alternate',
-                                        (new Map('string', ParameterInterface::class))
-                                            ->put(
-                                                'hreflang',
-                                                new Parameter('hreflang', 'en')
-                                            )
-                                    ))
+                                new LinkValue(
+                                    Url::fromString('/foo/bar'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'fr')
+                                        )
+                                ),
+                                new LinkValue(
+                                    Url::fromString('bar'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'fr')
+                                        )
+                                ),
+                                new LinkValue(
+                                    Url::fromString('baz'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'fr')
+                                        )
+                                ),
+                                new LinkValue(
+                                    Url::fromString('/en/foo/bar'),
+                                    'alternate',
+                                    (new Map('string', Parameter::class))
+                                        ->put(
+                                            'hreflang',
+                                            new Parameter\Parameter('hreflang', 'en')
+                                        )
+                                )
                             )
                         )
                 )
@@ -209,11 +198,11 @@ class AlternatesParserTest extends TestCase
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            new Map('string', AttributeInterface::class)
+            new Map('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver
 };
 use Innmind\Xml\{
@@ -19,12 +19,12 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
-final class RssParser implements ParserInterface
+final class RssParser implements Parser
 {
     use HtmlTrait;
 
@@ -38,8 +38,8 @@ final class RssParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

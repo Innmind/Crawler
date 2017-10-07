@@ -5,13 +5,13 @@ namespace Tests\Innmind\Crawler;
 
 use Innmind\Crawler\{
     HttpResource,
-    HttpResource\AttributeInterface
+    HttpResource\Attribute
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream,
-    FileInterface
+    File
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -23,11 +23,11 @@ class HttpResourceTest extends TestCase
         $resource = new HttpResource(
             $url = Url::fromString('http://example.com/foo'),
             $mediaType = MediaType::fromString('application/json'),
-            $attributes = new Map('string', AttributeInterface::class),
+            $attributes = new Map('string', Attribute::class),
             $content = new StringStream('')
         );
 
-        $this->assertInstanceOf(FileInterface::class, $resource);
+        $this->assertInstanceOf(File::class, $resource);
         $this->assertSame($url, $resource->url());
         $this->assertSame('foo', (string) $resource->name());
         $this->assertSame($mediaType, $resource->mediaType());
@@ -36,7 +36,8 @@ class HttpResourceTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 3 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>
      */
     public function testThrowWhenInvalidAttributeMap()
     {
@@ -53,7 +54,7 @@ class HttpResourceTest extends TestCase
         $resource = new HttpResource(
             Url::fromString('http://example.com'),
             MediaType::fromString('application/json'),
-            new Map('string', AttributeInterface::class),
+            new Map('string', Attribute::class),
             new StringStream('')
         );
 

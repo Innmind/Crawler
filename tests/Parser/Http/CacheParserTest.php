@@ -5,8 +5,8 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser\Http\CacheParser,
-    ParserInterface,
-    HttpResource\AttributeInterface
+    Parser,
+    HttpResource\Attribute
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
@@ -15,13 +15,12 @@ use Innmind\TimeContinuum\{
     Period\Earth\Second
 };
 use Innmind\Http\{
-    Message\Request,
-    Message\ResponseInterface,
-    Message\Method,
-    Headers,
-    ProtocolVersion,
-    Header\HeaderInterface,
-    Header\HeaderValueInterface,
+    Message\Request\Request,
+    Message\Response,
+    Message\Method\Method,
+    Headers\Headers,
+    ProtocolVersion\ProtocolVersion,
+    Header,
     Header\CacheControl,
     Header\CacheControlValue\PrivateCache,
     Header\CacheControlValue\PublicCache,
@@ -31,7 +30,6 @@ use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
-    Set,
     MapInterface
 };
 use PHPUnit\Framework\TestCase;
@@ -41,7 +39,7 @@ class CaheParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             new CacheParser(
                 $this->createMock(TimeContinuumInterface::class)
             )
@@ -55,25 +53,21 @@ class CaheParserTest extends TestCase
 
     public function testDoesntHaveCacheControl()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
-            ->willReturn(
-                new Headers(
-                    new Map('string', HeaderInterface::class)
-                )
-            );
+            ->willReturn(new Headers);
         $clock = $this->createMock(TimeContinuumInterface::class);
         $attributes = (new CacheParser($clock))->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -81,17 +75,16 @@ class CaheParserTest extends TestCase
 
     public function testSharedMaxAgeDirectiveNotFound()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'cache-control',
                             new CacheControl(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new PrivateCache(''))
+                                new PrivateCache('')
                             )
                         )
                 )
@@ -102,11 +95,11 @@ class CaheParserTest extends TestCase
                 Url::fromString('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $expected = new Map('string', AttributeInterface::class)
+            $expected = new Map('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -114,18 +107,17 @@ class CaheParserTest extends TestCase
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->method('headers')
             ->willReturn(
                 new Headers(
-                    (new Map('string', HeaderInterface::class))
+                    (new Map('string', Header::class))
                         ->put(
                             'cache-control',
                             new CacheControl(
-                                (new Set(HeaderValueInterface::class))
-                                    ->add(new PublicCache)
-                                    ->add(new SharedMaxAge(42))
+                                new PublicCache,
+                                new SharedMaxAge(42)
                             )
                         )
                 )
@@ -153,17 +145,17 @@ class CaheParserTest extends TestCase
                 Url::fromString('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,
-            $notExpected = new Map('string', AttributeInterface::class)
+            $notExpected = new Map('string', Attribute::class)
         );
 
         $this->assertNotSame($notExpected, $attributes);
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
-        $this->assertSame(AttributeInterface::class, (string) $attributes->valueType());
+        $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $attribute = $attributes->get('expires_at');
         $this->assertSame('expires_at', $attribute->name());

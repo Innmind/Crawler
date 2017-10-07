@@ -3,53 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Crawler\{
-    HttpResource\AttributeInterface,
-    Parser\Http\ContentTypeParser
-};
-use Innmind\Http\Message\RequestInterface;
-use Innmind\HttpTransport\TransportInterface;
-use Innmind\Filesystem\MediaType\{
-    MediaType,
-    NullMediaType
-};
-use Innmind\Immutable\Map;
+use Innmind\Http\Message\Request;
 
-final class Crawler implements CrawlerInterface
+interface Crawler
 {
-    private $transport;
-    private $parser;
-
-    public function __construct(
-        TransportInterface $transport,
-        ParserInterface $parser
-    ) {
-        $this->transport = $transport;
-        $this->parser = $parser;
-    }
-
-    public function execute(RequestInterface $request): HttpResource
-    {
-        $response = $this->transport->fulfill($request);
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            new Map('string', AttributeInterface::class)
-        );
-
-        if ($attributes->contains(ContentTypeParser::key())) {
-            $mediaType = MediaType::fromString(
-                (string) $attributes->get(ContentTypeParser::key())->content()
-            );
-        } else {
-            $mediaType = new NullMediaType;
-        }
-
-        return new HttpResource(
-            $request->url(),
-            $mediaType,
-            $attributes,
-            $response->body()
-        );
-    }
+    public function execute(Request $request): HttpResource;
 }

@@ -6,8 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     Parser\Html\JournalParser,
     Parser\Http\ContentTypeParser,
-    ParserInterface,
-    HttpResource\AttributeInterface,
+    Parser,
     HttpResource\Attribute
 };
 use Innmind\Html\{
@@ -19,8 +18,8 @@ use Innmind\Xml\Translator\{
     NodeTranslators
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
@@ -52,7 +51,7 @@ class JournalParserTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ParserInterface::class,
+            Parser::class,
             $this->parser
         );
     }
@@ -64,9 +63,9 @@ class JournalParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = new Map('string', AttributeInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = new Map('string', Attribute::class);
 
         $attributes = $this->parser->parse(
             $request,
@@ -79,12 +78,12 @@ class JournalParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/csv')
                 )
@@ -101,12 +100,12 @@ class JournalParserTest extends TestCase
 
     public function testDoesntParseWhenNoBody()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -127,12 +126,12 @@ class JournalParserTest extends TestCase
 
     public function testDoesntParseWhenNotEnoughArticles()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $expected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $expected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -161,12 +160,12 @@ HTML
 
     public function testParse()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $notExpected = (new Map('string', AttributeInterface::class))
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $notExpected = (new Map('string', Attribute::class))
             ->put(
                 ContentTypeParser::key(),
-                new Attribute(
+                new Attribute\Attribute(
                     ContentTypeParser::key(),
                     MediaType::fromString('text/html')
                 )
@@ -195,7 +194,7 @@ HTML
         $this->assertInstanceOf(MapInterface::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
-            AttributeInterface::class,
+            Attribute::class,
             (string) $attributes->valueType()
         );
         $this->assertCount(2, $attributes);

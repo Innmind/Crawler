@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    HttpResource\Attribute,
+    Parser,
+    HttpResource\Attribute\Attribute,
     UrlResolver,
     Visitor\RemoveDuplicatedUrls
 };
@@ -22,8 +22,8 @@ use Innmind\Html\{
     Element\A
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Url\{
     UrlInterface,
@@ -34,7 +34,7 @@ use Innmind\Immutable\{
     Set
 };
 
-final class LinksParser implements ParserInterface
+final class LinksParser implements Parser
 {
     use HtmlTrait;
 
@@ -48,8 +48,8 @@ final class LinksParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

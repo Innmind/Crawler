@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
 use Innmind\Crawler\{
-    ParserInterface,
-    Exception\InvalidArgumentException,
-    Exception\InvalidOpenGraphAttributeException,
-    HttpResource\Attribute,
+    Parser,
+    Exception\DomainException,
+    Exception\InvalidOpenGraphAttribute,
+    HttpResource\Attribute\Attribute,
     Parser\Html\HtmlTrait
 };
 use Innmind\Xml\{
@@ -20,8 +20,8 @@ use Innmind\Html\{
     Exception\ElementNotFoundException
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -29,7 +29,7 @@ use Innmind\Immutable\{
     SetInterface
 };
 
-abstract class AbstractPropertyParser implements ParserInterface
+abstract class AbstractPropertyParser implements Parser
 {
     use HtmlTrait;
 
@@ -41,7 +41,7 @@ abstract class AbstractPropertyParser implements ParserInterface
         string $property
     ) {
         if (empty($property)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->reader = $reader;
@@ -49,8 +49,8 @@ abstract class AbstractPropertyParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {
@@ -91,7 +91,7 @@ abstract class AbstractPropertyParser implements ParserInterface
                 static::key(),
                 new Attribute(static::key(), $this->parseValues($values))
             );
-        } catch (InvalidOpenGraphAttributeException $e) {
+        } catch (InvalidOpenGraphAttribute $e) {
             return $attributes;
         }
     }

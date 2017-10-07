@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Crawler\HttpResource;
+namespace Tests\Innmind\Crawler\HttpResource\Attribute;
 
 use Innmind\Crawler\HttpResource\{
-    Attribute,
-    AttributeInterface
+    Attribute\Attribute,
+    Attribute as AttributeInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +21,7 @@ class AttributeTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
+     * @expectedException Innmind\Crawler\Exception\DomainException
      */
     public function testThrowWhenEmptyName()
     {
