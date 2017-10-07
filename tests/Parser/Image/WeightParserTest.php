@@ -11,12 +11,13 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface
+    Message\Request,
+    Message\Response
 };
-use Innmind\Filesystem\{
-    StreamInterface,
-    MediaType\MediaType
+use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\Stream\{
+    Readable,
+    Stream\Size
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -45,8 +46,8 @@ class WeightParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -60,8 +61,8 @@ class WeightParserTest extends TestCase
 
     public function testDoesntParseWhenNotImage()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -82,8 +83,8 @@ class WeightParserTest extends TestCase
 
     public function testDoesntParseWhenSizeNotKnown()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -96,7 +97,7 @@ class WeightParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(
-                $stream = $this->createMock(StreamInterface::class)
+                $stream = $this->createMock(Readable::class)
             );
         $stream
             ->expects($this->once())
@@ -114,8 +115,8 @@ class WeightParserTest extends TestCase
 
     public function testParse()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $notExpected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -128,7 +129,7 @@ class WeightParserTest extends TestCase
             ->expects($this->exactly(2))
             ->method('body')
             ->willReturn(
-                $stream = $this->createMock(StreamInterface::class)
+                $stream = $this->createMock(Readable::class)
             );
         $stream
             ->expects($this->once())
@@ -137,7 +138,7 @@ class WeightParserTest extends TestCase
         $stream
             ->expects($this->once())
             ->method('size')
-            ->willReturn(66);
+            ->willReturn(new Size(66));
 
         $attributes = $this->parser->parse(
             $request,
@@ -149,6 +150,7 @@ class WeightParserTest extends TestCase
         $this->assertTrue($attributes->contains('weight'));
         $weight = $attributes->get('weight');
         $this->assertSame('weight', $weight->name());
-        $this->assertSame(66, $weight->content());
+        $this->assertInstanceOf(Size::class, $weight->content());
+        $this->assertSame(66, $weight->content()->toInt());
     }
 }

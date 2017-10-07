@@ -14,7 +14,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\NodeTranslators
 };
-use Innmind\Filesystem\Stream\Stream;
+use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ class FindContentNodeTest extends TestCase
                 )
             )
         );
-        $html = $reader->read(Stream::fromPath('fixtures/lemonde.html'));
+        $html = $reader->read(new Stream(fopen('fixtures/lemonde.html', 'r')));
 
         $node = (new FindContentNode)(
             (new Map('int', NodeInterface::class))

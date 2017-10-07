@@ -14,8 +14,8 @@ use Innmind\Html\{
     Exception\ElementNotFoundException
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
@@ -31,8 +31,8 @@ final class JournalParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

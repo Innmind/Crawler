@@ -8,8 +8,8 @@ use Innmind\Crawler\{
     ParserInterface
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -35,8 +35,8 @@ class SequenceParserTest extends TestCase
         $parser2 = $this->createMock(ParserInterface::class);
         $parser = new SequenceParser($parser1, $parser2);
 
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $attributes = $this->createMock(MapInterface::class);
 
         $parser1

@@ -19,8 +19,8 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
@@ -38,8 +38,8 @@ final class CanonicalParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

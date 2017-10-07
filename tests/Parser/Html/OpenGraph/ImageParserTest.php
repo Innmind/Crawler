@@ -11,8 +11,8 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface
+    Message\Request,
+    Message\Response
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
@@ -63,8 +63,8 @@ class ImageParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -78,8 +78,8 @@ class ImageParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -100,7 +100,7 @@ class ImageParserTest extends TestCase
 
     public function testDoesntParseWhenNoHead()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -115,7 +115,7 @@ class ImageParserTest extends TestCase
             );
 
         $attributes = $this->parser->parse(
-            $this->createMock(RequestInterface::class),
+            $this->createMock(Request::class),
             $response,
             $expected
         );
@@ -125,7 +125,7 @@ class ImageParserTest extends TestCase
 
     public function testDoesntParseWhenEmptyMeta()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -150,7 +150,7 @@ HTML
             );
 
         $attributes = $this->parser->parse(
-            $this->createMock(RequestInterface::class),
+            $this->createMock(Request::class),
             $response,
             $expected
         );
@@ -160,7 +160,7 @@ HTML
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -186,7 +186,7 @@ HTML
             );
 
         $attributes = $this->parser->parse(
-            $this->createMock(RequestInterface::class),
+            $this->createMock(Request::class),
             $response,
             $notExpected
         );

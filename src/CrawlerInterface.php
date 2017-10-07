@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler;
 
-use Innmind\Http\Message\RequestInterface;
+use Innmind\Http\Message\Request;
 
 interface CrawlerInterface
 {
-    public function execute(RequestInterface $request): HttpResource;
+    public function execute(Request $request): HttpResource;
 }

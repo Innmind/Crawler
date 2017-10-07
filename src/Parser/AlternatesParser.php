@@ -9,8 +9,8 @@ use Innmind\Crawler\{
     Parser\Html\AlternatesParser as HtmlParser
 };
 use Innmind\http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
@@ -26,8 +26,8 @@ final class AlternatesParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         return $this->merge(

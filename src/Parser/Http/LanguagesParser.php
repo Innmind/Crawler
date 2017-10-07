@@ -8,8 +8,8 @@ use Innmind\Crawler\{
     HttpResource\Attribute
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
+    Message\Request,
+    Message\Response,
     Header\ContentLanguage,
     Header\ContentLanguageValue
 };
@@ -21,8 +21,8 @@ use Innmind\Immutable\{
 final class LanguagesParser implements ParserInterface
 {
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (

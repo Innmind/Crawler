@@ -18,13 +18,12 @@ use Innmind\Url\{
     UrlInterface
 };
 use Innmind\Http\{
-    Message\Request,
-    Message\RequestInterface,
-    Message\ResponseInterface,
-    Message\Method,
-    ProtocolVersion,
-    Headers,
-    Header\HeaderInterface
+    Message\Request\Request,
+    Message\Request as RequestInterface,
+    Message\Response,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion,
+    Headers\Headers
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
@@ -76,7 +75,7 @@ class AlternatesParserTest extends TestCase
     public function testDoesntParseWhenNoContentType()
     {
         $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -91,7 +90,7 @@ class AlternatesParserTest extends TestCase
     public function testDoesntParseWhenNotHtml()
     {
         $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -112,7 +111,7 @@ class AlternatesParserTest extends TestCase
 
     public function testDoesntParseWhenNoLink()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -137,7 +136,7 @@ class AlternatesParserTest extends TestCase
 
     public function testDoesntParseWhenLinkNotACorrectlyParsedOne()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -164,7 +163,7 @@ class AlternatesParserTest extends TestCase
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('body')
@@ -197,7 +196,7 @@ HTML
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1),
-                new Headers(new Map('string', HeaderInterface::class)),
+                new Headers,
                 new StringStream('')
             ),
             $response,

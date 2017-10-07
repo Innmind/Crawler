@@ -8,8 +8,8 @@ use Innmind\Crawler\{
     HttpResource\Attribute
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Html\{
     Visitor\Elements,
@@ -36,8 +36,8 @@ final class TitleParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isHtml($attributes)) {

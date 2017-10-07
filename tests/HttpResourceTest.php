@@ -11,7 +11,7 @@ use Innmind\Url\Url;
 use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream,
-    FileInterface
+    File
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +27,7 @@ class HttpResourceTest extends TestCase
             $content = new StringStream('')
         );
 
-        $this->assertInstanceOf(FileInterface::class, $resource);
+        $this->assertInstanceOf(File::class, $resource);
         $this->assertSame($url, $resource->url());
         $this->assertSame('foo', (string) $resource->name());
         $this->assertSame($mediaType, $resource->mediaType());

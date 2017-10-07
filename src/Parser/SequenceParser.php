@@ -5,8 +5,8 @@ namespace Innmind\Crawler\Parser;
 
 use Innmind\Crawler\ParserInterface;
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
@@ -22,8 +22,8 @@ final class SequenceParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         for ($i = 0; $i < $this->length; $i++) {

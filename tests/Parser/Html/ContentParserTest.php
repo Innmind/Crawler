@@ -19,14 +19,14 @@ use Innmind\Xml\Translator\{
     NodeTranslators
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\Stream,
     Stream\StringStream
 };
+use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\{
     Map,
     MapInterface
@@ -65,8 +65,8 @@ class ContentParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -80,8 +80,8 @@ class ContentParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -102,8 +102,8 @@ class ContentParserTest extends TestCase
 
     public function testDoesntParseWhenNoBody()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -131,8 +131,8 @@ class ContentParserTest extends TestCase
      */
     public function testParse(string $fixture)
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $notExpected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -144,7 +144,7 @@ class ContentParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(Stream::fromPath($fixture));
+            ->willReturn(new Stream(fopen($fixture, 'r')));
 
         $attributes = $this->parser->parse(
             $request,

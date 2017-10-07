@@ -23,8 +23,8 @@ use Innmind\Filesystem\{
     Stream\StringStream
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     Map,
@@ -64,8 +64,8 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -79,8 +79,8 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNotHtml()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -101,8 +101,8 @@ class TitleParserTest extends TestCase
 
     public function testDoesntParseWhenNothingFound()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -130,8 +130,8 @@ class TitleParserTest extends TestCase
      */
     public function testParseH1($title, $html)
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $notExpected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),

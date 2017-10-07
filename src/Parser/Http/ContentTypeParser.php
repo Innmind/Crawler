@@ -8,8 +8,8 @@ use Innmind\Crawler\{
     HttpResource\Attribute
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
+    Message\Request,
+    Message\Response,
     Header\ContentType
 };
 use Innmind\Filesystem\MediaType\MediaType;
@@ -18,8 +18,8 @@ use Innmind\Immutable\MapInterface;
 final class ContentTypeParser implements ParserInterface
 {
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (

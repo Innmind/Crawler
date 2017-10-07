@@ -12,13 +12,11 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface
+    Message\Request,
+    Message\Response
 };
-use Innmind\Filesystem\{
-    Stream\Stream,
-    MediaType\MediaType
-};
+use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -46,8 +44,8 @@ class DimensionParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse(
@@ -61,8 +59,8 @@ class DimensionParserTest extends TestCase
 
     public function testDoesntParseWhenNotImage()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $expected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -83,8 +81,8 @@ class DimensionParserTest extends TestCase
 
     public function testParse()
     {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $notExpected = (new Map('string', AttributeInterface::class))
             ->put(
                 ContentTypeParser::key(),
@@ -96,7 +94,7 @@ class DimensionParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(Stream::fromPath('fixtures/dont_panic.jpg'));
+            ->willReturn(new Stream(fopen('fixtures/dont_panic.jpg', 'r')));
 
         $attributes = $this->parser->parse(
             $request,

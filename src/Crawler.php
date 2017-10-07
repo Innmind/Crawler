@@ -7,8 +7,8 @@ use Innmind\Crawler\{
     HttpResource\AttributeInterface,
     Parser\Http\ContentTypeParser
 };
-use Innmind\Http\Message\RequestInterface;
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\Http\Message\Request;
+use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\MediaType\{
     MediaType,
     NullMediaType
@@ -21,14 +21,14 @@ final class Crawler implements CrawlerInterface
     private $parser;
 
     public function __construct(
-        TransportInterface $transport,
+        Transport $transport,
         ParserInterface $parser
     ) {
         $this->transport = $transport;
         $this->parser = $parser;
     }
 
-    public function execute(RequestInterface $request): HttpResource
+    public function execute(Request $request): HttpResource
     {
         $response = $this->transport->fulfill($request);
         $attributes = $this->parser->parse(

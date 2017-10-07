@@ -11,23 +11,18 @@ use Innmind\Crawler\{
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Http\{
-    Message\ResponseInterface,
-    Message\RequestInterface,
-    HeadersInterface,
-    Header\HeaderInterface,
-    Header\HeaderValueInterface,
+    Message\Response,
+    Message\Request,
+    Headers,
+    Header,
     Header\Link,
-    Header\LinkValue,
-    Header\ParameterInterface
+    Header\LinkValue
 };
 use Innmind\Url\{
     Url,
     UrlInterface
 };
-use Innmind\Immutable\{
-    Map,
-    Set
-};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class CanonicalParserTest extends TestCase
@@ -56,19 +51,19 @@ class CanonicalParserTest extends TestCase
 
     public function testDoesntParseWhenNoLink()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
             ->method('has')
             ->with('Link')
             ->willReturn(false);
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
@@ -78,8 +73,8 @@ class CanonicalParserTest extends TestCase
 
     public function testDoesntParseWhenLinkNotFullyParsed()
     {
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
@@ -93,8 +88,8 @@ class CanonicalParserTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('Link')
-            ->willReturn($this->createMock(HeaderInterface::class));
-        $request = $this->createMock(RequestInterface::class);
+            ->willReturn($this->createMock(Header::class));
+        $request = $this->createMock(Request::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
@@ -104,8 +99,8 @@ class CanonicalParserTest extends TestCase
 
     public function testDoesntParseWhenCanonicalLinkNotFound()
     {
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(3))
             ->method('headers')
@@ -121,17 +116,13 @@ class CanonicalParserTest extends TestCase
             ->with('Link')
             ->willReturn(
                 new Link(
-                    (new Set(HeaderValueInterface::class))
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/'),
-                                'foo',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
+                    new LinkValue(
+                        Url::fromString('/'),
+                        'foo'
+                    )
                 )
             );
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
@@ -141,8 +132,8 @@ class CanonicalParserTest extends TestCase
 
     public function testDoesntParseWhenMultipleCanonicalLinksFound()
     {
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(3))
             ->method('headers')
@@ -158,31 +149,21 @@ class CanonicalParserTest extends TestCase
             ->with('Link')
             ->willReturn(
                 new Link(
-                    (new Set(HeaderValueInterface::class))
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/'),
-                                'foo',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/foo'),
-                                'canonical',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/bar'),
-                                'canonical',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
+                    new LinkValue(
+                        Url::fromString('/'),
+                        'foo'
+                    ),
+                    new LinkValue(
+                        Url::fromString('/foo'),
+                        'canonical'
+                    ),
+                    new LinkValue(
+                        Url::fromString('/bar'),
+                        'canonical'
+                    )
                 )
             );
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $this->parser->parse($request, $response, $expected);
@@ -192,8 +173,8 @@ class CanonicalParserTest extends TestCase
 
     public function testParse()
     {
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(3))
             ->method('headers')
@@ -209,24 +190,17 @@ class CanonicalParserTest extends TestCase
             ->with('Link')
             ->willReturn(
                 new Link(
-                    (new Set(HeaderValueInterface::class))
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/'),
-                                'foo',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
-                        ->add(
-                            new LinkValue(
-                                Url::fromString('/foo'),
-                                'canonical',
-                                new Map('string', ParameterInterface::class)
-                            )
-                        )
+                    new LinkValue(
+                        Url::fromString('/'),
+                        'foo'
+                    ),
+                    new LinkValue(
+                        Url::fromString('/foo'),
+                        'canonical'
+                    )
                 )
             );
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('url')

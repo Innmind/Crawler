@@ -9,17 +9,15 @@ use Innmind\Crawler\{
     HttpResource\AttributeInterface
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
-    Header\HeaderInterface,
-    Header\HeaderValueInterface,
+    Message\Request,
+    Message\Response,
+    Header,
     Header\ContentLanguage,
     Header\ContentLanguageValue,
-    HeadersInterface
+    Headers
 };
 use Innmind\Immutable\{
     Map,
-    Set,
     SetInterface
 };
 use PHPUnit\Framework\TestCase;
@@ -42,13 +40,13 @@ class LanguagesParserTest extends TestCase
     public function testDoesntParseWhenNoContentLanguage()
     {
         $parser = new LanguagesParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
         $response
             ->expects($this->once())
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(HeadersInterface::class)
+                $headers = $this->createMock(Headers::class)
             );
         $headers
             ->expects($this->once())
@@ -65,9 +63,9 @@ class LanguagesParserTest extends TestCase
     public function testDoesntParseWhenContentLanguageNotFullyParsed()
     {
         $parser = new LanguagesParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(2))
             ->method('headers')
@@ -81,7 +79,7 @@ class LanguagesParserTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('Content-Language')
-            ->willReturn($this->createMock(HeaderInterface::class));
+            ->willReturn($this->createMock(Header::class));
         $expected = new Map('string', AttributeInterface::class);
 
         $attributes = $parser->parse($request, $response, $expected);
@@ -92,9 +90,9 @@ class LanguagesParserTest extends TestCase
     public function testParse()
     {
         $parser = new LanguagesParser;
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
-        $headers = $this->createMock(HeadersInterface::class);
+        $request = $this->createMock(Request::class);
+        $response = $this->createMock(Response::class);
+        $headers = $this->createMock(Headers::class);
         $response
             ->expects($this->exactly(3))
             ->method('headers')
@@ -110,9 +108,8 @@ class LanguagesParserTest extends TestCase
             ->with('Content-Language')
             ->willReturn(
                 new ContentLanguage(
-                    (new Set(HeaderValueInterface::class))
-                        ->add(new ContentLanguageValue('fr'))
-                        ->add(new ContentLanguageValue('en-US'))
+                    new ContentLanguageValue('fr'),
+                    new ContentLanguageValue('en-US')
                 )
             );
         $expected = new Map('string', AttributeInterface::class);

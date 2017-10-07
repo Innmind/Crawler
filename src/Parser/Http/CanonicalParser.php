@@ -9,8 +9,8 @@ use Innmind\Crawler\{
     UrlResolver
 };
 use Innmind\Http\{
-    Message\RequestInterface,
-    Message\ResponseInterface,
+    Message\Request,
+    Message\Response,
     Header\Link,
     Header\LinkValue
 };
@@ -26,8 +26,8 @@ final class CanonicalParser implements ParserInterface
     }
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (

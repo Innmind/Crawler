@@ -10,8 +10,8 @@ use Innmind\Crawler\{
     HttpResource\AttributeInterface
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -23,8 +23,8 @@ final class DimensionParser implements ParserInterface
     use ImageTrait;
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (!$this->isImage($attributes)) {

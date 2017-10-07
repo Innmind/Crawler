@@ -5,7 +5,7 @@ namespace Innmind\Crawler;
 
 use Innmind\Crawler\Parser\Html\BaseParser;
 use Innmind\UrlResolver\ResolverInterface;
-use Innmind\Http\Message\RequestInterface;
+use Innmind\Http\Message\Request;
 use Innmind\Url\{
     UrlInterface,
     Url
@@ -22,12 +22,12 @@ final class UrlResolver
     }
 
     /**
-     * @param  RequestInterface $request
+     * @param  Request $request
      * @param  MapInterface<string, AttributeInterface> $attributes
      * @param  UrlInterface $target
      */
     public function resolve(
-        RequestInterface $request,
+        Request $request,
         MapInterface $attributes,
         UrlInterface $target
     ): UrlInterface {

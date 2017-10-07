@@ -3,19 +3,16 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Specification;
 
-use Innmind\Filesystem\{
-    MediaTypeInterface,
-    MediaType\MediaType
-};
+use Innmind\Filesystem\MediaType;
 use Innmind\Immutable\Set;
 
 final class Html
 {
     public static $allowed;
 
-    public function isSatisfiedBy(MediaTypeInterface $type): bool
+    public function isSatisfiedBy(MediaType $type): bool
     {
-        $type = (string) new MediaType(
+        $type = (string) new MediaType\MediaType(
             $type->topLevel(),
             $type->subType(),
             $type->suffix(),

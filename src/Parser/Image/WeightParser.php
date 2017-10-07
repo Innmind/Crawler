@@ -8,8 +8,8 @@ use Innmind\Crawler\{
     HttpResource\Attribute
 };
 use Innmind\Http\Message\{
-    RequestInterface,
-    ResponseInterface
+    Request,
+    Response
 };
 use Innmind\Immutable\MapInterface;
 
@@ -18,8 +18,8 @@ final class WeightParser implements ParserInterface
     use ImageTrait;
 
     public function parse(
-        RequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         MapInterface $attributes
     ): MapInterface {
         if (

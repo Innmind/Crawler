@@ -10,7 +10,7 @@ use Innmind\Crawler\{
     Parser\Html\BaseParser
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Http\Message\RequestInterface;
+use Innmind\Http\Message\Request;
 use Innmind\Url\{
     UrlInterface,
     Url
@@ -23,7 +23,7 @@ class UrlResolverTest extends TestCase
     public function testResolveFromRequestUrl()
     {
         $resolver = new UrlResolver(new BaseResolver);
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('url')
@@ -42,7 +42,7 @@ class UrlResolverTest extends TestCase
     public function testResolveFromBase()
     {
         $resolver = new UrlResolver(new BaseResolver);
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('url')
