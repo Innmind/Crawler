@@ -22,9 +22,7 @@ final class UrlResolver
     }
 
     /**
-     * @param  Request $request
      * @param  MapInterface<string, AttributeInterface> $attributes
-     * @param  UrlInterface $target
      */
     public function resolve(
         Request $request,
