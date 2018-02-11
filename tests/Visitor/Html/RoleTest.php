@@ -54,8 +54,8 @@ HTML
         $this->assertInstanceOf(SetInterface::class, $elements);
         $this->assertSame(ElementInterface::class, (string) $elements->type());
         $this->assertCount(2, $elements);
-        $this->assertEquals(
-            "\n".'            <h1>whatever</h1>'."\n".'        ',
+        $this->assertSame(
+            '<h1>whatever</h1>'."\n".'        ',
             $elements->current()->content()
         );
         $elements->next();

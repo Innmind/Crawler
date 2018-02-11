@@ -55,25 +55,18 @@ HTML
         );
 
         $cleaned = $visitor($html);
-        $expected = "<!DOCTYPE html>
-<html>
-<body>
+        $expected = <<<HTML
+<!DOCTYPE html>
+<html><body>
     <div>
-        <article>
-            <h1>whatever</h1>
-            <script>some nasty javascript</script>
-            <h2>else</h2>
-            <script>some nasty javascript</script>
-            <h2>else</h2>
-            <script>some nasty javascript</script>
-            <h2>else</h2>
-        </article>
-".'        '."
-    </div>
-    <script></script>
-    <div>hey</div>
-</body>
-</html>";
+        <article><h1>whatever</h1>
+            <script>some nasty javascript</script><h2>else</h2>
+            <script>some nasty javascript</script><h2>else</h2>
+            <script>some nasty javascript</script><h2>else</h2>
+        </article></div>
+    <script></script><div>hey</div>
+</body></html>
+HTML;
 
         $this->assertNotSame($html, $cleaned);
         $this->assertInstanceOf(NodeInterface::class, $cleaned);
