@@ -61,3 +61,5 @@ $resource = $crawler->execute(
 ```
 
 Here `$resource` is an instance of [`HttpResource`](src/HttpResource.php), with a single attribute available we only used the `ContentTypeParser` but there's [plenty more](src/Parser).
+
+To build a full crawler you can use the [container definition](container.yml).
