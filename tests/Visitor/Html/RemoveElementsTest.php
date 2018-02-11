@@ -54,18 +54,24 @@ HTML
         );
 
         $cleaned = $visitor($html);
-        $expected = <<<HTML
-<!DOCTYPE html>
-<html><body>
+        $expected = "<!DOCTYPE html>
+<html>
+<body>
     <div>
-        <article><h1>whatever</h1>
+        <article>
+            <h1>whatever</h1>
+".'            '."
             <h2>else</h2>
+".'            '."
             <h2>else</h2>
+".'            '."
             <h2>else</h2>
-        </article></div>
+        </article>
+    </div>
+".'    '."
     <div>hey</div>
-</body></html>
-HTML;
+</body>
+</html>";
 
         $this->assertNotSame($html, $cleaned);
         $this->assertInstanceOf(NodeInterface::class, $cleaned);
