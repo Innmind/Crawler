@@ -25,8 +25,7 @@
         "innmind/html": "~3.0",
         "innmind/colour": "~2.0",
         "innmind/math": "~4.0",
-        "innmind/http-transport": "~3.0",
-        "innmind/compose": "^1.0"
+        "innmind/http-transport": "~3.0"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +39,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~6.0",
+        "innmind/compose": "^1.0"
     }
 }
