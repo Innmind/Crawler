@@ -10,12 +10,11 @@ use Innmind\UrlResolver\ResolverInterface;
 
 function bootstrap(
     Transport $transport,
-    TimeContinuumInterface $clock = null,
-    Reader $reader = null,
-    ResolverInterface $resolver = null,
-    Parser $parser = null
+    TimeContinuumInterface $clock,
+    Reader $reader,
+    ResolverInterface $resolver
 ): Crawler {
-    $parser = $parser ?? new Parser\SequenceParser(
+    $parser = new Parser\SequenceParser(
         new Parser\Http\ContentTypeParser,
         new Parser\Http\CacheParser($clock),
         new Parser\Html\BaseParser($reader),
