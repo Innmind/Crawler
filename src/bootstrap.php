@@ -28,7 +28,7 @@ function bootstrap(
         ),
         new Parser\ConditionalParser(
             new Parser\HtmlParser(
-                new Parser\SequenceParser(
+                new Parser\ConditionalParser(
                     new Parser\Html\OpenGraph\UrlParser($reader),
                     new Parser\Html\CanonicalParser($reader, $resolver)
                 )
