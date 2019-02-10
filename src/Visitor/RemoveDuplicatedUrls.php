@@ -26,7 +26,7 @@ final class RemoveDuplicatedUrls
         return $urls
             ->reduce(
                 new Map('string', UrlInterface::class),
-                function(MapInterface $urls, UrlInterface $url): MapInterface {
+                static function(MapInterface $urls, UrlInterface $url): MapInterface {
                     $string = (string) $url;
 
                     if ($urls->contains($string)) {
@@ -38,7 +38,7 @@ final class RemoveDuplicatedUrls
             )
             ->reduce(
                 new Set(UrlInterface::class),
-                function(SetInterface $urls, string $string, UrlInterface $url): SetInterface {
+                static function(SetInterface $urls, string $string, UrlInterface $url): SetInterface {
                     return $urls->add($url);
                 }
             );

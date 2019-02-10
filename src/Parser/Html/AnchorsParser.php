@@ -59,15 +59,15 @@ final class AnchorsParser implements Parser
         }
 
         $anchors = $anchors
-            ->filter(function(Node $node): bool {
+            ->filter(static function(Node $node): bool {
                 return $node instanceof A;
             })
-            ->filter(function(A $anchor): bool {
-                return (new Str((string) $anchor->href()))->matches('~^#~');
+            ->filter(static function(A $anchor): bool {
+                return Str::of((string) $anchor->href())->matches('~^#~');
             })
             ->reduce(
                 new Set('string'),
-                function(SetInterface $anchors, A $anchor): SetInterface {
+                static function(SetInterface $anchors, A $anchor): SetInterface {
                     return $anchors->add(
                         (string) Str::of((string) $anchor->href())->substring(1)
                     );

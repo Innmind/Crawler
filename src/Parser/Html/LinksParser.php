@@ -65,11 +65,11 @@ final class LinksParser implements Parser
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(Node $link): bool {
+                ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
                 })
-                ->filter(function(Link $link): bool {
-                    return in_array(
+                ->filter(static function(Link $link): bool {
+                    return \in_array(
                         $link->relationship(),
                         ['first', 'next', 'previous', 'last'],
                         true
@@ -77,7 +77,7 @@ final class LinksParser implements Parser
                 })
                 ->reduce(
                     $links,
-                    function(SetInterface $links, Link $link): SetInterface {
+                    static function(SetInterface $links, Link $link): SetInterface {
                         return $links->add($link->href());
                     }
                 );
@@ -89,15 +89,15 @@ final class LinksParser implements Parser
             $links = (new Elements('a'))(
                 (new Body)($document)
             )
-                ->filter(function(Node $a): bool {
+                ->filter(static function(Node $a): bool {
                     return $a instanceof A;
                 })
-                ->filter(function(A $a): bool {
+                ->filter(static function(A $a): bool {
                     return (string) Str::of((string) $a)->substring(0, 1) !== '#';
                 })
                 ->reduce(
                     $links,
-                    function(SetInterface $links, A $a): SetInterface {
+                    static function(SetInterface $links, A $a): SetInterface {
                         return $links->add($a->href());
                     }
                 );

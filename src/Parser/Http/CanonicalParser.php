@@ -41,7 +41,7 @@ final class CanonicalParser implements Parser
             ->headers()
             ->get('Link')
             ->values()
-            ->filter(function(LinkValue $value): bool {
+            ->filter(static function(LinkValue $value): bool {
                 return $value->relationship() === 'canonical';
             });
 

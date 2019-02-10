@@ -43,7 +43,7 @@ final class FindContentNode
 
         $dispersion = $nodes->reduce(
             [],
-            function(array $dispersion, int $position, Node $node): array {
+            static function(array $dispersion, int $position, Node $node): array {
                 $text = (new Text)($node);
                 $text = new Str($text);
                 $dispersion[$position] = $text->wordCount();
@@ -74,7 +74,7 @@ final class FindContentNode
         //select the minimum amount of words that needs to be in nodes
         $min = $quantile->quartile(\min($lookup))->value()->value();
 
-        $nodes = $nodes->filter(function(int $position) use ($min, $dispersion): bool {
+        $nodes = $nodes->filter(static function(int $position) use ($min, $dispersion): bool {
             return $dispersion[$position] >= $min;
         });
 

@@ -67,11 +67,11 @@ final class LanguagesParser implements Parser
                 $metas = (new Elements('meta'))(
                     (new Head)($document)
                 )
-                    ->filter(function(ElementInterface $element): bool {
+                    ->filter(static function(ElementInterface $element): bool {
                         return $element->attributes()->contains('http-equiv') &&
                             $element->attributes()->contains('content');
                     })
-                    ->filter(function(ElementInterface $meta): bool {
+                    ->filter(static function(ElementInterface $meta): bool {
                         $header = $meta->attributes()->get('http-equiv')->value();
                         $header = new Str($header);
 

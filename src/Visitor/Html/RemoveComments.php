@@ -14,28 +14,20 @@ final class RemoveComments
     {
         $removedChildren = 0;
 
-        return $node
-            ->children()
-            ->reduce(
-                $node,
-                function(
-                    Node $node,
-                    int $position,
-                    Node $child
-                ) use (
-                    &$removedChildren
-                ): Node {
-                    if ($child instanceof Comment) {
-                        return $node->removeChild(
-                            $position - $removedChildren++
-                        );
-                    }
-
-                    return $node->replaceChild(
-                        $position - $removedChildren,
-                        $this($child)
+        return $node->children()->reduce(
+            $node,
+            function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
+                if ($child instanceof Comment) {
+                    return $node->removeChild(
+                        $position - $removedChildren++
                     );
                 }
-            );
+
+                return $node->replaceChild(
+                    $position - $removedChildren,
+                    $this($child)
+                );
+            }
+        );
     }
 }

@@ -41,7 +41,7 @@ final class CacheParser implements Parser
             ->headers()
             ->get('Cache-Control')
             ->values()
-            ->filter(function(Value $value): bool {
+            ->filter(static function(Value $value): bool {
                 return $value instanceof SharedMaxAge;
             });
 

@@ -33,7 +33,7 @@ final class HttpResource implements File
     ) {
         assertMap('string', Attribute::class, $attributes, 3);
 
-        $name = basename((string) $url->path());
+        $name = \basename((string) $url->path());
         $this->url = $url;
         $this->name = new Name\Name(Str::of($name)->empty() ? 'index' : $name);
         $this->mediaType = $mediaType;

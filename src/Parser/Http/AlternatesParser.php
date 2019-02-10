@@ -50,7 +50,7 @@ final class AlternatesParser implements Parser
             ->values()
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(MapInterface $links, LinkValue $header): MapInterface {
+                static function(MapInterface $links, LinkValue $header): MapInterface {
                     if (
                         $header->relationship() !== 'alternate' ||
                         !$header->parameters()->contains('hreflang')
@@ -70,7 +70,7 @@ final class AlternatesParser implements Parser
         }
 
         $alternates = $links
-            ->groupBy(function(UrlInterface $url, string $language): string {
+            ->groupBy(static function(UrlInterface $url, string $language): string {
                 return $language;
             })
             ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
@@ -86,7 +86,7 @@ final class AlternatesParser implements Parser
             })
             ->reduce(
                 new Map('string', Attribute::class),
-                function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
+                static function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
                     return $languages->put(
                         $language,
                         new Alternate(

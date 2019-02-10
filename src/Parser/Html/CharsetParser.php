@@ -52,7 +52,7 @@ final class CharsetParser implements Parser
             return $attributes;
         }
 
-        $meta = $metas->filter(function(Element $meta): bool {
+        $meta = $metas->filter(static function(Element $meta): bool {
             return $meta->attributes()->contains('charset');
         });
 

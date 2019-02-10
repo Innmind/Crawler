@@ -54,10 +54,10 @@ final class AndroidParser implements Parser
         }
 
         $link = $links
-            ->filter(function(Node $link): bool {
+            ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
             })
-            ->filter(function(Link $link): bool {
+            ->filter(static function(Link $link): bool {
                 return (string) $link->href()->scheme() === 'android-app';
             });
 

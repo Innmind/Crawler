@@ -57,7 +57,7 @@ final class IosParser implements Parser
             return $attributes;
         }
 
-        $meta = $metas->filter(function(Element $meta): bool {
+        $meta = $metas->filter(static function(Element $meta): bool {
             return $meta->attributes()->contains('name') &&
                 $meta->attributes()->get('name')->value() === 'apple-itunes-app' &&
                 $meta->attributes()->contains('content');

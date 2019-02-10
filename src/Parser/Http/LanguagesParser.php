@@ -43,7 +43,7 @@ final class LanguagesParser implements Parser
                     ->values()
                     ->reduce(
                         new Set('string'),
-                        function(SetInterface $carry, ContentLanguageValue $language): SetInterface {
+                        static function(SetInterface $carry, ContentLanguageValue $language): SetInterface {
                             return $carry->add((string) $language);
                         }
                     )

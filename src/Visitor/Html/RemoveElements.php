@@ -22,31 +22,23 @@ final class RemoveElements
     {
         $removedChildren = 0;
 
-        return $node
-            ->children()
-            ->reduce(
-                $node,
-                function(
-                    Node $node,
-                    int $position,
-                    Node $child
-                ) use (
-                    &$removedChildren
-                ): Node {
-                    if (
-                        $child instanceof Element &&
-                        $this->toRemove->contains($child->name())
-                    ) {
-                        return $node->removeChild(
-                            $position - $removedChildren++
-                        );
-                    }
-
-                    return $node->replaceChild(
-                        $position - $removedChildren,
-                        $this($child)
+        return $node->children()->reduce(
+            $node,
+            function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
+                if (
+                    $child instanceof Element &&
+                    $this->toRemove->contains($child->name())
+                ) {
+                    return $node->removeChild(
+                        $position - $removedChildren++
                     );
                 }
-            );
+
+                return $node->replaceChild(
+                    $position - $removedChildren,
+                    $this($child)
+                );
+            }
+        );
     }
 }

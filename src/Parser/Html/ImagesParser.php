@@ -103,12 +103,12 @@ final class ImagesParser implements Parser
     private function images(ElementInterface $body): Map
     {
         return (new Elements('img'))($body)
-            ->filter(function(Node $img): bool {
+            ->filter(static function(Node $img): bool {
                 return $img instanceof Img;
             })
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(MapInterface $images, Img $img): MapInterface {
+                static function(MapInterface $images, Img $img): MapInterface {
                     return $images->put(
                         $img->src(),
                         $img->attributes()->contains('alt') ?
@@ -121,7 +121,7 @@ final class ImagesParser implements Parser
     private function figures(ElementInterface $body): Map
     {
         return (new Elements('figure'))($body)
-            ->filter(function(Node $figure): bool {
+            ->filter(static function(Node $figure): bool {
                 try {
                     $img = (new Element('img'))($figure);
 
@@ -132,7 +132,7 @@ final class ImagesParser implements Parser
             })
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(MapInterface $images, ElementInterface $figure): MapInterface {
+                static function(MapInterface $images, ElementInterface $figure): MapInterface {
                     $img = (new Element('img'))($figure);
 
                     try {
@@ -162,7 +162,7 @@ final class ImagesParser implements Parser
 
         return $figures
             ->merge($images)
-            ->filter(function(UrlInterface $url) use ($urls): bool {
+            ->filter(static function(UrlInterface $url) use ($urls): bool {
                 return $urls->contains($url);
             });
     }

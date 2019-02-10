@@ -55,11 +55,11 @@ final class ThemeColorParser implements Parser
             $meta = (new Elements('meta'))(
                 (new Head)($document)
             )
-                ->filter(function(Element $meta): bool {
+                ->filter(static function(Element $meta): bool {
                     return $meta->attributes()->contains('name') &&
                         $meta->attributes()->contains('content');
                 })
-                ->filter(function(Element $meta): bool {
+                ->filter(static function(Element $meta): bool {
                     $name = $meta
                         ->attributes()
                         ->get('name')

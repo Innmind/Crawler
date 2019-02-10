@@ -56,11 +56,11 @@ final class AuthorParser implements Parser
         }
 
         $meta = $metas
-            ->filter(function(Element $meta): bool {
+            ->filter(static function(Element $meta): bool {
                 return $meta->attributes()->contains('name') &&
                     $meta->attributes()->contains('content');
             })
-            ->filter(function(Element $meta): bool {
+            ->filter(static function(Element $meta): bool {
                 $name = $meta
                     ->attributes()
                     ->get('name')

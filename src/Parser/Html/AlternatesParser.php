@@ -68,10 +68,10 @@ final class AlternatesParser implements Parser
         }
 
         $links = $links
-            ->filter(function(Node $link): bool {
+            ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
             })
-            ->filter(function(Link $link): bool {
+            ->filter(static function(Link $link): bool {
                 return $link->relationship() === 'alternate' &&
                     $link->attributes()->contains('hreflang');
             });
@@ -83,14 +83,14 @@ final class AlternatesParser implements Parser
         $alternates = $links
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(MapInterface $links, Link $link): MapInterface {
+                static function(MapInterface $links, Link $link): MapInterface {
                     return $links->put(
                         $link->href(),
                         $link->attributes()->get('hreflang')->value()
                     );
                 }
             )
-            ->groupBy(function(UrlInterface $url, string $language) {
+            ->groupBy(static function(UrlInterface $url, string $language) {
                 return $language;
             })
             ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
@@ -106,7 +106,7 @@ final class AlternatesParser implements Parser
             })
             ->reduce(
                 new Map('string', Attribute::class),
-                function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
+                static function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
                     return $languages->put(
                         $language,
                         new Alternate(

@@ -52,10 +52,10 @@ final class RssParser implements Parser
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(Node $link): bool {
+                ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
                 })
-                ->filter(function(Link $link): bool {
+                ->filter(static function(Link $link): bool {
                     return $link->relationship() === 'alternate' &&
                         $link->attributes()->contains('type') &&
                         $link->attributes()->get('type')->value() === 'application/rss+xml';

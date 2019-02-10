@@ -30,7 +30,7 @@ final class ImageParser extends AbstractPropertyParser
             })
             ->reduce(
                 new Set(UrlInterface::class),
-                function(SetInterface $urls, string $url): SetInterface {
+                static function(SetInterface $urls, string $url): SetInterface {
                     return $urls->add(Url::fromString($url));
                 }
             );

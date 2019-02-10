@@ -64,7 +64,7 @@ abstract class AbstractPropertyParser implements Parser
             $values = (new Elements('meta'))(
                 (new Head)($document)
             )
-                ->filter(function(Element $meta): bool {
+                ->filter(static function(Element $meta): bool {
                     return $meta->attributes()->contains('property') &&
                         $meta->attributes()->contains('content');
                 })
@@ -73,7 +73,7 @@ abstract class AbstractPropertyParser implements Parser
                 })
                 ->reduce(
                     new Set('string'),
-                    function(SetInterface $values, Element $meta): SetInterface {
+                    static function(SetInterface $values, Element $meta): SetInterface {
                         return $values->add(
                             $meta->attributes()->get('content')->value()
                         );
