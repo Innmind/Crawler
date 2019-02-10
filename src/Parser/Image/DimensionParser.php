@@ -30,7 +30,7 @@ final class DimensionParser implements Parser
             return $attributes;
         }
 
-        $infos = getimagesizefromstring(
+        $infos = \getimagesizefromstring(
             (string) $response->body()
         );
 
