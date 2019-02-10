@@ -5,37 +5,37 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Body,
-    Exception\ElementNotFoundException,
-    Element\A
+    Exception\ElementNotFound,
+    Element\A,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
     Set,
-    Str
+    Str,
 };
 
 final class AnchorsParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
 
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
     public function parse(
@@ -47,18 +47,18 @@ final class AnchorsParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $anchors = (new Elements('a'))(
                 (new Body)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $anchors = $anchors
-            ->filter(function(NodeInterface $node): bool {
+            ->filter(function(Node $node): bool {
                 return $node instanceof A;
             })
             ->filter(function(A $anchor): bool {

@@ -6,13 +6,13 @@ namespace Tests\Innmind\Crawler;
 use Innmind\Crawler\{
     UrlResolver,
     HttpResource\Attribute,
-    Parser\Html\BaseParser
+    Parser\Html\BaseParser,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Http\Message\Request;
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

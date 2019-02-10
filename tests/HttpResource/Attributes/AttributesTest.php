@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\HttpResource\Attributes;
 use Innmind\Crawler\HttpResource\{
     Attributes\Attributes,
     Attributes as AttributesInterface,
-    Attribute
+    Attribute,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

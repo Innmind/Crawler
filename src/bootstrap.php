@@ -5,13 +5,13 @@ namespace Innmind\Crawler;
 
 use Innmind\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\Xml\ReaderInterface;
+use Innmind\Xml\Reader;
 use Innmind\UrlResolver\ResolverInterface;
 
 function bootstrap(
     Transport $transport,
     TimeContinuumInterface $clock = null,
-    ReaderInterface $reader = null,
+    Reader $reader = null,
     ResolverInterface $resolver = null,
     Parser $parser = null
 ): Crawler {

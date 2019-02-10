@@ -6,13 +6,13 @@ namespace Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
     Header\Link,
-    Header\LinkValue
+    Header\LinkValue,
 };
 use Innmind\Immutable\MapInterface;
 

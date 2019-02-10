@@ -6,15 +6,15 @@ namespace Innmind\Crawler\Parser\Image;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attributes\Attributes,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 final class DimensionParser implements Parser

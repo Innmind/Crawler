@@ -8,33 +8,26 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     Parser,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class CanonicalParserTest extends TestCase
@@ -44,13 +37,7 @@ class CanonicalParserTest extends TestCase
     public function setUp()
     {
         $this->parser = new CanonicalParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            ),
+            html(),
             new UrlResolver(new BaseResolver)
         );
     }

@@ -5,39 +5,38 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    ElementInterface,
-    AttributeInterface
+    Reader,
+    Element as ElementInterface,
+    Attribute as AttributeInterface,
 };
 use Innmind\Html\{
     Visitor\Element,
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
     Str,
-    Set
+    Set,
 };
 
 final class LanguagesParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
 
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
     public function parse(
@@ -51,7 +50,7 @@ final class LanguagesParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $html = (new Element('html'))($document);
@@ -59,7 +58,7 @@ final class LanguagesParser implements Parser
             if ($html->attributes()->contains('lang')) {
                 $languages = $html->attributes()->get('lang');
             }
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 
@@ -85,7 +84,7 @@ final class LanguagesParser implements Parser
                         ->attributes()
                         ->get('content');
                 }
-            } catch (ElementNotFoundException $e) {
+            } catch (ElementNotFound $e) {
                 //pass
             }
         }

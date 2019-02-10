@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
-    Specification\Html
+    Specification\Html,
 };
 use Innmind\Immutable\MapInterface;
 

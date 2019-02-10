@@ -5,22 +5,22 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    Visitor\Text
+    Reader,
+    Node,
+    Visitor\Text,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -28,11 +28,11 @@ final class TitleParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
 
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
     public function parse(
@@ -44,7 +44,7 @@ final class TitleParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         $title = $this->getH1($document);
 
@@ -67,7 +67,7 @@ final class TitleParser implements Parser
         return 'title';
     }
 
-    private function getH1(NodeInterface $document): string
+    private function getH1(Node $document): string
     {
         $h1s = (new Elements('h1'))($document);
 
@@ -78,7 +78,7 @@ final class TitleParser implements Parser
         return trim((new Text)($h1s->current()));
     }
 
-    private function getTitle(NodeInterface $document): string
+    private function getTitle(Node $document): string
     {
         try {
             $title = (new Text)(
@@ -88,7 +88,7 @@ final class TitleParser implements Parser
             );
 
             return trim($title);
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return '';
         }
     }

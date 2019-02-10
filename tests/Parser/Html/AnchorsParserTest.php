@@ -7,29 +7,22 @@ use Innmind\Crawler\{
     Parser\Html\AnchorsParser,
     Parser\Http\ContentTypeParser,
     Parser,
-    HttpResource\Attribute
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
+    HttpResource\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Immutable\{
-    Map,
     MapInterface,
-    SetInterface
+    Map,
+    SetInterface,
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class AnchorsParserTest extends TestCase
@@ -38,15 +31,7 @@ class AnchorsParserTest extends TestCase
 
     public function setUp()
     {
-        $this->parser = new AnchorsParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            )
-        );
+        $this->parser = new AnchorsParser(html());
     }
 
     public function testInterface()

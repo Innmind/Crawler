@@ -6,21 +6,21 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException,
-    Element\Link
+    Exception\ElementNotFound,
+    Element\Link,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -28,12 +28,12 @@ final class RssParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
     private $resolver;
 
-    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolver)
     {
-        $this->reader = $reader;
+        $this->read = $read;
         $this->resolver = $resolver;
     }
 
@@ -46,13 +46,13 @@ final class RssParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(NodeInterface $link): bool {
+                ->filter(function(Node $link): bool {
                     return $link instanceof Link;
                 })
                 ->filter(function(Link $link): bool {
@@ -60,7 +60,7 @@ final class RssParser implements Parser
                         $link->attributes()->contains('type') &&
                         $link->attributes()->get('type')->value() === 'application/rss+xml';
                 });
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 

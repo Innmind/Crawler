@@ -7,15 +7,15 @@ use Innmind\Crawler\HttpResource\{
     Alternates,
     Alternate,
     Attribute,
-    Attributes
+    Attributes,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     Map,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 

@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\CharsetParser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
@@ -15,7 +15,7 @@ use Innmind\Http\{
     Header,
     Header\ContentType,
     Header\ContentTypeValue,
-    Header\Parameter
+    Header\Parameter,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

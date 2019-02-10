@@ -8,7 +8,7 @@ use Innmind\UrlResolver\ResolverInterface;
 use Innmind\Http\Message\Request;
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\MapInterface;
 

@@ -5,11 +5,11 @@ namespace Tests\Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
     Parser\ConditionalParser,
-    Parser
+    Parser,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;

@@ -5,12 +5,12 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
-    Header\ContentType
+    Header\ContentType,
 };
 use Innmind\Immutable\MapInterface;
 

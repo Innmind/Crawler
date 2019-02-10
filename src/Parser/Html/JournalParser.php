@@ -5,17 +5,17 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
-use Innmind\Xml\ReaderInterface;
+use Innmind\Xml\Reader;
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Body,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -23,11 +23,11 @@ final class JournalParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
 
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
     public function parse(
@@ -39,13 +39,13 @@ final class JournalParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $articles = (new Elements('article'))(
                 (new Body)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 

@@ -4,18 +4,10 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Visitor\Html\Role;
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface,
-    Translator\NodeTranslator,
-    Translator\NodeTranslators
-};
+use Innmind\Xml\Element;
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\SetInterface;
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class RoleTest extends TestCase
@@ -24,14 +16,7 @@ class RoleTest extends TestCase
     {
         $visitor = new Role('main');
 
-        $reader = new Reader(
-            new NodeTranslator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
-        $html = $reader->read(
+        $html = html()(
             new StringStream(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -52,7 +37,7 @@ HTML
         $elements = $visitor($html);
 
         $this->assertInstanceOf(SetInterface::class, $elements);
-        $this->assertSame(ElementInterface::class, (string) $elements->type());
+        $this->assertSame(Element::class, (string) $elements->type());
         $this->assertCount(2, $elements);
         $this->assertSame(
             '<h1>whatever</h1>'."\n".'        ',

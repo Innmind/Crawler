@@ -12,7 +12,7 @@ use Innmind\Url\Path;
 use Innmind\Immutable\Map;
 use Innmind\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\Xml\ReaderInterface;
+use Innmind\Xml\Reader;
 use Innmind\UrlResolver\ResolverInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +25,7 @@ class ContainerTest extends TestCase
             (new Map('string', 'mixed'))
                 ->put('transport', $this->createMock(Transport::class))
                 ->put('clock', $this->createMock(TimeContinuumInterface::class))
-                ->put('reader', $this->createMock(ReaderInterface::class))
+                ->put('reader', $this->createMock(Reader::class))
                 ->put('urlResolver', $this->createMock(ResolverInterface::class))
         );
 

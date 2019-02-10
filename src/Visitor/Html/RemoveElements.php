@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element,
 };
 use Innmind\Immutable\Sequence;
 
@@ -18,7 +18,7 @@ final class RemoveElements
         $this->toRemove = new Sequence(...$toRemove);
     }
 
-    public function __invoke(NodeInterface $node): NodeInterface
+    public function __invoke(Node $node): Node
     {
         $removedChildren = 0;
 
@@ -27,14 +27,14 @@ final class RemoveElements
             ->reduce(
                 $node,
                 function(
-                    NodeInterface $node,
+                    Node $node,
                     int $position,
-                    NodeInterface $child
+                    Node $child
                 ) use (
                     &$removedChildren
-                ): NodeInterface {
+                ): Node {
                     if (
-                        $child instanceof ElementInterface &&
+                        $child instanceof Element &&
                         $this->toRemove->contains($child->name())
                     ) {
                         return $node->removeChild(

@@ -7,7 +7,7 @@ use Innmind\Crawler\{
     Parser,
     Parser\Http\CanonicalParser,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Http\{
@@ -16,11 +16,11 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\Link,
-    Header\LinkValue
+    Header\LinkValue,
 };
 use Innmind\Url\{
+    UrlInterface,
     Url,
-    UrlInterface
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

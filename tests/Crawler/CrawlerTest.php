@@ -8,7 +8,7 @@ use Innmind\Crawler\{
     Crawler as CrawlerInterface,
     Parser,
     HttpResource,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -16,20 +16,20 @@ use Innmind\Http\{
     Message\Method\Method,
     Headers\Headers,
     ProtocolVersion\ProtocolVersion,
-    Header
+    Header,
 };
 use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\{
     MediaType\NullMediaType,
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Stream\Readable;
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Set,
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 

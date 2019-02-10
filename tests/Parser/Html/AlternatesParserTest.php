@@ -9,12 +9,12 @@ use Innmind\Crawler\{
     HttpResource\Alternates,
     Parser,
     Parser\Http\ContentTypeParser,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\{
+    UrlInterface,
     Url,
-    UrlInterface
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -22,25 +22,18 @@ use Innmind\Http\{
     Message\Response,
     Message\Method\Method,
     ProtocolVersion\ProtocolVersion,
-    Headers\Headers
+    Headers\Headers,
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
-    MediaType\MediaType
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
+    MediaType\MediaType,
 };
 use Innmind\Immutable\{
     Map,
     Set,
     SetInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
@@ -50,13 +43,7 @@ class AlternatesParserTest extends TestCase
     public function setUp()
     {
         $this->parser = new AlternatesParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            ),
+            html(),
             new UrlResolver(new BaseResolver)
         );
     }

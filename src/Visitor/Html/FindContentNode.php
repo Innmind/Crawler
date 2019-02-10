@@ -5,32 +5,32 @@ namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Exception\ContentTooDispersed;
 use Innmind\Xml\{
-    NodeInterface,
-    Visitor\Text
+    Node,
+    Visitor\Text,
 };
 use Innmind\Math\{
     Quantile\Quantile,
-    Regression\Dataset
+    Regression\Dataset,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Str
+    Str,
 };
 
 final class FindContentNode
 {
     /**
-     * @param MapInterface<int, NodeInterface> $nodes
+     * @param MapInterface<int, Node> $nodes
      */
-    public function __invoke(MapInterface $nodes): NodeInterface
+    public function __invoke(MapInterface $nodes): Node
     {
         if (
             (string) $nodes->keyType() !== 'int' ||
-            (string) $nodes->valueType() !== NodeInterface::class
+            (string) $nodes->valueType() !== Node::class
         ) {
             throw new \TypeError(sprintf(
                 'Argument 1 must be of type MapInterface<int, %s>',
-                NodeInterface::class
+                Node::class
             ));
         }
 
@@ -50,7 +50,7 @@ final class FindContentNode
 
         $dispersion = $nodes->reduce(
             [],
-            function(array $dispersion, int $position, NodeInterface $node): array {
+            function(array $dispersion, int $position, Node $node): array {
                 $text = (new Text)($node);
                 $text = new Str($text);
                 $dispersion[$position] = $text->wordCount();

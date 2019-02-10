@@ -7,23 +7,15 @@ use Innmind\Crawler\{
     Parser\Html\OpenGraph\ImageParser,
     HttpResource\Attribute,
     Parser,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Http\{
     Message\Request,
-    Message\Response
+    Message\Response,
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
-    MediaType\MediaType
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
+    MediaType\MediaType,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -31,6 +23,7 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class ImageParserTest extends TestCase
@@ -39,15 +32,7 @@ class ImageParserTest extends TestCase
 
     public function setUp()
     {
-        $this->parser = new ImageParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            )
-        );
+        $this->parser = new ImageParser(html());
     }
 
     public function testInterface()

@@ -8,21 +8,21 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     HttpResource\Alternate,
     HttpResource\Alternates,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
     Element\Link,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -30,21 +30,21 @@ use Innmind\Immutable\{
     Map,
     SequenceInterface,
     Pair,
-    Set
+    Set,
 };
 
 final class AlternatesParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
     private $resolver;
 
     public function __construct(
-        ReaderInterface $reader,
+        Reader $read,
         UrlResolver $resolver
     ) {
-        $this->reader = $reader;
+        $this->read = $read;
         $this->resolver = $resolver;
     }
 
@@ -57,18 +57,18 @@ final class AlternatesParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $links = $links
-            ->filter(function(NodeInterface $link): bool {
+            ->filter(function(Node $link): bool {
                 return $link instanceof Link;
             })
             ->filter(function(Link $link): bool {

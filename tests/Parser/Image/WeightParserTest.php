@@ -7,16 +7,16 @@ use Innmind\Crawler\{
     Parser\Image\WeightParser,
     HttpResource\Attribute,
     Parser,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Http\{
     Message\Request,
-    Message\Response
+    Message\Response,
 };
 use Innmind\Filesystem\MediaType\MediaType;
 use Innmind\Stream\{
     Readable,
-    Stream\Size
+    Stream\Size,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

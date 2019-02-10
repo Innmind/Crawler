@@ -5,13 +5,13 @@ namespace Tests\Innmind\Crawler;
 
 use Innmind\Crawler\{
     HttpResource,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\{
     MediaType\MediaType,
     Stream\StringStream,
-    File
+    File,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

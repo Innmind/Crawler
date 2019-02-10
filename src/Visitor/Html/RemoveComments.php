@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Xml\{
-    NodeInterface,
-    Node\Comment
+    Node,
+    Node\Comment,
 };
 
 final class RemoveComments
 {
-    public function __invoke(NodeInterface $node): NodeInterface
+    public function __invoke(Node $node): Node
     {
         $removedChildren = 0;
 
@@ -19,12 +19,12 @@ final class RemoveComments
             ->reduce(
                 $node,
                 function(
-                    NodeInterface $node,
+                    Node $node,
                     int $position,
-                    NodeInterface $child
+                    Node $child
                 ) use (
                     &$removedChildren
-                ): NodeInterface {
+                ): Node {
                     if ($child instanceof Comment) {
                         return $node->removeChild(
                             $position - $removedChildren++

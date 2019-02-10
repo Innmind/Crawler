@@ -7,46 +7,46 @@ use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
     UrlResolver,
-    Visitor\RemoveDuplicatedUrls
+    Visitor\RemoveDuplicatedUrls,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    ElementInterface,
-    Visitor\Text
+    Reader,
+    Node,
+    Element as ElementInterface,
+    Visitor\Text,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
     Visitor\Body,
-    Exception\ElementNotFoundException,
-    Element\Img
+    Exception\ElementNotFound,
+    Element\Img,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
     Pair,
-    Set
+    Set,
 };
 
 final class ImagesParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
     private $resolver;
 
-    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolver)
     {
-        $this->reader = $reader;
+        $this->read = $read;
         $this->resolver = $resolver;
     }
 
@@ -59,11 +59,11 @@ final class ImagesParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $body = (new Body)($document);
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
@@ -104,7 +104,7 @@ final class ImagesParser implements Parser
     private function images(ElementInterface $body): Map
     {
         return (new Elements('img'))($body)
-            ->filter(function(NodeInterface $img): bool {
+            ->filter(function(Node $img): bool {
                 return $img instanceof Img;
             })
             ->reduce(
@@ -122,12 +122,12 @@ final class ImagesParser implements Parser
     private function figures(ElementInterface $body): Map
     {
         return (new Elements('figure'))($body)
-            ->filter(function(NodeInterface $figure): bool {
+            ->filter(function(Node $figure): bool {
                 try {
                     $img = (new Element('img'))($figure);
 
                     return $img instanceof Img;
-                } catch (ElementNotFoundException $e) {
+                } catch (ElementNotFound $e) {
                     return false;
                 }
             })
@@ -143,7 +143,7 @@ final class ImagesParser implements Parser
                             $img->src(),
                             (new Text)($caption)
                         );
-                    } catch (ElementNotFoundException $e) {
+                    } catch (ElementNotFound $e) {
                         return $images->put(
                             $img->src(),
                             $img->attributes()->contains('alt') ?

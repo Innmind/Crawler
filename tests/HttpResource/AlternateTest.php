@@ -5,15 +5,15 @@ namespace Tests\Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\HttpResource\{
     Alternate,
-    Attribute
+    Attribute,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     SetInterface,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 

@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\HttpResource\Attribute;
 
 use Innmind\Crawler\HttpResource\{
     Attribute\Attribute,
-    Attribute as AttributeInterface
+    Attribute as AttributeInterface,
 };
 use PHPUnit\Framework\TestCase;
 

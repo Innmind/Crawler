@@ -6,7 +6,7 @@ namespace Innmind\Crawler\Parser;
 use Innmind\Crawler\Parser;
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 

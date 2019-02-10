@@ -5,7 +5,7 @@ namespace Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
-    Exception\CantMergeDifferentLanguages
+    Exception\CantMergeDifferentLanguages,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;

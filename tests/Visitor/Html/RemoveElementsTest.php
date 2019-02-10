@@ -4,16 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Visitor\Html\RemoveElements;
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\{
-    NodeInterface,
-    Translator\NodeTranslator,
-    Translator\NodeTranslators
-};
+use Innmind\Xml\Node;
 use Innmind\Filesystem\Stream\StringStream;
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class RemoveElementsTest extends TestCase
@@ -22,14 +15,7 @@ class RemoveElementsTest extends TestCase
     {
         $visitor = new RemoveElements('script');
 
-        $reader = new Reader(
-            new NodeTranslator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
-        $html = $reader->read(
+        $html = html()(
             new StringStream(<<<HTML
 <!DOCTYPE html>
 <html>
@@ -68,7 +54,7 @@ HTML
 HTML;
 
         $this->assertNotSame($html, $cleaned);
-        $this->assertInstanceOf(NodeInterface::class, $cleaned);
+        $this->assertInstanceOf(Node::class, $cleaned);
         $this->assertSame($expected, (string) $cleaned);
     }
 }

@@ -6,13 +6,13 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser\Http\CacheParser,
     Parser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
     ElapsedPeriod,
-    Period\Earth\Second
+    Period\Earth\Second,
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -24,13 +24,13 @@ use Innmind\Http\{
     Header\CacheControl,
     Header\CacheControlValue\PrivateCache,
     Header\CacheControlValue\PublicCache,
-    Header\CacheControlValue\SharedMaxAge
+    Header\CacheControlValue\SharedMaxAge,
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 

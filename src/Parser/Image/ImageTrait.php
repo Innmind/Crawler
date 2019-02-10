@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Parser\Image;
 
 use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
-    Specification\Image
+    Specification\Image,
 };
 use Innmind\Immutable\MapInterface;
 

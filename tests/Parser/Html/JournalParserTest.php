@@ -7,28 +7,21 @@ use Innmind\Crawler\{
     Parser\Html\JournalParser,
     Parser\Http\ContentTypeParser,
     Parser,
-    HttpResource\Attribute
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
+    HttpResource\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class JournalParserTest extends TestCase
@@ -37,15 +30,7 @@ class JournalParserTest extends TestCase
 
     public function setUp()
     {
-        $this->parser = new JournalParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            )
-        );
+        $this->parser = new JournalParser(html());
     }
 
     public function testInterface()

@@ -7,7 +7,7 @@ use function Innmind\Crawler\bootstrap;
 use Innmind\Crawler\Crawler\Crawler;
 use Innmind\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\Xml\ReaderInterface;
+use Innmind\Xml\Reader;
 use Innmind\UrlResolver\ResolverInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +18,7 @@ class BootstrapTest extends TestCase
         $crawler = bootstrap(
             $this->createMock(Transport::class),
             $this->createMock(TimeContinuumInterface::class),
-            $this->createMock(ReaderInterface::class),
+            $this->createMock(Reader::class),
             $this->createMock(ResolverInterface::class)
         );
 

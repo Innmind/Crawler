@@ -5,21 +5,20 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    ElementInterface
+    Reader,
+    Element,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -27,11 +26,11 @@ final class CharsetParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
 
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
     public function parse(
@@ -43,17 +42,17 @@ final class CharsetParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $metas = (new Elements('meta'))(
                 (new Head)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
-        $meta = $metas->filter(function(ElementInterface $meta): bool {
+        $meta = $metas->filter(function(Element $meta): bool {
             return $meta->attributes()->contains('charset');
         });
 

@@ -6,7 +6,7 @@ namespace Innmind\Crawler\HttpResource\Attributes;
 use Innmind\Crawler\{
     HttpResource\Attributes as AttributesInterface,
     HttpResource\Attribute,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
 

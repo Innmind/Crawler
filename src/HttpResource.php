@@ -8,7 +8,7 @@ use Innmind\Url\UrlInterface;
 use Innmind\Filesystem\{
     File,
     MediaType,
-    Name
+    Name,
 };
 use Innmind\Stream\Readable;
 use Innmind\Immutable\MapInterface;

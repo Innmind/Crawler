@@ -7,28 +7,21 @@ use Innmind\Crawler\{
     Parser\Html\TitleParser,
     Parser,
     HttpResource\Attribute,
-    Parser\Http\ContentTypeParser
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class TitleParserTest extends TestCase
@@ -37,15 +30,7 @@ class TitleParserTest extends TestCase
 
     public function setUp()
     {
-        $this->parser = new TitleParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            )
-        );
+        $this->parser = new TitleParser(html());
     }
 
     public function testInterface()

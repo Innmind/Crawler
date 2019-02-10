@@ -8,12 +8,12 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     HttpResource\Alternates,
     Parser,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\{
+    UrlInterface,
     Url,
-    UrlInterface
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -25,12 +25,12 @@ use Innmind\Http\{
     Header\Value\Value,
     Header\Parameter,
     Header\Link,
-    Header\LinkValue
+    Header\LinkValue,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
-    SetInterface
+    SetInterface,
 };
 use PHPUnit\Framework\TestCase;
 

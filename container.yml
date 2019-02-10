@@ -1,7 +1,7 @@
 arguments:
     transport: Innmind\HttpTransport\Transport
     clock: '?Innmind\TimeContinuum\TimeContinuumInterface'
-    reader: '?Innmind\Xml\ReaderInterface'
+    reader: '?Innmind\Xml\Reader'
     urlResolver: '?Innmind\UrlResolver\ResolverInterface'
     parser: Innmind\Crawler\Parser ?? $parser.default
 

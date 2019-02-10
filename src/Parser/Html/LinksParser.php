@@ -7,43 +7,43 @@ use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
     UrlResolver,
-    Visitor\RemoveDuplicatedUrls
+    Visitor\RemoveDuplicatedUrls,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
     Visitor\Body,
-    Exception\ElementNotFoundException,
+    Exception\ElementNotFound,
     Element\Link,
-    Element\A
+    Element\A,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set
+    Set,
 };
 
 final class LinksParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
     private $resolver;
 
-    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolver)
     {
-        $this->reader = $reader;
+        $this->read = $read;
         $this->resolver = $resolver;
     }
 
@@ -56,14 +56,14 @@ final class LinksParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
         $links = new Set(UrlInterface::class);
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(NodeInterface $link): bool {
+                ->filter(function(Node $link): bool {
                     return $link instanceof Link;
                 })
                 ->filter(function(Link $link): bool {
@@ -79,7 +79,7 @@ final class LinksParser implements Parser
                         return $links->add($link->href());
                     }
                 );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 
@@ -87,7 +87,7 @@ final class LinksParser implements Parser
             $links = (new Elements('a'))(
                 (new Body)($document)
             )
-                ->filter(function(NodeInterface $a): bool {
+                ->filter(function(Node $a): bool {
                     return $a instanceof A;
                 })
                 ->filter(function(A $a): bool {
@@ -99,7 +99,7 @@ final class LinksParser implements Parser
                         return $links->add($a->href());
                     }
                 );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 

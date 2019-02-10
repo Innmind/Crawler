@@ -4,19 +4,19 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\Parser\Html\OpenGraph;
 
 use Innmind\Crawler\Exception\InvalidOpenGraphAttribute;
-use Innmind\Xml\ReaderInterface;
+use Innmind\Xml\Reader;
 use Innmind\Url\{
+    UrlInterface,
     Url,
-    UrlInterface
 };
 use Innmind\Immutable\{
     SetInterface,
-    Set
+    Set,
 };
 
 final class ImageParser extends AbstractPropertyParser
 {
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $reader)
     {
         parent::__construct($reader, 'image');
     }

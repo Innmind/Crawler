@@ -8,11 +8,11 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     HttpResource\Attributes,
     Parser,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Http\{
     Message\Request,
-    Message\Response
+    Message\Response,
 };
 use Innmind\Filesystem\MediaType\MediaType;
 use Innmind\Stream\Readable\Stream;

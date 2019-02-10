@@ -5,7 +5,7 @@ namespace Innmind\Crawler\HttpResource\Attribute;
 
 use Innmind\Crawler\{
     HttpResource\Attribute as AttributeInterface,
-    Exception\DomainException
+    Exception\DomainException,
 };
 
 final class Attribute implements AttributeInterface

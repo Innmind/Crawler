@@ -11,17 +11,9 @@ use Innmind\Crawler\{
     Parser,
     HttpResource\Alternates,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
@@ -31,14 +23,15 @@ use Innmind\Http\{
     Header,
     Header\Link,
     Header\LinkValue,
-    Header\Parameter
+    Header\Parameter,
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\{
     Stream\StringStream,
-    MediaType\MediaType
+    MediaType\MediaType,
 };
 use Innmind\Immutable\Map;
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
@@ -52,13 +45,7 @@ class AlternatesParserTest extends TestCase
                 $resolver = new UrlResolver(new BaseResolver)
             ),
             new HtmlParser(
-                new Reader(
-                    new NodeTranslator(
-                        NodeTranslators::defaults()->merge(
-                            HtmlTranslators::defaults()
-                        )
-                    )
-                ),
+                html(),
                 $resolver
             )
         );

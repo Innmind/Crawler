@@ -5,7 +5,7 @@ namespace Innmind\Crawler;
 
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 

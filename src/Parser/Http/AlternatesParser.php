@@ -8,13 +8,13 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     HttpResource\Alternate,
     HttpResource\Alternates,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
     Header\Link,
-    Header\LinkValue
+    Header\LinkValue,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -22,7 +22,7 @@ use Innmind\Immutable\{
     Map,
     SequenceInterface,
     Set,
-    Pair
+    Pair,
 };
 
 final class AlternatesParser implements Parser

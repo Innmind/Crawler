@@ -7,7 +7,7 @@ use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     SetInterface,
     Set,
-    Map
+    Map,
 };
 
 final class RemoveDuplicatedUrls

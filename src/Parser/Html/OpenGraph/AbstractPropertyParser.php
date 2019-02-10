@@ -8,43 +8,43 @@ use Innmind\Crawler\{
     Exception\DomainException,
     Exception\InvalidOpenGraphAttribute,
     HttpResource\Attribute\Attribute,
-    Parser\Html\HtmlTrait
+    Parser\Html\HtmlTrait,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    ElementInterface
+    Reader,
+    Element,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
-    SetInterface
 };
 
 abstract class AbstractPropertyParser implements Parser
 {
     use HtmlTrait;
 
-    private $reader;
+    private $read;
     private $property;
 
     public function __construct(
-        ReaderInterface $reader,
+        Reader $read,
         string $property
     ) {
         if (empty($property)) {
             throw new DomainException;
         }
 
-        $this->reader = $reader;
+        $this->read = $read;
         $this->property = 'og:'.$property;
     }
 
@@ -57,28 +57,28 @@ abstract class AbstractPropertyParser implements Parser
             return $attributes;
         }
 
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $values = (new Elements('meta'))(
                 (new Head)($document)
             )
-                ->filter(function(ElementInterface $meta): bool {
+                ->filter(function(Element $meta): bool {
                     return $meta->attributes()->contains('property') &&
                         $meta->attributes()->contains('content');
                 })
-                ->filter(function(ElementInterface $meta): bool {
+                ->filter(function(Element $meta): bool {
                     return $meta->attributes()->get('property')->value() === $this->property;
                 })
                 ->reduce(
                     new Set('string'),
-                    function(Set $values, ElementInterface $meta): Set {
+                    function(Set $values, Element $meta): Set {
                         return $values->add(
                             $meta->attributes()->get('content')->value()
                         );
                     }
                 );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 

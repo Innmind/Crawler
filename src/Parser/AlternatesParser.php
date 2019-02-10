@@ -6,11 +6,11 @@ namespace Innmind\Crawler\Parser;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\AlternatesParser as HttpParser,
-    Parser\Html\AlternatesParser as HtmlParser
+    Parser\Html\AlternatesParser as HtmlParser,
 };
 use Innmind\http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 

@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\ContentTypeParser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Filesystem\MediaType;
 use Innmind\Http\{
@@ -15,7 +15,7 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue
+    Header\ContentTypeValue,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
