@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\HttpResource\{
-    Alternate,
-    Attribute,
+use Innmind\Crawler\{
+    HttpResource\Alternate,
+    HttpResource\Attribute,
+    Exception\CantMergeDifferentLanguages,
 };
 use Innmind\Url\{
     UrlInterface,
@@ -36,20 +37,18 @@ class AlternateTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessae Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>
-     */
     public function testThrowWhenInvalidLinks()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>');
+
         new Alternate('fr', new Set('int'));
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguages
-     */
     public function testThrowWhenMergingDifferentLanguages()
     {
+        $this->expectException(CantMergeDifferentLanguages::class);
+
         (new Alternate('fr', new Set(UrlInterface::class)))->merge(
             new Alternate('en', new Set(UrlInterface::class))
         );

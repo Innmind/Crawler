@@ -37,7 +37,7 @@ class AlternatesParserTest extends TestCase
 {
     private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parse = new AlternatesParser(
             new UrlResolver(new BaseResolver)

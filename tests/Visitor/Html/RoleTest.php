@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
-use Innmind\Crawler\Visitor\Html\Role;
+use Innmind\Crawler\{
+    Visitor\Html\Role,
+    Exception\DomainException,
+};
 use Innmind\Xml\Element;
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\SetInterface;
@@ -47,11 +50,10 @@ HTML
         $this->assertSame('hey', $elements->current()->content());
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\DomainException
-     */
     public function testThrowWhenEmptyRole()
     {
+        $this->expectException(DomainException::class);
+
         new Role('');
     }
 }

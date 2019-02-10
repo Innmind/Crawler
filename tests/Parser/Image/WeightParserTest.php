@@ -25,7 +25,7 @@ class WeightParserTest extends TestCase
 {
     private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parse = new WeightParser;
     }

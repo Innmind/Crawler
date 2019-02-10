@@ -30,7 +30,7 @@ class ImageParserTest extends TestCase
 {
     private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parse = new ImageParser(html());
     }

@@ -38,12 +38,11 @@ class RemoveDuplicatedUrlsTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 must be of type SetInterface<Innmind\Url\UrlInterface>
-     */
     public function testThrowWhenInvalidSet()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 1 must be of type SetInterface<Innmind\Url\UrlInterface>');
+
         (new RemoveDuplicatedUrls)(new Set('string'));
     }
 }

@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\HttpResource\{
-    Alternates,
-    Alternate,
-    Attribute,
-    Attributes,
+use Innmind\Crawler\{
+    HttpResource\Alternates,
+    HttpResource\Alternate,
+    HttpResource\Attribute,
+    HttpResource\Attributes,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Url\{
     UrlInterface,
@@ -56,11 +57,10 @@ class AlternatesTest extends TestCase
         $this->assertSame('fr', $alternates->key());
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotOnlyAlternates()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Alternates(
             Map::of('string', Attribute::class)
                 (

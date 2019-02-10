@@ -35,12 +35,11 @@ class HttpResourceTest extends TestCase
         $this->assertSame($content, $resource->content());
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 3 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>
-     */
     public function testThrowWhenInvalidAttributeMap()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 3 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>');
+
         new HttpResource(
             Url::fromString('http://example.com/foo'),
             MediaType::fromString('application/json'),

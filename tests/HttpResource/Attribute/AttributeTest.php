@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\HttpResource\Attribute;
 
-use Innmind\Crawler\HttpResource\{
-    Attribute\Attribute,
-    Attribute as AttributeInterface,
+use Innmind\Crawler\{
+    HttpResource\Attribute\Attribute,
+    HttpResource\Attribute as AttributeInterface,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -20,11 +21,10 @@ class AttributeTest extends TestCase
         $this->assertSame(42, $attribute->content());
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\DomainException
-     */
     public function testThrowWhenEmptyName()
     {
+        $this->expectException(DomainException::class);
+
         new Attribute('', 42);
     }
 }
