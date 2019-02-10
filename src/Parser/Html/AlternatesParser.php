@@ -111,12 +111,7 @@ final class AlternatesParser implements Parser
                         $language,
                         new Alternate(
                             $language,
-                            $links->keys()->reduce(
-                                new Set(UrlInterface::class),
-                                function(Set $links, UrlInterface $link): Set {
-                                    return $links->add($link);
-                                }
-                            )
+                            $links->keys()
                         )
                     );
                 }
