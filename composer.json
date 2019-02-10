@@ -25,7 +25,7 @@
         "innmind/html": "~4.0",
         "innmind/colour": "~2.0",
         "innmind/math": "~4.0",
-        "innmind/http-transport": "~3.0"
+        "innmind/http-transport": "~4.0"
     },
     "autoload": {
         "psr-4": {

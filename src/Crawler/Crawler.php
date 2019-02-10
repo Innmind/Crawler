@@ -20,20 +20,20 @@ use Innmind\Immutable\Map;
 
 final class Crawler implements CrawlerInterface
 {
-    private $transport;
+    private $fulfill;
     private $parser;
 
     public function __construct(
-        Transport $transport,
+        Transport $fulfill,
         Parser $parser
     ) {
-        $this->transport = $transport;
+        $this->fulfill = $fulfill;
         $this->parser = $parser;
     }
 
     public function execute(Request $request): HttpResource
     {
-        $response = $this->transport->fulfill($request);
+        $response = ($this->fulfill)($request);
         $attributes = $this->parser->parse(
             $request,
             $response,

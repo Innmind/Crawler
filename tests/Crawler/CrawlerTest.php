@@ -50,7 +50,7 @@ class CrawlerTest extends TestCase
         );
         $transport
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(Response::class)
@@ -97,7 +97,7 @@ class CrawlerTest extends TestCase
         );
         $transport
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(Response::class)
