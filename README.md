@@ -17,45 +17,30 @@ composer require innmind/crawler
 ## Usage
 
 ```php
-use Innmind\Crawler\{
-    Crawler,
-    Parser\Http\ContentTypeParser
-};
-use Innmind\Http\{
-    Translator\Response\Psr7Translator,
-    Factory\Header\Factories,
-    Factory\HeaderFactoryInterface,
-    Message\Request,
-    Message\Method,
-    ProtocolVersion,
-    Headers,
-    Header\HeaderInterface
-};
-use Innmind\HttpTransport\GuzzleTransport;
+use function Innmind\Crawler\bootstrap;
+use Innmind\OperatingSystem\Factory;
+use Innmind\UrlResolver\UrlResolver;
 use Innmind\Url\Url;
-use Innmind\Filesystem\Stream\NullStream;
-use Innmind\Immutable\Map;
-use GuzzleHttp\Client as Http;
+use Innmind\Http\{
+    Message\Request\Request,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion,
+};
 
-$crawler = new Crawler(
-    new GuzzleTransport(
-        new Http,
-        new Psr7Translator(
-            Factories::default()
-        )
-    ),
-    new ContentTypeParser
+$os = Factory::build();
+
+$crawler = bootstrap(
+    $os->remote()->http(),
+    $os->clock(),
+    reader(),
+    new UrlResolver
 );
 
 $resource = $crawler->execute(
     new Request(
         Url::fromString('https://en.wikipedia.org/wiki/H2g2'),
         new Method('GET'),
-        new ProtocolVersion(2, 0),
-        new Headers(
-            new Map('string', HeaderInterface::class)
-        ),
-        new NullStream
+        new ProtocolVersion(2, 0)
     )
 );
 ```
