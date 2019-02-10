@@ -20,8 +20,6 @@ use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    SetInterface,
-    Set,
     Pair,
 };
 
@@ -93,12 +91,7 @@ final class AlternatesParser implements Parser
                         $language,
                         new Alternate(
                             $language,
-                            $links->keys()->reduce(
-                                new Set(UrlInterface::class),
-                                function(SetInterface $links, UrlInterface $link): SetInterface {
-                                    return $links->add($link);
-                                }
-                            )
+                            $links->keys()
                         )
                     );
                 }
