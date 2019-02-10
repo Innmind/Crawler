@@ -8,7 +8,7 @@ use Innmind\Immutable\Set;
 
 final class Html
 {
-    public static $allowed;
+    private static $allowed;
 
     public function isSatisfiedBy(MediaType $type): bool
     {
