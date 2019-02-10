@@ -24,8 +24,6 @@ use Innmind\Immutable\MapInterface;
 
 final class CharsetParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
 
     public function __construct(Reader $read)
@@ -38,10 +36,6 @@ final class CharsetParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         try {

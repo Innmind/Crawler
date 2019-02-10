@@ -6,7 +6,6 @@ namespace Innmind\Crawler\Parser\Html\OpenGraph;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
-    Parser\Html\HtmlTrait,
     Visitor\Html\OpenGraph,
 };
 use Innmind\Xml\Reader;
@@ -27,8 +26,6 @@ use Innmind\Immutable\{
 
 final class ImageParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
     private $extract;
 
@@ -43,10 +40,6 @@ final class ImageParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         $values = ($this->extract)($document)

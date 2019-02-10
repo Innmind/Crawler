@@ -43,43 +43,6 @@ class TitleParserTest extends TestCase
         $this->assertSame('title', TitleParser::key());
     }
 
-    public function testDoesntParseWhenNoContentType()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = new Map('string', Attribute::class);
-
-        $attributes = ($this->parse)(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
-    public function testDoesntParseWhenNotHtml()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = Map::of('string', Attribute::class)
-            (
-                ContentTypeParser::key(),
-                new Attribute\Attribute(
-                    ContentTypeParser::key(),
-                    MediaType::fromString('text/csv')
-                )
-            );
-
-        $attributes = ($this->parse)(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
     public function testDoesntParseWhenNoHead()
     {
         $response = $this->createMock(Response::class);

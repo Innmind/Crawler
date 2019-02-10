@@ -38,8 +38,6 @@ use Innmind\Immutable\{
 
 final class LinksParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
     private $resolve;
 
@@ -54,10 +52,6 @@ final class LinksParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
         $links = new Set(UrlInterface::class);
 

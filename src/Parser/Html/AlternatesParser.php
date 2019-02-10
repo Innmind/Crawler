@@ -35,8 +35,6 @@ use Innmind\Immutable\{
 
 final class AlternatesParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
     private $resolve;
 
@@ -53,10 +51,6 @@ final class AlternatesParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         try {

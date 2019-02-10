@@ -7,7 +7,8 @@ use Innmind\Crawler\{
     Parser\AlternatesParser,
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Http\ContentTypeParser,
-    Parser\Html\AlternatesParser as HtmlParser,
+    Parser\HtmlParser,
+    Parser\Html,
     Parser,
     HttpResource\Alternates,
     HttpResource\Attribute,
@@ -45,8 +46,10 @@ class AlternatesParserTest extends TestCase
                 $resolver = new UrlResolver(new BaseResolver)
             ),
             new HtmlParser(
-                html(),
-                $resolver
+                new Html\AlternatesParser(
+                    html(),
+                    $resolver
+                )
             )
         );
     }

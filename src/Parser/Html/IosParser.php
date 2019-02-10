@@ -27,8 +27,6 @@ use Innmind\Immutable\{
 
 final class IosParser implements Parser
 {
-    use HtmlTrait;
-
     private const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
 
     private $read;
@@ -43,10 +41,6 @@ final class IosParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         try {

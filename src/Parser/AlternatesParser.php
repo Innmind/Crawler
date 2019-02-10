@@ -19,7 +19,7 @@ final class AlternatesParser implements Parser
     private $http;
     private $html;
 
-    public function __construct(HttpParser $http, HtmlParser $html)
+    public function __construct(Parser $http, Parser $html)
     {
         $this->http = $http;
         $this->html = $html;

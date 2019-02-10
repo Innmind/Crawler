@@ -26,8 +26,6 @@ use Innmind\Immutable\MapInterface;
 
 final class CanonicalParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
     private $resolve;
 
@@ -42,10 +40,6 @@ final class CanonicalParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         try {

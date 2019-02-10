@@ -30,8 +30,6 @@ use Innmind\Immutable\{
 
 final class LanguagesParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
 
     public function __construct(Reader $read)
@@ -45,10 +43,6 @@ final class LanguagesParser implements Parser
         MapInterface $attributes
     ): MapInterface {
         $languages = null;
-
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
 
         $document = ($this->read)($response->body());
 

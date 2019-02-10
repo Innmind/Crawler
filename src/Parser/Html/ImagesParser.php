@@ -38,8 +38,6 @@ use Innmind\Immutable\{
 
 final class ImagesParser implements Parser
 {
-    use HtmlTrait;
-
     private $read;
     private $resolve;
 
@@ -54,10 +52,6 @@ final class ImagesParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
         $document = ($this->read)($response->body());
 
         try {
