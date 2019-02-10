@@ -29,7 +29,7 @@ final class IosParser implements Parser
 {
     use HtmlTrait;
 
-    const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
+    private const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
 
     private $read;
 
