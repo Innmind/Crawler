@@ -13,12 +13,10 @@ use Innmind\Immutable\MapInterface;
 final class SequenceParser implements Parser
 {
     private $parsers;
-    private $length;
 
     public function __construct(Parser ...$parsers)
     {
         $this->parsers = $parsers;
-        $this->length = count($parsers);
     }
 
     public function parse(
@@ -26,8 +24,8 @@ final class SequenceParser implements Parser
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        for ($i = 0; $i < $this->length; $i++) {
-            $attributes = $this->parsers[$i]->parse(
+        foreach ($this->parsers as $parser) {
+            $attributes = $parser->parse(
                 $request,
                 $response,
                 $attributes
