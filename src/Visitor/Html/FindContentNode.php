@@ -67,7 +67,7 @@ final class FindContentNode
             }
         }
 
-        if (empty($lookup)) {
+        if (\count($lookup) === 0) {
             throw new ContentTooDispersed;
         }
 
