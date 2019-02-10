@@ -43,7 +43,7 @@ final class Role
 
         return $node->children()->reduce(
             $set,
-            function(Set $set, int $position, Node $node): Set {
+            function(SetInterface $set, int $position, Node $node): SetInterface {
                 return $set->merge(
                     $this($node)
                 );
