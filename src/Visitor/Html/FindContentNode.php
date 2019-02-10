@@ -72,7 +72,7 @@ final class FindContentNode
         }
 
         //select the minimum amount of words that needs to be in nodes
-        $min = $quantile->quartile(min($lookup))->value()->value();
+        $min = $quantile->quartile(\min($lookup))->value()->value();
 
         $nodes = $nodes->filter(function(int $position) use ($min, $dispersion): bool {
             return $dispersion[$position] >= $min;
