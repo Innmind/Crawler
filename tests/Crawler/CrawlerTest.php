@@ -35,7 +35,7 @@ class CrawlerTest extends TestCase
 {
     public function testInterface()
     {
-        $crawler = new Crawler(
+        $crawl = new Crawler(
             $transport = $this->createMock(Transport::class),
             $parser = $this->createMock(Parser::class)
         );
@@ -63,9 +63,9 @@ class CrawlerTest extends TestCase
                     ('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
             );
 
-        $resource = $crawler->execute($request);
+        $resource = $crawl($request);
 
-        $this->assertInstanceOf(CrawlerInterface::class, $crawler);
+        $this->assertInstanceOf(CrawlerInterface::class, $crawl);
         $this->assertInstanceOf(HttpResource::class, $resource);
         $this->assertSame($url, $resource->url());
         $this->assertInstanceOf(NullMediaType::class, $resource->mediaType());
@@ -80,7 +80,7 @@ class CrawlerTest extends TestCase
 
     public function testUseTheParsedMediaTypeForTheResource()
     {
-        $crawler = new Crawler(
+        $crawl = new Crawler(
             $transport = $this->createMock(Transport::class),
             $parser = $this->createMock(Parser::class)
         );
@@ -111,7 +111,7 @@ class CrawlerTest extends TestCase
                     )
             );
 
-        $resource = $crawler->execute($request);
+        $resource = $crawl($request);
 
         $this->assertInstanceOf(MediaType::class, $resource->mediaType());
         $this->assertSame('application/json', (string) $resource->mediaType());

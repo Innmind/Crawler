@@ -29,14 +29,14 @@ use Innmind\Http\{
 
 $os = Factory::build();
 
-$crawler = bootstrap(
+$crawl = bootstrap(
     $os->remote()->http(),
     $os->clock(),
     reader(),
     new UrlResolver
 );
 
-$resource = $crawler->execute(
+$resource = $crawl(
     new Request(
         Url::fromString('https://en.wikipedia.org/wiki/H2g2'),
         new Method('GET'),

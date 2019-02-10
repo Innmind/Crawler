@@ -31,7 +31,7 @@ final class Crawler implements CrawlerInterface
         $this->parser = $parser;
     }
 
-    public function execute(Request $request): HttpResource
+    public function __invoke(Request $request): HttpResource
     {
         $response = ($this->fulfill)($request);
         $attributes = $this->parser->parse(
