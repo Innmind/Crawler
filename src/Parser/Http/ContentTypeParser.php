@@ -17,7 +17,7 @@ use Innmind\Immutable\MapInterface;
 
 final class ContentTypeParser implements Parser
 {
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

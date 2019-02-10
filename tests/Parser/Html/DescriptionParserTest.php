@@ -26,18 +26,18 @@ use PHPUnit\Framework\TestCase;
 
 class DescriptionParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new DescriptionParser(html());
+        $this->parse = new DescriptionParser(html());
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -52,7 +52,7 @@ class DescriptionParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -74,7 +74,7 @@ class DescriptionParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -100,7 +100,7 @@ class DescriptionParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -135,7 +135,7 @@ class DescriptionParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -171,7 +171,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected
@@ -218,7 +218,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

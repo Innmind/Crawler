@@ -27,18 +27,18 @@ use PHPUnit\Framework\TestCase;
 
 class AnchorsParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new AnchorsParser(html());
+        $this->parse = new AnchorsParser(html());
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -53,7 +53,7 @@ class AnchorsParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -75,7 +75,7 @@ class AnchorsParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -101,7 +101,7 @@ class AnchorsParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -138,7 +138,7 @@ class AnchorsParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

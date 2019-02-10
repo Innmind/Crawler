@@ -26,18 +26,18 @@ use PHPUnit\Framework\TestCase;
 
 class TitleParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new TitleParser(html());
+        $this->parse = new TitleParser(html());
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -52,7 +52,7 @@ class TitleParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -74,7 +74,7 @@ class TitleParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -100,7 +100,7 @@ class TitleParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -129,7 +129,7 @@ class TitleParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream($html));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

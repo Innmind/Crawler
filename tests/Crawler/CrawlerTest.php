@@ -56,7 +56,7 @@ class CrawlerTest extends TestCase
             ->willReturn($content = $this->createMock(Readable::class));
         $parser
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response)
             ->willReturn(
                 Map::of('string', Attribute::class)
@@ -101,7 +101,7 @@ class CrawlerTest extends TestCase
             ->willReturn($this->createMock(Readable::class));
         $parser
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response)
             ->willReturn(
                 Map::of('string', Attribute::class)

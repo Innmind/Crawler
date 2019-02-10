@@ -32,11 +32,11 @@ use PHPUnit\Framework\TestCase;
 
 class CanonicalParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new CanonicalParser(
+        $this->parse = new CanonicalParser(
             html(),
             new UrlResolver(new BaseResolver)
         );
@@ -46,7 +46,7 @@ class CanonicalParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -61,7 +61,7 @@ class CanonicalParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -83,7 +83,7 @@ class CanonicalParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -109,7 +109,7 @@ class CanonicalParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -142,7 +142,7 @@ class CanonicalParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -176,7 +176,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -214,7 +214,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

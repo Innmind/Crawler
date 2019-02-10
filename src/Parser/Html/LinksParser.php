@@ -49,7 +49,7 @@ final class LinksParser implements Parser
         $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

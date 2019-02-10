@@ -39,7 +39,7 @@ final class LanguagesParser implements Parser
         $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

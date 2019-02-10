@@ -49,7 +49,7 @@ abstract class AbstractPropertyParser implements Parser
         $this->property = 'og:'.$property;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

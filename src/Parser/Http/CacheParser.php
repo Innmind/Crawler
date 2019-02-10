@@ -28,7 +28,7 @@ final class CacheParser implements Parser
         $this->clock = $clock;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

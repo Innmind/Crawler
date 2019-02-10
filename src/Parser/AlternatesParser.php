@@ -25,14 +25,14 @@ final class AlternatesParser implements Parser
         $this->html = $html;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
         return $this->merge(
-            $this->http->parse($request, $response, $attributes),
-            $this->html->parse($request, $response, $attributes)
+            ($this->http)($request, $response, $attributes),
+            ($this->html)($request, $response, $attributes)
         );
     }
 

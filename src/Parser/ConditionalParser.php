@@ -22,15 +22,15 @@ final class ConditionalParser implements Parser
         $this->parsers = $parsers;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
         $original = $attributes;
 
-        foreach ($this->parsers as $parser) {
-            $attributes = $parser->parse(
+        foreach ($this->parsers as $parse) {
+            $attributes = $parse(
                 $request,
                 $response,
                 $attributes

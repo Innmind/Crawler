@@ -33,11 +33,11 @@ use PHPUnit\Framework\TestCase;
 
 class ImagesParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new ImagesParser(
+        $this->parse = new ImagesParser(
             html(),
             new UrlResolver(new BaseResolver)
         );
@@ -47,7 +47,7 @@ class ImagesParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -62,7 +62,7 @@ class ImagesParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -84,7 +84,7 @@ class ImagesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -110,7 +110,7 @@ class ImagesParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -143,7 +143,7 @@ class ImagesParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -191,7 +191,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

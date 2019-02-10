@@ -56,7 +56,7 @@ class CaheParserTest extends TestCase
             ->method('headers')
             ->willReturn(new Headers);
         $clock = $this->createMock(TimeContinuumInterface::class);
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -82,7 +82,7 @@ class CaheParserTest extends TestCase
                 )
             );
         $clock = $this->createMock(TimeContinuumInterface::class);
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
@@ -126,7 +126,7 @@ class CaheParserTest extends TestCase
             ->willReturn(
                 $expected = $this->createMock(PointInTimeInterface::class)
             );
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),

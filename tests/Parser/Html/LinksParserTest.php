@@ -33,11 +33,11 @@ use PHPUnit\Framework\TestCase;
 
 class LinksParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new LinksParser(
+        $this->parse = new LinksParser(
             html(),
             new UrlResolver(new BaseResolver)
         );
@@ -47,7 +47,7 @@ class LinksParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -62,7 +62,7 @@ class LinksParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -84,7 +84,7 @@ class LinksParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -121,7 +121,7 @@ class LinksParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -168,7 +168,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

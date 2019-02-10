@@ -16,7 +16,7 @@ interface Parser
      *
      * @return MapInterface<string, AttributeInterface>
      */
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

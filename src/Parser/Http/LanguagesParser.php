@@ -21,7 +21,7 @@ use Innmind\Immutable\{
 
 final class LanguagesParser implements Parser
 {
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

@@ -37,11 +37,11 @@ use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new AlternatesParser(
+        $this->parse = new AlternatesParser(
             html(),
             new UrlResolver(new BaseResolver)
         );
@@ -49,7 +49,7 @@ class AlternatesParserTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(Parser::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parse);
     }
 
     public function testKey()
@@ -63,7 +63,7 @@ class AlternatesParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -85,7 +85,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -110,7 +110,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(RequestInterface::class),
             $response,
             $expected
@@ -137,7 +137,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(RequestInterface::class),
             $response,
             $expected
@@ -176,7 +176,7 @@ HTML
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),

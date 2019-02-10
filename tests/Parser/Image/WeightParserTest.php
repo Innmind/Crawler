@@ -23,18 +23,18 @@ use PHPUnit\Framework\TestCase;
 
 class WeightParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new WeightParser;
+        $this->parse = new WeightParser;
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -49,7 +49,7 @@ class WeightParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -71,7 +71,7 @@ class WeightParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -103,7 +103,7 @@ class WeightParserTest extends TestCase
             ->method('knowsSize')
             ->willReturn(false);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -139,7 +139,7 @@ class WeightParserTest extends TestCase
             ->method('size')
             ->willReturn(new Size(66));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

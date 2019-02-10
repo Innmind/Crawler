@@ -39,7 +39,7 @@ class LanguagesParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentLanguage()
     {
-        $parser = new LanguagesParser;
+        $parse = new LanguagesParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -55,14 +55,14 @@ class LanguagesParserTest extends TestCase
             ->willReturn(false);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenContentLanguageNotFullyParsed()
     {
-        $parser = new LanguagesParser;
+        $parse = new LanguagesParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $headers = $this->createMock(Headers::class);
@@ -82,14 +82,14 @@ class LanguagesParserTest extends TestCase
             ->willReturn($this->createMock(Header::class));
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testParse()
     {
-        $parser = new LanguagesParser;
+        $parse = new LanguagesParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $headers = $this->createMock(Headers::class);
@@ -114,7 +114,7 @@ class LanguagesParserTest extends TestCase
             );
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);

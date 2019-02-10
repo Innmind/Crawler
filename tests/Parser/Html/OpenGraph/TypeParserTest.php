@@ -26,16 +26,16 @@ use PHPUnit\Framework\TestCase;
 
 class TypeParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new TypeParser(html());
+        $this->parse = new TypeParser(html());
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf(Parser::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parse);
     }
 
     public function testKey()
@@ -49,7 +49,7 @@ class TypeParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -71,7 +71,7 @@ class TypeParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -96,7 +96,7 @@ class TypeParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(Request::class),
             $response,
             $expected
@@ -131,7 +131,7 @@ HTML
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(Request::class),
             $response,
             $notExpected

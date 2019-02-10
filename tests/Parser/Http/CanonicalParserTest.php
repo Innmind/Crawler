@@ -27,11 +27,11 @@ use PHPUnit\Framework\TestCase;
 
 class CanonicalParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new CanonicalParser(
+        $this->parse = new CanonicalParser(
             new UrlResolver(new BaseResolver)
         );
     }
@@ -40,7 +40,7 @@ class CanonicalParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -66,7 +66,7 @@ class CanonicalParserTest extends TestCase
         $request = $this->createMock(Request::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse($request, $response, $expected);
+        $attributes = ($this->parse)($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
@@ -92,7 +92,7 @@ class CanonicalParserTest extends TestCase
         $request = $this->createMock(Request::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse($request, $response, $expected);
+        $attributes = ($this->parse)($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
@@ -125,7 +125,7 @@ class CanonicalParserTest extends TestCase
         $request = $this->createMock(Request::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse($request, $response, $expected);
+        $attributes = ($this->parse)($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
@@ -166,7 +166,7 @@ class CanonicalParserTest extends TestCase
         $request = $this->createMock(Request::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse($request, $response, $expected);
+        $attributes = ($this->parse)($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
@@ -207,7 +207,7 @@ class CanonicalParserTest extends TestCase
             ->willReturn(Url::fromString('http://example.com/whatever'));
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse($request, $response, $expected);
+        $attributes = ($this->parse)($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);

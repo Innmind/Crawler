@@ -36,11 +36,11 @@ use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new AlternatesParser(
+        $this->parse = new AlternatesParser(
             new HttpParser(
                 $resolver = new UrlResolver(new BaseResolver)
             ),
@@ -55,7 +55,7 @@ class AlternatesParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -80,7 +80,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
@@ -125,7 +125,7 @@ HTML
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
@@ -187,7 +187,7 @@ HTML
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),

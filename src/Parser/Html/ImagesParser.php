@@ -49,7 +49,7 @@ final class ImagesParser implements Parser
         $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

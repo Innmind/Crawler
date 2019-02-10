@@ -17,7 +17,7 @@ final class WeightParser implements Parser
 {
     use ImageTrait;
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

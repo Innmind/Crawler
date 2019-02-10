@@ -21,18 +21,18 @@ use PHPUnit\Framework\TestCase;
 
 class DimensionParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
     public function setUp()
     {
-        $this->parser = new DimensionParser;
+        $this->parse = new DimensionParser;
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -47,7 +47,7 @@ class DimensionParserTest extends TestCase
         $response = $this->createMock(Response::class);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -69,7 +69,7 @@ class DimensionParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -95,7 +95,7 @@ class DimensionParserTest extends TestCase
             ->method('body')
             ->willReturn(new Stream(fopen('fixtures/dont_panic.jpg', 'r')));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected
