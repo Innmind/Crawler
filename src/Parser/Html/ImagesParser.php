@@ -155,7 +155,7 @@ final class ImagesParser implements Parser
             );
     }
 
-    private function removeDuplicates(Map $images, Map $figures): Map
+    private function removeDuplicates(MapInterface $images, MapInterface $figures): MapInterface
     {
         $urls = $figures->reduce(
             new Set(UrlInterface::class),
