@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "~7.2",
-        "innmind/immutable": "~2.1",
+        "innmind/immutable": "~2.13",
         "innmind/http": "~3.0",
         "innmind/filesystem": "~3.0",
         "guzzlehttp/guzzle": "^6.2",

@@ -65,7 +65,7 @@ final class ThemeColorParser implements Parser
                         ->get('name')
                         ->value();
 
-                    return (string) (new Str($name))->toLower() === 'theme-color';
+                    return (string) Str::of($name)->toLower() === 'theme-color';
                 });
         } catch (ElementNotFound $e) {
             return $attributes;

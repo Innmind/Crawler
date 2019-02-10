@@ -23,6 +23,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
 };
 
@@ -58,7 +59,7 @@ final class CitationsParser implements Parser
 
         $citations = $citations->reduce(
             new Set('string'),
-            function(Set $citations, Node $cite): Set {
+            function(SetInterface $citations, Node $cite): SetInterface {
                 return $citations->add(
                     trim((new Text)($cite))
                 );

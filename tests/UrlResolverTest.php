@@ -49,8 +49,8 @@ class UrlResolverTest extends TestCase
 
         $url = $resolver->resolve(
             $request,
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     BaseParser::key(),
                     new Attribute\Attribute(
                         BaseParser::key(),

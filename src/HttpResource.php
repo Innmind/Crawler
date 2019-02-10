@@ -12,6 +12,7 @@ use Innmind\Filesystem\{
 };
 use Innmind\Stream\Readable;
 use Innmind\Immutable\MapInterface;
+use function Innmind\Immutable\assertMap;
 
 final class HttpResource implements File
 {
@@ -27,15 +28,7 @@ final class HttpResource implements File
         MapInterface $attributes,
         Readable $content
     ) {
-        if (
-            (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== Attribute::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 3 must be of type MapInterface<string, %s>',
-                Attribute::class
-            ));
-        }
+        assertMap('string', Attribute::class, $attributes, 3);
 
         $name = basename((string) $url->path());
         $this->url = $url;

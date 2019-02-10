@@ -38,21 +38,9 @@ final class DimensionParser implements Parser
             self::key(),
             new Attributes(
                 self::key(),
-                (new Map('string', Attribute::class))
-                    ->put(
-                        'width',
-                        new Attribute\Attribute(
-                            'width',
-                            $infos[0]
-                        )
-                    )
-                    ->put(
-                        'height',
-                        new Attribute\Attribute(
-                            'height',
-                            $infos[1]
-                        )
-                    )
+                Map::of('string', Attribute::class)
+                    ('width', new Attribute\Attribute('width', $infos[0]))
+                    ('height', new Attribute\Attribute('height', $infos[1]))
             )
         );
     }

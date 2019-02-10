@@ -65,22 +65,18 @@ class AlternatesParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'link',
-                            new Link(
-                                new LinkValue(
-                                    Url::fromString('/en/foo/bar'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'en')
-                                        )
+                Headers::of(
+                    new Link(
+                        new LinkValue(
+                            Url::fromString('/en/foo/bar'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'en')
                                 )
-                            )
                         )
+                    )
                 )
             );
 
@@ -88,9 +84,7 @@ class AlternatesParserTest extends TestCase
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             new Map('string', Attribute::class)
@@ -122,8 +116,8 @@ HTML
                 )
             );
 
-        $attributes = (new Map('string', Attribute::class))
-            ->put(
+        $attributes = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -135,9 +129,7 @@ HTML
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $attributes
@@ -157,22 +149,18 @@ HTML
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'link',
-                            new Link(
-                                new LinkValue(
-                                    Url::fromString('/en/foo/bar'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'en')
-                                        )
+                Headers::of(
+                    new Link(
+                        new LinkValue(
+                            Url::fromString('/en/foo/bar'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'en')
                                 )
-                            )
                         )
+                    )
                 )
             );
         $response
@@ -203,9 +191,7 @@ HTML
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $attributes

@@ -17,9 +17,9 @@ class AttributesTest extends TestCase
     {
         $attributes = new Attributes(
             'foo',
-            $content = (new Map('string', Attribute::class))
-                ->put('bar', new Attribute\Attribute('bar', 42))
-                ->put('baz', new Attribute\Attribute('baz', 'idk'))
+            $content = Map::of('string', Attribute::class)
+                ('bar', new Attribute\Attribute('bar', 42))
+                ('baz', new Attribute\Attribute('baz', 'idk'))
         );
 
         $this->assertInstanceOf(AttributesInterface::class, $attributes);
@@ -54,9 +54,9 @@ class AttributesTest extends TestCase
     {
         $attributes = new Attributes(
             'foo',
-            $content = (new Map('string', Attribute::class))
-                ->put('bar', new Attribute\Attribute('bar', 42))
-                ->put('baz', new Attribute\Attribute('baz', 'idk'))
+            $content = Map::of('string', Attribute::class)
+                ('bar', new Attribute\Attribute('bar', 42))
+                ('baz', new Attribute\Attribute('baz', 'idk'))
         );
 
         $this->assertSame($content->get('bar'), $attributes->current());

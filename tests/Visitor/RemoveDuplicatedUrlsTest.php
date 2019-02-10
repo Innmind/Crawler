@@ -19,13 +19,15 @@ class RemoveDuplicatedUrlsTest extends TestCase
     public function testInterface()
     {
         $urls = (new RemoveDuplicatedUrls)(
-            (new Set(UrlInterface::class))
-                ->add($keep1 = Url::fromString('http://example.com/'))
-                ->add(Url::fromString('http://example.com/'))
-                ->add($keep2 = Url::fromString('http://example.com/yay'))
-                ->add($keep3 = Url::fromString('http://example.com/bar/baz'))
-                ->add(Url::fromString('http://example.com/bar/baz'))
-                ->add($keep4 = Url::fromString('http://example.com/unique'))
+            Set::of(
+                UrlInterface::class,
+                $keep1 = Url::fromString('http://example.com/'),
+                Url::fromString('http://example.com/'),
+                $keep2 = Url::fromString('http://example.com/yay'),
+                $keep3 = Url::fromString('http://example.com/bar/baz'),
+                Url::fromString('http://example.com/bar/baz'),
+                $keep4 = Url::fromString('http://example.com/unique')
+            )
         );
 
         $this->assertInstanceOf(SetInterface::class, $urls);

@@ -8,13 +8,13 @@ use Innmind\Crawler\{
     HttpResource,
     Parser,
     HttpResource\Attribute,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Http\Message\Request;
 use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\MediaType\{
     MediaType,
-    NullMediaType
+    NullMediaType,
 };
 use Innmind\Immutable\Map;
 

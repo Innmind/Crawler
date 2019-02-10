@@ -20,7 +20,7 @@ use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    SequenceInterface,
+    SetInterface,
     Set,
     Pair,
 };
@@ -52,7 +52,7 @@ final class AlternatesParser implements Parser
             ->values()
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(Map $links, LinkValue $header): Map {
+                function(MapInterface $links, LinkValue $header): MapInterface {
                     if (
                         $header->relationship() !== 'alternate' ||
                         !$header->parameters()->contains('hreflang')
@@ -88,14 +88,14 @@ final class AlternatesParser implements Parser
             })
             ->reduce(
                 new Map('string', Attribute::class),
-                function(Map $languages, string $language, MapInterface $links): Map {
+                function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
                     return $languages->put(
                         $language,
                         new Alternate(
                             $language,
                             $links->keys()->reduce(
                                 new Set(UrlInterface::class),
-                                function(Set $links, UrlInterface $link): Set {
+                                function(SetInterface $links, UrlInterface $link): SetInterface {
                                     return $links->add($link);
                                 }
                             )

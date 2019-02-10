@@ -15,6 +15,7 @@ use Innmind\Http\{
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
 };
 
@@ -42,7 +43,7 @@ final class LanguagesParser implements Parser
                     ->values()
                     ->reduce(
                         new Set('string'),
-                        function(Set $carry, ContentLanguageValue $language): Set {
+                        function(SetInterface $carry, ContentLanguageValue $language): SetInterface {
                             return $carry->add((string) $language);
                         }
                     )

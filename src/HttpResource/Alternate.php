@@ -9,6 +9,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\SetInterface;
+use function Innmind\Immutable\assertSet;
 
 final class Alternate implements Attribute
 {
@@ -18,12 +19,7 @@ final class Alternate implements Attribute
         string $language,
         SetInterface $links
     ) {
-        if ((string) $links->type() !== UrlInterface::class) {
-            throw new \TypeError(sprintf(
-                'Argument 2 must be of type SetInterface<%s>',
-                UrlInterface::class
-            ));
-        }
+        assertSet(UrlInterface::class, $links, 2);
 
         $this->attribute = new Attribute\Attribute(
             $language,

@@ -16,6 +16,7 @@ use Innmind\Immutable\{
     MapInterface,
     Str,
 };
+use function Innmind\Immutable\assertMap;
 
 final class FindContentNode
 {
@@ -24,15 +25,7 @@ final class FindContentNode
      */
     public function __invoke(MapInterface $nodes): Node
     {
-        if (
-            (string) $nodes->keyType() !== 'int' ||
-            (string) $nodes->valueType() !== Node::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 1 must be of type MapInterface<int, %s>',
-                Node::class
-            ));
-        }
+        assertMap('int', Node::class, $nodes, 1);
 
         $nodes->rewind();
 

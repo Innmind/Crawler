@@ -116,7 +116,7 @@ final class LanguagesParser implements Parser
         $languages = explode(',', $languages->value());
 
         foreach ($languages as $language) {
-            $language = (new Str($language))->trim();
+            $language = Str::of($language)->trim();
 
             if ($language->matches('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
                 $set = $set->add((string) $language);

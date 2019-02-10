@@ -59,11 +59,11 @@ class AlternateTest extends TestCase
     {
         $first = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($foo = Url::fromString('/foo'))
+            Set::of(UrlInterface::class, $foo = Url::fromString('/foo'))
         );
         $second = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($bar = Url::fromString('/bar'))
+            Set::of(UrlInterface::class, $bar = Url::fromString('/bar'))
         );
 
         $third = $first->merge($second);

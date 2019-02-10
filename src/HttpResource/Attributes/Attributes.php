@@ -9,6 +9,7 @@ use Innmind\Crawler\{
     Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
+use function Innmind\Immutable\assertMap;
 
 final class Attributes implements AttributesInterface
 {
@@ -23,15 +24,7 @@ final class Attributes implements AttributesInterface
             throw new DomainException;
         }
 
-        if (
-            (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== Attribute::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 2 must be of type MapInterface<string, %s>',
-                Attribute::class
-            ));
-        }
+        assertMap('string', Attribute::class, $attributes, 2);
 
         $this->name = $name;
         $this->content = $attributes;

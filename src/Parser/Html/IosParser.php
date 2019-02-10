@@ -68,7 +68,7 @@ final class IosParser implements Parser
         }
 
         $content = $meta->current()->attributes()->get('content')->value();
-        $content = (new Str($content));
+        $content = Str::of($content);
 
         if (!$content->matches(self::PATTERN)) {
             return $attributes;

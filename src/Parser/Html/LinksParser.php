@@ -31,6 +31,7 @@ use Innmind\Url\{
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
 };
 
@@ -75,7 +76,7 @@ final class LinksParser implements Parser
                 })
                 ->reduce(
                     $links,
-                    function(Set $links, Link $link): Set {
+                    function(SetInterface $links, Link $link): SetInterface {
                         return $links->add($link->href());
                     }
                 );
@@ -95,7 +96,7 @@ final class LinksParser implements Parser
                 })
                 ->reduce(
                     $links,
-                    function(Set $links, A $a): Set {
+                    function(SetInterface $links, A $a): SetInterface {
                         return $links->add($a->href());
                     }
                 );

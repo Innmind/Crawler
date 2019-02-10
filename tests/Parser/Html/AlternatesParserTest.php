@@ -22,7 +22,6 @@ use Innmind\Http\{
     Message\Response,
     Message\Method\Method,
     ProtocolVersion\ProtocolVersion,
-    Headers\Headers,
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
@@ -77,8 +76,8 @@ class AlternatesParserTest extends TestCase
     {
         $request = $this->createMock(RequestInterface::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -102,8 +101,8 @@ class AlternatesParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -129,8 +128,8 @@ class AlternatesParserTest extends TestCase
             ->willReturn(
                 new StringStream('<html><head><link rel="alternate" href="ios-app://294047850/lmfr/" /></head></html>')
             );
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -168,8 +167,8 @@ class AlternatesParserTest extends TestCase
 HTML
                 )
             );
-        $attributes = (new Map('string', Attribute::class))
-            ->put(
+        $attributes = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -181,9 +180,7 @@ HTML
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $attributes

@@ -83,7 +83,7 @@ final class AlternatesParser implements Parser
         $alternates = $links
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(Map $links, Link $link): Map {
+                function(MapInterface $links, Link $link): MapInterface {
                     return $links->put(
                         $link->href(),
                         $link->attributes()->get('hreflang')->value()
@@ -106,7 +106,7 @@ final class AlternatesParser implements Parser
             })
             ->reduce(
                 new Map('string', Attribute::class),
-                function(Map $languages, string $language, MapInterface $links): Map {
+                function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
                     return $languages->put(
                         $language,
                         new Alternate(

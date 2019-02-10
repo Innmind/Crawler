@@ -66,7 +66,7 @@ final class DescriptionParser implements Parser
                     ->get('name')
                     ->value();
 
-                return (string) (new Str($name))->toLower() === 'description';
+                return (string) Str::of($name)->toLower() === 'description';
             });
 
         if ($meta->size() !== 1) {
@@ -78,7 +78,7 @@ final class DescriptionParser implements Parser
             ->attributes()
             ->get('content')
             ->value();
-        $description = (new Str($description))
+        $description = Str::of($description)
             ->trim()
             ->pregReplace('/\t/m', ' ')
             ->pregReplace('/ {2,}/m', ' ');

@@ -63,8 +63,8 @@ class UrlParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -88,8 +88,8 @@ class UrlParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -123,8 +123,8 @@ class UrlParserTest extends TestCase
 </html>
 HTML
             ));
-        $notExpected = (new Map('string', Attribute::class))
-            ->put(
+        $notExpected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),

@@ -84,8 +84,8 @@ final class ContentParser implements Parser
                 $node = $elements->current();
             } else {
                 $node = (new FindContentNode)(
-                    (new Map('int', Node::class))
-                        ->put(0, $body)
+                    Map::of('int', Node::class)
+                        (0, $body)
                 );
             }
         }

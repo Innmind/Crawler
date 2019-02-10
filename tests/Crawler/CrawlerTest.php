@@ -14,9 +14,7 @@ use Innmind\Http\{
     Message\Request\Request,
     Message\Response,
     Message\Method\Method,
-    Headers\Headers,
     ProtocolVersion\ProtocolVersion,
-    Header,
 };
 use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\{
@@ -44,9 +42,7 @@ class CrawlerTest extends TestCase
         $request = new Request(
             $url = Url::fromString('http://example.com'),
             new Method('GET'),
-            new ProtocolVersion(1, 1),
-            new Headers(new Map('string', Header::class)),
-            new StringStream('')
+            new ProtocolVersion(1, 1)
         );
         $transport
             ->expects($this->once())
@@ -63,8 +59,8 @@ class CrawlerTest extends TestCase
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', Attribute::class))
-                    ->put('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
+                Map::of('string', Attribute::class)
+                    ('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
             );
 
         $resource = $crawler->execute($request);
@@ -91,9 +87,7 @@ class CrawlerTest extends TestCase
         $request = new Request(
             Url::fromString('http://example.com'),
             new Method('GET'),
-            new ProtocolVersion(1, 1),
-            new Headers(new Map('string', Header::class)),
-            new StringStream('')
+            new ProtocolVersion(1, 1)
         );
         $transport
             ->expects($this->once())
@@ -110,8 +104,8 @@ class CrawlerTest extends TestCase
             ->method('parse')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', Attribute::class))
-                    ->put(
+                Map::of('string', Attribute::class)
+                    (
                         'content_type',
                         new Attribute\Attribute('content_type', 'application/json', 24)
                     )

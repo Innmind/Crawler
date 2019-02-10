@@ -34,6 +34,7 @@ use Innmind\Immutable\{
     MapInterface,
     Map,
     Pair,
+    SetInterface,
     Set,
 };
 
@@ -109,7 +110,7 @@ final class ImagesParser implements Parser
             })
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(Map $images, Img $img): Map {
+                function(MapInterface $images, Img $img): MapInterface {
                     return $images->put(
                         $img->src(),
                         $img->attributes()->contains('alt') ?
@@ -133,7 +134,7 @@ final class ImagesParser implements Parser
             })
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(Map $images, ElementInterface $figure): Map {
+                function(MapInterface $images, ElementInterface $figure): MapInterface {
                     $img = (new Element('img'))($figure);
 
                     try {
@@ -158,13 +159,13 @@ final class ImagesParser implements Parser
     {
         $urls = $figures->reduce(
             new Set(UrlInterface::class),
-            function(Set $urls, UrlInterface $url): Set {
+            function(SetInterface $urls, UrlInterface $url): SetInterface {
                 return $urls->add($url);
             }
         );
         $urls = $images->reduce(
             $urls,
-            function(Set $urls, UrlInterface $url): Set {
+            function(SetInterface $urls, UrlInterface $url): SetInterface {
                 return $urls->add($url);
             }
         );

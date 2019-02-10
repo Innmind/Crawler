@@ -75,8 +75,8 @@ class LinksParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -97,8 +97,8 @@ class LinksParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -138,8 +138,8 @@ HTML
             ->method('url')
             ->willReturn(Url::fromString('http://example.com'));
         $response = $this->createMock(Response::class);
-        $notExpected = (new Map('string', Attribute::class))
-            ->put(
+        $notExpected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),

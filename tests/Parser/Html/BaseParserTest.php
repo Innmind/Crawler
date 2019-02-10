@@ -66,8 +66,8 @@ class BaseParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -88,8 +88,8 @@ class BaseParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -114,8 +114,8 @@ class BaseParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -147,8 +147,8 @@ HTML
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -181,8 +181,8 @@ HTML
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $notExpected = (new Map('string', Attribute::class))
-            ->put(
+        $notExpected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),

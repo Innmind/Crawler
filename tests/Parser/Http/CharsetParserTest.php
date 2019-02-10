@@ -147,8 +147,8 @@ class CharsetParserTest extends TestCase
                     new ContentTypeValue(
                         'foo',
                         'bar',
-                        (new Map('string', Parameter::class))
-                            ->put(
+                        Map::of('string', Parameter::class)
+                            (
                                 'charset',
                                 new Parameter\Parameter('charset', 'utf-8')
                             )

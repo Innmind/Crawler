@@ -18,11 +18,8 @@ class FindContentNodeTest extends TestCase
         $html = html()(new Stream(fopen('fixtures/lemonde.html', 'r')));
 
         $node = (new FindContentNode)(
-            (new Map('int', Node::class))
-                ->put(
-                    0,
-                    (new Body)($html)
-                )
+            Map::of('int', Node::class)
+                (0, (new Body)($html))
         );
 
         $this->assertSame('div', $node->name());
@@ -40,8 +37,8 @@ class FindContentNodeTest extends TestCase
             ->expects($this->once())
             ->method('hasChildren')
             ->willReturn(false);
-        $map = (new Map('int', Node::class))
-            ->put(0, $expected);
+        $map = Map::of('int', Node::class)
+            (0, $expected);
         $map->next();
 
         $node = (new FindContentNode)($map);

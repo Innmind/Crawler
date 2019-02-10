@@ -27,7 +27,6 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue,
 };
-use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
     Map,
     SetInterface,
@@ -65,9 +64,7 @@ class AlternatesParserTest extends TestCase
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $expected = new Map('string', Attribute::class)
@@ -82,24 +79,18 @@ class AlternatesParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'link',
-                            new Header\Header(
-                                'Link',
-                                new Value('</foo/bar>; rel="index"')
-                            )
-                        )
+                Headers::of(
+                    new Header\Header(
+                        'Link',
+                        new Value('</foo/bar>; rel="index"')
+                    )
                 )
             );
         $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $expected = new Map('string', Attribute::class)
@@ -114,26 +105,20 @@ class AlternatesParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'link',
-                            new Link(
-                                new LinkValue(
-                                    Url::fromString('/foo/bar'),
-                                    'prev'
-                                )
-                            )
+                Headers::of(
+                    new Link(
+                        new LinkValue(
+                            Url::fromString('/foo/bar'),
+                            'prev'
                         )
+                    )
                 )
             );
         $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $expected = new Map('string', Attribute::class)
@@ -148,58 +133,52 @@ class AlternatesParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'link',
-                            new Link(
-                                new LinkValue(
-                                    Url::fromString('/foo/bar'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'fr')
-                                        )
-                                ),
-                                new LinkValue(
-                                    Url::fromString('bar'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'fr')
-                                        )
-                                ),
-                                new LinkValue(
-                                    Url::fromString('baz'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'fr')
-                                        )
-                                ),
-                                new LinkValue(
-                                    Url::fromString('/en/foo/bar'),
-                                    'alternate',
-                                    (new Map('string', Parameter::class))
-                                        ->put(
-                                            'hreflang',
-                                            new Parameter\Parameter('hreflang', 'en')
-                                        )
+                Headers::of(
+                    new Link(
+                        new LinkValue(
+                            Url::fromString('/foo/bar'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'fr')
                                 )
-                            )
+                        ),
+                        new LinkValue(
+                            Url::fromString('bar'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'fr')
+                                )
+                        ),
+                        new LinkValue(
+                            Url::fromString('baz'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'fr')
+                                )
+                        ),
+                        new LinkValue(
+                            Url::fromString('/en/foo/bar'),
+                            'alternate',
+                            Map::of('string', Parameter::class)
+                                (
+                                    'hreflang',
+                                    new Parameter\Parameter('hreflang', 'en')
+                                )
                         )
+                    )
                 )
             );
         $attributes = $this->parser->parse(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             new Map('string', Attribute::class)

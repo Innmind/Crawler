@@ -36,8 +36,8 @@ class AlternatesTest extends TestCase
     public function testIterator()
     {
         $alternates = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     $alternate = new Alternate(
                         'fr',
@@ -62,8 +62,8 @@ class AlternatesTest extends TestCase
     public function testThrowWhenNotOnlyAlternates()
     {
         new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     $this->createMock(Attribute::class)
                 )
@@ -73,8 +73,8 @@ class AlternatesTest extends TestCase
     public function testMerge()
     {
         $first = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'de',
                     new Alternate(
                         'de',
@@ -82,7 +82,7 @@ class AlternatesTest extends TestCase
                             ->add($de = Url::fromString('/de'))
                     )
                 )
-                ->put(
+                (
                     'en',
                     new Alternate(
                         'en',
@@ -92,8 +92,8 @@ class AlternatesTest extends TestCase
                 )
         );
         $second = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     new Alternate(
                         'fr',
@@ -101,7 +101,7 @@ class AlternatesTest extends TestCase
                             ->add($fr = Url::fromString('/fr'))
                     )
                 )
-                ->put(
+                (
                     'en',
                     new Alternate(
                         'en',

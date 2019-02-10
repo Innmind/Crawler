@@ -23,6 +23,7 @@ use Innmind\Http\Message\{
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
     Str,
 };
@@ -66,7 +67,7 @@ final class AnchorsParser implements Parser
             })
             ->reduce(
                 new Set('string'),
-                function(Set $anchors, A $anchor): Set {
+                function(SetInterface $anchors, A $anchor): SetInterface {
                     return $anchors->add(
                         substr((string) $anchor->href(), 1)
                     );

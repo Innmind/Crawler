@@ -72,7 +72,7 @@ abstract class AbstractPropertyParser implements Parser
                 })
                 ->reduce(
                     new Set('string'),
-                    function(Set $values, Element $meta): Set {
+                    function(SetInterface $values, Element $meta): SetInterface {
                         return $values->add(
                             $meta->attributes()->get('content')->value()
                         );
