@@ -25,11 +25,11 @@ use Innmind\Immutable\{
 
 final class AlternatesParser implements Parser
 {
-    private $resolver;
+    private $resolve;
 
-    public function __construct(UrlResolver $resolver)
+    public function __construct(UrlResolver $resolve)
     {
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
     public function parse(
@@ -75,7 +75,7 @@ final class AlternatesParser implements Parser
             })
             ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
                 return $links->map(function(UrlInterface $link, string $language) use ($request, $attributes): Pair {
-                    $link = $this->resolver->resolve(
+                    $link = ($this->resolve)(
                         $request,
                         $attributes,
                         $link

@@ -29,12 +29,12 @@ final class RssParser implements Parser
     use HtmlTrait;
 
     private $read;
-    private $resolver;
+    private $resolve;
 
-    public function __construct(Reader $read, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolve)
     {
         $this->read = $read;
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
     public function parse(
@@ -72,7 +72,7 @@ final class RssParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $this->resolver->resolve(
+                ($this->resolve)(
                     $request,
                     $attributes,
                     $links->current()->href()

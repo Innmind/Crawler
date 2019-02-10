@@ -21,14 +21,14 @@ class UrlResolverTest extends TestCase
 {
     public function testResolveFromRequestUrl()
     {
-        $resolver = new UrlResolver(new BaseResolver);
+        $resolve = new UrlResolver(new BaseResolver);
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('url')
             ->willReturn(Url::fromString('http://github.com/Innmind/'));
 
-        $url = $resolver->resolve(
+        $url = $resolve(
             $request,
             new Map('string', Attribute::class),
             Url::fromString('/foo')
@@ -40,14 +40,14 @@ class UrlResolverTest extends TestCase
 
     public function testResolveFromBase()
     {
-        $resolver = new UrlResolver(new BaseResolver);
+        $resolve = new UrlResolver(new BaseResolver);
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('url')
             ->willReturn(Url::fromString('http://github.com/Innmind/'));
 
-        $url = $resolver->resolve(
+        $url = $resolve(
             $request,
             Map::of('string', Attribute::class)
                 (

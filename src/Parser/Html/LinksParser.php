@@ -41,12 +41,12 @@ final class LinksParser implements Parser
     use HtmlTrait;
 
     private $read;
-    private $resolver;
+    private $resolve;
 
-    public function __construct(Reader $read, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolve)
     {
         $this->read = $read;
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
     public function parse(
@@ -106,7 +106,7 @@ final class LinksParser implements Parser
         }
 
         $links = $links->map(function(UrlInterface $link) use ($request, $attributes): UrlInterface {
-            return $this->resolver->resolve(
+            return ($this->resolve)(
                 $request,
                 $attributes,
                 $link

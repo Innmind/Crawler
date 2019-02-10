@@ -41,12 +41,12 @@ final class ImagesParser implements Parser
     use HtmlTrait;
 
     private $read;
-    private $resolver;
+    private $resolve;
 
-    public function __construct(Reader $read, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolve)
     {
         $this->read = $read;
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
     public function parse(
@@ -70,7 +70,7 @@ final class ImagesParser implements Parser
             ->images($body)
             ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
-                    $this->resolver->resolve($request, $attributes, $url),
+                    ($this->resolve)($request, $attributes, $url),
                     $description
                 );
             });
@@ -78,7 +78,7 @@ final class ImagesParser implements Parser
             ->figures($body)
             ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
-                    $this->resolver->resolve($request, $attributes, $url),
+                    ($this->resolve)($request, $attributes, $url),
                     $description
                 );
             });

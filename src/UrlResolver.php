@@ -24,7 +24,7 @@ final class UrlResolver
     /**
      * @param  MapInterface<string, AttributeInterface> $attributes
      */
-    public function resolve(
+    public function __invoke(
         Request $request,
         MapInterface $attributes,
         UrlInterface $target

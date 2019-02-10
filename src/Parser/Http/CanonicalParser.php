@@ -18,11 +18,11 @@ use Innmind\Immutable\MapInterface;
 
 final class CanonicalParser implements Parser
 {
-    private $resolver;
+    private $resolve;
 
-    public function __construct(UrlResolver $resolver)
+    public function __construct(UrlResolver $resolve)
     {
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
     public function parse(
@@ -53,7 +53,7 @@ final class CanonicalParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $this->resolver->resolve(
+                ($this->resolve)(
                     $request,
                     $attributes,
                     $links->current()->url()
