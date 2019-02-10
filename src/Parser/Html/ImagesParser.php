@@ -34,8 +34,6 @@ use Innmind\Immutable\{
     MapInterface,
     Map,
     Pair,
-    SetInterface,
-    Set,
 };
 
 final class ImagesParser implements Parser
@@ -157,18 +155,9 @@ final class ImagesParser implements Parser
 
     private function removeDuplicates(MapInterface $images, MapInterface $figures): MapInterface
     {
-        $urls = $figures->reduce(
-            new Set(UrlInterface::class),
-            function(SetInterface $urls, UrlInterface $url): SetInterface {
-                return $urls->add($url);
-            }
-        );
-        $urls = $images->reduce(
-            $urls,
-            function(SetInterface $urls, UrlInterface $url): SetInterface {
-                return $urls->add($url);
-            }
-        );
+        $urls = $figures
+            ->keys()
+            ->merge($images->keys());
         $urls = (new RemoveDuplicatedUrls)($urls);
 
         return $figures
