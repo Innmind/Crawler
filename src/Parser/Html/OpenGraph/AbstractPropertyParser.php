@@ -9,16 +9,9 @@ use Innmind\Crawler\{
     Exception\InvalidOpenGraphAttribute,
     HttpResource\Attribute\Attribute,
     Parser\Html\HtmlTrait,
+    Visitor\Html\OpenGraph,
 };
-use Innmind\Xml\{
-    Reader,
-    Element,
-};
-use Innmind\Html\{
-    Visitor\Elements,
-    Visitor\Head,
-    Exception\ElementNotFound,
-};
+use Innmind\Xml\Reader;
 use Innmind\Http\Message\{
     Request,
     Response,
@@ -26,7 +19,6 @@ use Innmind\Http\Message\{
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
-    Set,
     Str,
 };
 
@@ -35,7 +27,7 @@ abstract class AbstractPropertyParser implements Parser
     use HtmlTrait;
 
     private $read;
-    private $property;
+    private $extract;
 
     public function __construct(
         Reader $read,
@@ -46,7 +38,7 @@ abstract class AbstractPropertyParser implements Parser
         }
 
         $this->read = $read;
-        $this->property = 'og:'.$property;
+        $this->extract = new OpenGraph($property);
     }
 
     public function __invoke(
@@ -60,30 +52,9 @@ abstract class AbstractPropertyParser implements Parser
 
         $document = ($this->read)($response->body());
 
-        try {
-            $values = (new Elements('meta'))(
-                (new Head)($document)
-            )
-                ->filter(static function(Element $meta): bool {
-                    return $meta->attributes()->contains('property') &&
-                        $meta->attributes()->contains('content');
-                })
-                ->filter(function(Element $meta): bool {
-                    return $meta->attributes()->get('property')->value() === $this->property;
-                })
-                ->reduce(
-                    new Set('string'),
-                    static function(SetInterface $values, Element $meta): SetInterface {
-                        return $values->add(
-                            $meta->attributes()->get('content')->value()
-                        );
-                    }
-                );
-        } catch (ElementNotFound $e) {
-            return $attributes;
-        }
+        $values = ($this->extract)($document);
 
-        if ($values->size() === 0) {
+        if ($values->empty()) {
             return $attributes;
         }
 
