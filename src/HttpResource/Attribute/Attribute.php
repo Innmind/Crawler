@@ -7,6 +7,7 @@ use Innmind\Crawler\{
     HttpResource\Attribute as AttributeInterface,
     Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class Attribute implements AttributeInterface
 {
@@ -15,7 +16,7 @@ final class Attribute implements AttributeInterface
 
     public function __construct(string $name, $content)
     {
-        if (empty($name)) {
+        if (Str::of($name)->empty()) {
             throw new DomainException;
         }
 

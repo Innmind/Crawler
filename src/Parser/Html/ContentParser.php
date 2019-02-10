@@ -29,6 +29,7 @@ use Innmind\Http\Message\{
 use Innmind\Immutable\{
     MapInterface,
     Map,
+    Str,
 };
 
 final class ContentParser implements Parser
@@ -90,15 +91,15 @@ final class ContentParser implements Parser
             }
         }
 
-        $text = trim((new Text)($node));
+        $text = Str::of((new Text)($node));
 
-        if (empty($text)) {
+        if ($text->empty()) {
             return $attributes;
         }
 
         return $attributes->put(
             self::key(),
-            new Attribute(self::key(), $text)
+            new Attribute(self::key(), (string) $text)
         );
     }
 

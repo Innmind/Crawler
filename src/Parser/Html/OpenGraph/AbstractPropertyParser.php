@@ -27,6 +27,7 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface,
     Set,
+    Str,
 };
 
 abstract class AbstractPropertyParser implements Parser
@@ -40,7 +41,7 @@ abstract class AbstractPropertyParser implements Parser
         Reader $read,
         string $property
     ) {
-        if (empty($property)) {
+        if (Str::of($property)->empty()) {
             throw new DomainException;
         }
 

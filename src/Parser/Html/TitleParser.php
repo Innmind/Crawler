@@ -22,7 +22,10 @@ use Innmind\Xml\{
     Node,
     Visitor\Text,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
 
 final class TitleParser implements Parser
 {
@@ -48,10 +51,10 @@ final class TitleParser implements Parser
 
         $title = $this->getH1($document);
 
-        if (empty($title)) {
+        if (Str::of($title)->empty()) {
             $title = $this->getTitle($document);
 
-            if (empty($title)) {
+            if (Str::of($title)->empty()) {
                 return $attributes;
             }
         }
@@ -75,7 +78,7 @@ final class TitleParser implements Parser
             return '';
         }
 
-        return trim((new Text)($h1s->current()));
+        return (string) Str::of((new Text)($h1s->current()))->trim();
     }
 
     private function getTitle(Node $document): string
@@ -87,7 +90,7 @@ final class TitleParser implements Parser
                 )
             );
 
-            return trim($title);
+            return (string) Str::of($title)->trim();
         } catch (ElementNotFound $e) {
             return '';
         }

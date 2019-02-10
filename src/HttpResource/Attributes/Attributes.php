@@ -8,7 +8,10 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
 use function Innmind\Immutable\assertMap;
 
 final class Attributes implements AttributesInterface
@@ -20,7 +23,7 @@ final class Attributes implements AttributesInterface
         string $name,
         MapInterface $attributes
     ) {
-        if (empty($name)) {
+        if (Str::of($name)->empty()) {
             throw new DomainException;
         }
 

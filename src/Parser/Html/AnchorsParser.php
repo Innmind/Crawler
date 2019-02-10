@@ -69,7 +69,7 @@ final class AnchorsParser implements Parser
                 new Set('string'),
                 function(SetInterface $anchors, A $anchor): SetInterface {
                     return $anchors->add(
-                        substr((string) $anchor->href(), 1)
+                        (string) Str::of((string) $anchor->href())->substring(1)
                     );
                 }
             );

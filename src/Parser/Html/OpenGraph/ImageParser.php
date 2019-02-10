@@ -12,6 +12,7 @@ use Innmind\Url\{
 use Innmind\Immutable\{
     SetInterface,
     Set,
+    Str,
 };
 
 final class ImageParser extends AbstractPropertyParser
@@ -25,7 +26,7 @@ final class ImageParser extends AbstractPropertyParser
     {
         $urls = $values
             ->filter(static function(string $url): bool {
-                return !empty($url);
+                return !Str::of($url)->empty();
             })
             ->reduce(
                 new Set(UrlInterface::class),

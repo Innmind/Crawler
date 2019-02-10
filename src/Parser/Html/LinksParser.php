@@ -33,6 +33,7 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface,
     Set,
+    Str,
 };
 
 final class LinksParser implements Parser
@@ -92,7 +93,7 @@ final class LinksParser implements Parser
                     return $a instanceof A;
                 })
                 ->filter(function(A $a): bool {
-                    return substr((string) $a, 0, 1) !== '#';
+                    return (string) Str::of((string) $a)->substring(0, 1) !== '#';
                 })
                 ->reduce(
                     $links,

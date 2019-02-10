@@ -69,7 +69,7 @@ final class AuthorParser implements Parser
                 return (string) Str::of($name)->toLower() === 'author';
             })
             ->filter(static function(Element $meta): bool {
-                return !empty($meta->attributes()->get('content')->value());
+                return !Str::of($meta->attributes()->get('content')->value())->empty();
             });
 
         if ($meta->size() !== 1) {

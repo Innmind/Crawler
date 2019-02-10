@@ -25,6 +25,7 @@ use Innmind\Immutable\{
     MapInterface,
     SetInterface,
     Set,
+    Str,
 };
 
 final class CitationsParser implements Parser
@@ -61,7 +62,7 @@ final class CitationsParser implements Parser
             new Set('string'),
             function(SetInterface $citations, Node $cite): SetInterface {
                 return $citations->add(
-                    trim((new Text)($cite))
+                    (string) Str::of((new Text)($cite))->trim()
                 );
             }
         );

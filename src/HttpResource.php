@@ -11,7 +11,10 @@ use Innmind\Filesystem\{
     Name,
 };
 use Innmind\Stream\Readable;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
 use function Innmind\Immutable\assertMap;
 
 final class HttpResource implements File
@@ -32,7 +35,7 @@ final class HttpResource implements File
 
         $name = basename((string) $url->path());
         $this->url = $url;
-        $this->name = new Name\Name(empty($name) ? 'index' : $name);
+        $this->name = new Name\Name(Str::of($name)->empty() ? 'index' : $name);
         $this->mediaType = $mediaType;
         $this->attributes = $attributes;
         $this->content = $content;

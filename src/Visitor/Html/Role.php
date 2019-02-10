@@ -11,6 +11,7 @@ use Innmind\Xml\{
 use Innmind\Immutable\{
     SetInterface,
     Set,
+    Str,
 };
 
 /**
@@ -22,7 +23,7 @@ final class Role
 
     public function __construct(string $role)
     {
-        if (empty($role)) {
+        if (Str::of($role)->empty()) {
             throw new DomainException;
         }
 
