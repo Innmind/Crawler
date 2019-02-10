@@ -66,8 +66,12 @@ function bootstrap(
                 new Parser\Html\ThemeColorParser($reader)
             )
         ),
-        new Parser\Image\DimensionParser,
-        new Parser\Image\WeightParser
+        new Parser\ImageParser(
+            new Parser\SequenceParser(
+                new Parser\Image\DimensionParser,
+                new Parser\Image\WeightParser
+            )
+        )
     );
 
     return new Crawler\Crawler($transport, $parser);

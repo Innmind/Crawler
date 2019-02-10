@@ -43,43 +43,6 @@ class WeightParserTest extends TestCase
         $this->assertSame('weight', WeightParser::key());
     }
 
-    public function testDoesntParseWhenNoContentType()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = new Map('string', Attribute::class);
-
-        $attributes = ($this->parse)(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
-    public function testDoesntParseWhenNotImage()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = Map::of('string', Attribute::class)
-            (
-                ContentTypeParser::key(),
-                new Attribute\Attribute(
-                    ContentTypeParser::key(),
-                    MediaType::fromString('text/csv')
-                )
-            );
-
-        $attributes = ($this->parse)(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
     public function testDoesntParseWhenSizeNotKnown()
     {
         $request = $this->createMock(Request::class);

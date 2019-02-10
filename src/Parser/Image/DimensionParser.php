@@ -19,17 +19,11 @@ use Innmind\Immutable\{
 
 final class DimensionParser implements Parser
 {
-    use ImageTrait;
-
     public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isImage($attributes)) {
-            return $attributes;
-        }
-
         $infos = \getimagesizefromstring(
             (string) $response->body()
         );
