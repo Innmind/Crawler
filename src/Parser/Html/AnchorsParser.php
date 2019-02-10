@@ -5,70 +5,65 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Body,
-    Exception\ElementNotFoundException,
-    Element\A
+    Exception\ElementNotFound,
+    Element\A,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
+    SetInterface,
     Set,
-    Str
+    Str,
 };
 
 final class AnchorsParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $anchors = (new Elements('a'))(
                 (new Body)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $anchors = $anchors
-            ->filter(function(NodeInterface $node): bool {
+            ->filter(static function(Node $node): bool {
                 return $node instanceof A;
             })
-            ->filter(function(A $anchor): bool {
-                return (new Str((string) $anchor->href()))->matches('~^#~');
+            ->filter(static function(A $anchor): bool {
+                return Str::of((string) $anchor->href())->matches('~^#~');
             })
             ->reduce(
                 new Set('string'),
-                function(Set $anchors, A $anchor): Set {
+                static function(SetInterface $anchors, A $anchor): SetInterface {
                     return $anchors->add(
-                        substr((string) $anchor->href(), 1)
+                        (string) Str::of((string) $anchor->href())->substring(1)
                     );
                 }
             );

@@ -9,55 +9,50 @@ use Innmind\Crawler\{
     Visitor\Html\RemoveElements,
     Visitor\Html\RemoveComments,
     Visitor\Html\FindContentNode,
-    Visitor\Html\Role
+    Visitor\Html\Role,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    Visitor\Text
+    Reader,
+    Node,
+    Visitor\Text,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Body,
-    Exception\ElementNotFoundException,
-    Element\Link
+    Exception\ElementNotFound,
+    Element\Link,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
+    Str,
 };
 
 final class ContentParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
         $document = (new RemoveElements('script', 'style'))($document);
         $document = (new RemoveComments)($document);
 
         try {
             $body = (new Body)($document);
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
@@ -84,21 +79,21 @@ final class ContentParser implements Parser
                 $node = $elements->current();
             } else {
                 $node = (new FindContentNode)(
-                    (new Map('int', NodeInterface::class))
-                        ->put(0, $body)
+                    Map::of('int', Node::class)
+                        (0, $body)
                 );
             }
         }
 
-        $text = trim((new Text)($node));
+        $text = Str::of((new Text)($node));
 
-        if (empty($text)) {
+        if ($text->empty()) {
             return $attributes;
         }
 
         return $attributes->put(
             self::key(),
-            new Attribute(self::key(), $text)
+            new Attribute(self::key(), (string) $text)
         );
     }
 

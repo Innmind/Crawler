@@ -6,9 +6,13 @@ namespace Innmind\Crawler\HttpResource\Attributes;
 use Innmind\Crawler\{
     HttpResource\Attributes as AttributesInterface,
     HttpResource\Attribute,
-    Exception\DomainException
+    Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
+use function Innmind\Immutable\assertMap;
 
 final class Attributes implements AttributesInterface
 {
@@ -19,19 +23,11 @@ final class Attributes implements AttributesInterface
         string $name,
         MapInterface $attributes
     ) {
-        if (empty($name)) {
+        if (Str::of($name)->empty()) {
             throw new DomainException;
         }
 
-        if (
-            (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== Attribute::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 2 must be of type MapInterface<string, %s>',
-                Attribute::class
-            ));
-        }
+        assertMap('string', Attribute::class, $attributes, 2);
 
         $this->name = $name;
         $this->content = $attributes;

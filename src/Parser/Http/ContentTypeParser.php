@@ -5,19 +5,19 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
-    Header\ContentType
+    Header\ContentType,
 };
 use Innmind\Filesystem\MediaType\MediaType;
 use Innmind\Immutable\MapInterface;
 
 final class ContentTypeParser implements Parser
 {
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes

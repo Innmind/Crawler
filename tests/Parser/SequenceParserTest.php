@@ -5,11 +5,11 @@ namespace Tests\Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
     Parser\SequenceParser,
-    Parser
+    Parser,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ class SequenceParserTest extends TestCase
     {
         $parser1 = $this->createMock(Parser::class);
         $parser2 = $this->createMock(Parser::class);
-        $parser = new SequenceParser($parser1, $parser2);
+        $parse = new SequenceParser($parser1, $parser2);
 
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
@@ -41,16 +41,16 @@ class SequenceParserTest extends TestCase
 
         $parser1
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response, $attributes)
             ->willReturn($attributes2 = $this->createMock(MapInterface::class));
         $parser2
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response, $attributes2)
             ->willReturn($attributes3 = $this->createMock(MapInterface::class));
 
-        $final = $parser->parse($request, $response, $attributes);
+        $final = $parse($request, $response, $attributes);
 
         $this->assertSame($attributes3, $final);
     }

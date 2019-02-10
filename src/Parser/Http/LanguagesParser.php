@@ -5,22 +5,23 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
     Header\ContentLanguage,
-    Header\ContentLanguageValue
+    Header\ContentLanguageValue,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set
+    SetInterface,
+    Set,
 };
 
 final class LanguagesParser implements Parser
 {
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
@@ -42,7 +43,7 @@ final class LanguagesParser implements Parser
                     ->values()
                     ->reduce(
                         new Set('string'),
-                        function(Set $carry, ContentLanguageValue $language): Set {
+                        static function(SetInterface $carry, ContentLanguageValue $language): SetInterface {
                             return $carry->add((string) $language);
                         }
                     )

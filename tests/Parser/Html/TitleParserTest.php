@@ -7,52 +7,37 @@ use Innmind\Crawler\{
     Parser\Html\TitleParser,
     Parser,
     HttpResource\Attribute,
-    Parser\Http\ContentTypeParser
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class TitleParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->parser = new TitleParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            )
-        );
+        $this->parse = new TitleParser(html());
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -61,49 +46,12 @@ class TitleParserTest extends TestCase
         $this->assertSame('title', TitleParser::key());
     }
 
-    public function testDoesntParseWhenNoContentType()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = new Map('string', Attribute::class);
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
-    public function testDoesntParseWhenNotHtml()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
-                ContentTypeParser::key(),
-                new Attribute\Attribute(
-                    ContentTypeParser::key(),
-                    MediaType::fromString('text/csv')
-                )
-            );
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
     public function testDoesntParseWhenNothingFound()
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -115,7 +63,7 @@ class TitleParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -131,8 +79,8 @@ class TitleParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $notExpected = (new Map('string', Attribute::class))
-            ->put(
+        $notExpected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -144,7 +92,7 @@ class TitleParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream($html));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

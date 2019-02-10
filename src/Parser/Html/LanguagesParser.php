@@ -5,53 +5,46 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    ElementInterface,
-    AttributeInterface
+    Reader,
+    Element as ElementInterface,
+    Attribute as AttributeInterface,
 };
 use Innmind\Html\{
     Visitor\Element,
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
     Str,
-    Set
+    Set,
 };
 
 final class LanguagesParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
         $languages = null;
 
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $html = (new Element('html'))($document);
@@ -59,7 +52,7 @@ final class LanguagesParser implements Parser
             if ($html->attributes()->contains('lang')) {
                 $languages = $html->attributes()->get('lang');
             }
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 
@@ -68,11 +61,11 @@ final class LanguagesParser implements Parser
                 $metas = (new Elements('meta'))(
                     (new Head)($document)
                 )
-                    ->filter(function(ElementInterface $element): bool {
+                    ->filter(static function(ElementInterface $element): bool {
                         return $element->attributes()->contains('http-equiv') &&
                             $element->attributes()->contains('content');
                     })
-                    ->filter(function(ElementInterface $meta): bool {
+                    ->filter(static function(ElementInterface $meta): bool {
                         $header = $meta->attributes()->get('http-equiv')->value();
                         $header = new Str($header);
 
@@ -85,7 +78,7 @@ final class LanguagesParser implements Parser
                         ->attributes()
                         ->get('content');
                 }
-            } catch (ElementNotFoundException $e) {
+            } catch (ElementNotFound $e) {
                 //pass
             }
         }
@@ -117,7 +110,7 @@ final class LanguagesParser implements Parser
         $languages = explode(',', $languages->value());
 
         foreach ($languages as $language) {
-            $language = (new Str($language))->trim();
+            $language = Str::of($language)->trim();
 
             if ($language->matches('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
                 $set = $set->add((string) $language);

@@ -5,8 +5,8 @@ namespace Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\Exception\InvalidArgumentException;
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class Alternates implements Attributes

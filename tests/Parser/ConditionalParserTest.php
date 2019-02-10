@@ -5,11 +5,11 @@ namespace Tests\Innmind\Crawler\Parser;
 
 use Innmind\Crawler\{
     Parser\ConditionalParser,
-    Parser
+    Parser,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ class ConditionalParserTest extends TestCase
         $parser1 = $this->createMock(Parser::class);
         $parser2 = $this->createMock(Parser::class);
         $parser3 = $this->createMock(Parser::class);
-        $parser = new ConditionalParser($parser1, $parser2, $parser3);
+        $parse = new ConditionalParser($parser1, $parser2, $parser3);
 
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
@@ -42,21 +42,21 @@ class ConditionalParserTest extends TestCase
 
         $parser1
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response, $attributes)
             ->willReturn($attributes);
         $parser2
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response, $attributes)
             ->willReturn($attributes2 = $this->createMock(MapInterface::class));
         $parser2
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response, $attributes2)
             ->willReturn($attributes3 = $this->createMock(MapInterface::class));
 
-        $final = $parser->parse($request, $response, $attributes);
+        $final = $parse($request, $response, $attributes);
 
         $this->assertSame($attributes2, $final);
     }

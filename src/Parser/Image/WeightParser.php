@@ -5,27 +5,22 @@ namespace Innmind\Crawler\Parser\Image;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
 final class WeightParser implements Parser
 {
-    use ImageTrait;
-
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (
-            !$this->isImage($attributes) ||
-            !$response->body()->knowsSize()
-        ) {
+        if (!$response->body()->knowsSize()) {
             return $attributes;
         }
 

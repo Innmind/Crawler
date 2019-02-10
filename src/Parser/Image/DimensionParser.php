@@ -6,31 +6,25 @@ namespace Innmind\Crawler\Parser\Image;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attributes\Attributes,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 final class DimensionParser implements Parser
 {
-    use ImageTrait;
-
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isImage($attributes)) {
-            return $attributes;
-        }
-
-        $infos = getimagesizefromstring(
+        $infos = \getimagesizefromstring(
             (string) $response->body()
         );
 
@@ -38,21 +32,9 @@ final class DimensionParser implements Parser
             self::key(),
             new Attributes(
                 self::key(),
-                (new Map('string', Attribute::class))
-                    ->put(
-                        'width',
-                        new Attribute\Attribute(
-                            'width',
-                            $infos[0]
-                        )
-                    )
-                    ->put(
-                        'height',
-                        new Attribute\Attribute(
-                            'height',
-                            $infos[1]
-                        )
-                    )
+                Map::of('string', Attribute::class)
+                    ('width', new Attribute\Attribute('width', $infos[0]))
+                    ('height', new Attribute\Attribute('height', $infos[1]))
             )
         );
     }

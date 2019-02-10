@@ -5,34 +5,27 @@ namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Exception\ContentTooDispersed;
 use Innmind\Xml\{
-    NodeInterface,
-    Visitor\Text
+    Node,
+    Visitor\Text,
 };
 use Innmind\Math\{
     Quantile\Quantile,
-    Regression\Dataset
+    Regression\Dataset,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Str
+    Str,
 };
+use function Innmind\Immutable\assertMap;
 
 final class FindContentNode
 {
     /**
-     * @param MapInterface<int, NodeInterface> $nodes
+     * @param MapInterface<int, Node> $nodes
      */
-    public function __invoke(MapInterface $nodes): NodeInterface
+    public function __invoke(MapInterface $nodes): Node
     {
-        if (
-            (string) $nodes->keyType() !== 'int' ||
-            (string) $nodes->valueType() !== NodeInterface::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 1 must be of type MapInterface<int, %s>',
-                NodeInterface::class
-            ));
-        }
+        assertMap('int', Node::class, $nodes, 1);
 
         $nodes->rewind();
 
@@ -50,7 +43,7 @@ final class FindContentNode
 
         $dispersion = $nodes->reduce(
             [],
-            function(array $dispersion, int $position, NodeInterface $node): array {
+            static function(array $dispersion, int $position, Node $node): array {
                 $text = (new Text)($node);
                 $text = new Str($text);
                 $dispersion[$position] = $text->wordCount();
@@ -74,14 +67,14 @@ final class FindContentNode
             }
         }
 
-        if (empty($lookup)) {
+        if (\count($lookup) === 0) {
             throw new ContentTooDispersed;
         }
 
         //select the minimum amount of words that needs to be in nodes
-        $min = $quantile->quartile(min($lookup))->value()->value();
+        $min = $quantile->quartile(\min($lookup))->value()->value();
 
-        $nodes = $nodes->filter(function(int $position) use ($min, $dispersion): bool {
+        $nodes = $nodes->filter(static function(int $position) use ($min, $dispersion): bool {
             return $dispersion[$position] >= $min;
         });
 

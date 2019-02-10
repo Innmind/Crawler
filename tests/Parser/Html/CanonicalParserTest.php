@@ -8,49 +8,36 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     Parser,
     HttpResource\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Filesystem\{
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class CanonicalParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->parser = new CanonicalParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            ),
+        $this->parse = new CanonicalParser(
+            html(),
             new UrlResolver(new BaseResolver)
         );
     }
@@ -59,7 +46,7 @@ class CanonicalParserTest extends TestCase
     {
         $this->assertInstanceOf(
             Parser::class,
-            $this->parser
+            $this->parse
         );
     }
 
@@ -68,49 +55,12 @@ class CanonicalParserTest extends TestCase
         $this->assertSame('canonical', CanonicalParser::key());
     }
 
-    public function testDoesntParseWhenNoContentType()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = new Map('string', Attribute::class);
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
-    public function testDoesntParseWhenNotHtml()
-    {
-        $request = $this->createMock(Request::class);
-        $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
-                ContentTypeParser::key(),
-                new Attribute\Attribute(
-                    ContentTypeParser::key(),
-                    MediaType::fromString('text/csv')
-                )
-            );
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
     public function testDoesntParseWhenNoHead()
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -122,7 +72,7 @@ class CanonicalParserTest extends TestCase
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -135,8 +85,8 @@ class CanonicalParserTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -155,7 +105,7 @@ class CanonicalParserTest extends TestCase
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -189,7 +139,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $expected
@@ -202,8 +152,8 @@ HTML
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $notExpected = (new Map('string', Attribute::class))
-            ->put(
+        $notExpected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -227,7 +177,7 @@ HTML
 HTML
             ));
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $request,
             $response,
             $notExpected

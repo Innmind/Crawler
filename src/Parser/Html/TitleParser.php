@@ -5,53 +5,50 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    Visitor\Text
+    Reader,
+    Node,
+    Visitor\Text,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
 
 final class TitleParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         $title = $this->getH1($document);
 
-        if (empty($title)) {
+        if (Str::of($title)->empty()) {
             $title = $this->getTitle($document);
 
-            if (empty($title)) {
+            if (Str::of($title)->empty()) {
                 return $attributes;
             }
         }
@@ -67,7 +64,7 @@ final class TitleParser implements Parser
         return 'title';
     }
 
-    private function getH1(NodeInterface $document): string
+    private function getH1(Node $document): string
     {
         $h1s = (new Elements('h1'))($document);
 
@@ -75,10 +72,10 @@ final class TitleParser implements Parser
             return '';
         }
 
-        return trim((new Text)($h1s->current()));
+        return (string) Str::of((new Text)($h1s->current()))->trim();
     }
 
-    private function getTitle(NodeInterface $document): string
+    private function getTitle(Node $document): string
     {
         try {
             $title = (new Text)(
@@ -87,8 +84,8 @@ final class TitleParser implements Parser
                 )
             );
 
-            return trim($title);
-        } catch (ElementNotFoundException $e) {
+            return (string) Str::of($title)->trim();
+        } catch (ElementNotFound $e) {
             return '';
         }
     }

@@ -7,8 +7,10 @@ use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
     SetInterface,
     Set,
-    Map
+    MapInterface,
+    Map,
 };
+use function Innmind\Immutable\assertSet;
 
 final class RemoveDuplicatedUrls
 {
@@ -19,17 +21,12 @@ final class RemoveDuplicatedUrls
      */
     public function __invoke(SetInterface $urls): SetInterface
     {
-        if ((string) $urls->type() !== UrlInterface::class) {
-            throw new \TypeError(sprintf(
-                'Argument 1 must be of type SetInterface<%s>',
-                UrlInterface::class
-            ));
-        }
+        assertSet(UrlInterface::class, $urls, 1);
 
         return $urls
             ->reduce(
                 new Map('string', UrlInterface::class),
-                function(Map $urls, UrlInterface $url): Map {
+                static function(MapInterface $urls, UrlInterface $url): MapInterface {
                     $string = (string) $url;
 
                     if ($urls->contains($string)) {
@@ -41,7 +38,7 @@ final class RemoveDuplicatedUrls
             )
             ->reduce(
                 new Set(UrlInterface::class),
-                function(Set $urls, string $string, UrlInterface $url): Set {
+                static function(SetInterface $urls, string $string, UrlInterface $url): SetInterface {
                     return $urls->add($url);
                 }
             );

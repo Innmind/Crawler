@@ -3,17 +3,18 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\HttpResource\{
-    Alternate,
-    Attribute
+use Innmind\Crawler\{
+    HttpResource\Alternate,
+    HttpResource\Attribute,
+    Exception\CantMergeDifferentLanguages,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     SetInterface,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -36,20 +37,18 @@ class AlternateTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessae Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>
-     */
     public function testThrowWhenInvalidLinks()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>');
+
         new Alternate('fr', new Set('int'));
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\CantMergeDifferentLanguages
-     */
     public function testThrowWhenMergingDifferentLanguages()
     {
+        $this->expectException(CantMergeDifferentLanguages::class);
+
         (new Alternate('fr', new Set(UrlInterface::class)))->merge(
             new Alternate('en', new Set(UrlInterface::class))
         );
@@ -59,11 +58,11 @@ class AlternateTest extends TestCase
     {
         $first = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($foo = Url::fromString('/foo'))
+            Set::of(UrlInterface::class, $foo = Url::fromString('/foo'))
         );
         $second = new Alternate(
             'fr',
-            (new Set(UrlInterface::class))->add($bar = Url::fromString('/bar'))
+            Set::of(UrlInterface::class, $bar = Url::fromString('/bar'))
         );
 
         $third = $first->merge($second);

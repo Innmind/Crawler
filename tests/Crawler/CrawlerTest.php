@@ -8,28 +8,26 @@ use Innmind\Crawler\{
     Crawler as CrawlerInterface,
     Parser,
     HttpResource,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\{
     Message\Request\Request,
     Message\Response,
     Message\Method\Method,
-    Headers\Headers,
     ProtocolVersion\ProtocolVersion,
-    Header
 };
 use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\{
     MediaType\NullMediaType,
     MediaType\MediaType,
-    Stream\StringStream
+    Stream\StringStream,
 };
 use Innmind\Stream\Readable;
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Set,
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -37,20 +35,18 @@ class CrawlerTest extends TestCase
 {
     public function testInterface()
     {
-        $crawler = new Crawler(
+        $crawl = new Crawler(
             $transport = $this->createMock(Transport::class),
             $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             $url = Url::fromString('http://example.com'),
             new Method('GET'),
-            new ProtocolVersion(1, 1),
-            new Headers(new Map('string', Header::class)),
-            new StringStream('')
+            new ProtocolVersion(1, 1)
         );
         $transport
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(Response::class)
@@ -60,16 +56,16 @@ class CrawlerTest extends TestCase
             ->willReturn($content = $this->createMock(Readable::class));
         $parser
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', Attribute::class))
-                    ->put('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
+                Map::of('string', Attribute::class)
+                    ('foo', $attribute = new Attribute\Attribute('foo', 42, 24))
             );
 
-        $resource = $crawler->execute($request);
+        $resource = $crawl($request);
 
-        $this->assertInstanceOf(CrawlerInterface::class, $crawler);
+        $this->assertInstanceOf(CrawlerInterface::class, $crawl);
         $this->assertInstanceOf(HttpResource::class, $resource);
         $this->assertSame($url, $resource->url());
         $this->assertInstanceOf(NullMediaType::class, $resource->mediaType());
@@ -84,20 +80,18 @@ class CrawlerTest extends TestCase
 
     public function testUseTheParsedMediaTypeForTheResource()
     {
-        $crawler = new Crawler(
+        $crawl = new Crawler(
             $transport = $this->createMock(Transport::class),
             $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
             Url::fromString('http://example.com'),
             new Method('GET'),
-            new ProtocolVersion(1, 1),
-            new Headers(new Map('string', Header::class)),
-            new StringStream('')
+            new ProtocolVersion(1, 1)
         );
         $transport
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($request)
             ->willReturn(
                 $response = $this->createMock(Response::class)
@@ -107,17 +101,17 @@ class CrawlerTest extends TestCase
             ->willReturn($this->createMock(Readable::class));
         $parser
             ->expects($this->once())
-            ->method('parse')
+            ->method('__invoke')
             ->with($request, $response)
             ->willReturn(
-                (new Map('string', Attribute::class))
-                    ->put(
+                Map::of('string', Attribute::class)
+                    (
                         'content_type',
                         new Attribute\Attribute('content_type', 'application/json', 24)
                     )
             );
 
-        $resource = $crawler->execute($request);
+        $resource = $crawl($request);
 
         $this->assertInstanceOf(MediaType::class, $resource->mediaType());
         $this->assertSame('application/json', (string) $resource->mediaType());

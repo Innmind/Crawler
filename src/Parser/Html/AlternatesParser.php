@@ -8,21 +8,21 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     HttpResource\Alternate,
     HttpResource\Alternates,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
     Element\Link,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -30,48 +30,42 @@ use Innmind\Immutable\{
     Map,
     SequenceInterface,
     Pair,
-    Set
+    Set,
 };
 
 final class AlternatesParser implements Parser
 {
-    use HtmlTrait;
-
-    private $reader;
-    private $resolver;
+    private $read;
+    private $resolve;
 
     public function __construct(
-        ReaderInterface $reader,
-        UrlResolver $resolver
+        Reader $read,
+        UrlResolver $resolve
     ) {
-        $this->reader = $reader;
-        $this->resolver = $resolver;
+        $this->read = $read;
+        $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $links = $links
-            ->filter(function(NodeInterface $link): bool {
+            ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
             })
-            ->filter(function(Link $link): bool {
+            ->filter(static function(Link $link): bool {
                 return $link->relationship() === 'alternate' &&
                     $link->attributes()->contains('hreflang');
             });
@@ -83,19 +77,19 @@ final class AlternatesParser implements Parser
         $alternates = $links
             ->reduce(
                 new Map(UrlInterface::class, 'string'),
-                function(Map $links, Link $link): Map {
+                static function(MapInterface $links, Link $link): MapInterface {
                     return $links->put(
                         $link->href(),
                         $link->attributes()->get('hreflang')->value()
                     );
                 }
             )
-            ->groupBy(function(UrlInterface $url, string $language) {
+            ->groupBy(static function(UrlInterface $url, string $language) {
                 return $language;
             })
             ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
                 return $links->map(function(UrlInterface $link, string $language) use ($request, $attributes): Pair {
-                    $link = $this->resolver->resolve(
+                    $link = ($this->resolve)(
                         $request,
                         $attributes,
                         $link
@@ -106,17 +100,12 @@ final class AlternatesParser implements Parser
             })
             ->reduce(
                 new Map('string', Attribute::class),
-                function(Map $languages, string $language, MapInterface $links): Map {
+                static function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
                     return $languages->put(
                         $language,
                         new Alternate(
                             $language,
-                            $links->keys()->reduce(
-                                new Set(UrlInterface::class),
-                                function(Set $links, UrlInterface $link): Set {
-                                    return $links->add($link);
-                                }
-                            )
+                            $links->keys()
                         )
                     );
                 }

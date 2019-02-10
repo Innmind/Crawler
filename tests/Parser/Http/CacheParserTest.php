@@ -6,13 +6,13 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser\Http\CacheParser,
     Parser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     PointInTimeInterface,
     ElapsedPeriod,
-    Period\Earth\Second
+    Period\Earth\Second,
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -20,17 +20,15 @@ use Innmind\Http\{
     Message\Method\Method,
     Headers\Headers,
     ProtocolVersion\ProtocolVersion,
-    Header,
     Header\CacheControl,
     Header\CacheControlValue\PrivateCache,
     Header\CacheControlValue\PublicCache,
-    Header\CacheControlValue\SharedMaxAge
+    Header\CacheControlValue\SharedMaxAge,
 };
 use Innmind\Url\Url;
-use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -58,13 +56,11 @@ class CaheParserTest extends TestCase
             ->method('headers')
             ->willReturn(new Headers);
         $clock = $this->createMock(TimeContinuumInterface::class);
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $expected = new Map('string', Attribute::class)
@@ -79,24 +75,18 @@ class CaheParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'cache-control',
-                            new CacheControl(
-                                new PrivateCache('')
-                            )
-                        )
+                Headers::of(
+                    new CacheControl(
+                        new PrivateCache('')
+                    )
                 )
             );
         $clock = $this->createMock(TimeContinuumInterface::class);
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $expected = new Map('string', Attribute::class)
@@ -111,15 +101,11 @@ class CaheParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(
-                new Headers(
-                    (new Map('string', Header::class))
-                        ->put(
-                            'cache-control',
-                            new CacheControl(
-                                new PublicCache,
-                                new SharedMaxAge(42)
-                            )
-                        )
+                Headers::of(
+                    new CacheControl(
+                        new PublicCache,
+                        new SharedMaxAge(42)
+                    )
                 )
             );
         $clock = $this->createMock(TimeContinuumInterface::class);
@@ -140,13 +126,11 @@ class CaheParserTest extends TestCase
             ->willReturn(
                 $expected = $this->createMock(PointInTimeInterface::class)
             );
-        $attributes = (new CacheParser($clock))->parse(
+        $attributes = (new CacheParser($clock))(
             new Request(
                 Url::fromString('http://example.com'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $notExpected = new Map('string', Attribute::class)

@@ -7,67 +7,63 @@ use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
     UrlResolver,
-    Visitor\RemoveDuplicatedUrls
+    Visitor\RemoveDuplicatedUrls,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
     Visitor\Body,
-    Exception\ElementNotFoundException,
+    Exception\ElementNotFound,
     Element\Link,
-    Element\A
+    Element\A,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set
+    SetInterface,
+    Set,
+    Str,
 };
 
 final class LinksParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
+    private $resolve;
 
-    private $reader;
-    private $resolver;
-
-    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolve)
     {
-        $this->reader = $reader;
-        $this->resolver = $resolver;
+        $this->read = $read;
+        $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
         $links = new Set(UrlInterface::class);
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(NodeInterface $link): bool {
+                ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
                 })
-                ->filter(function(Link $link): bool {
-                    return in_array(
+                ->filter(static function(Link $link): bool {
+                    return \in_array(
                         $link->relationship(),
                         ['first', 'next', 'previous', 'last'],
                         true
@@ -75,11 +71,11 @@ final class LinksParser implements Parser
                 })
                 ->reduce(
                     $links,
-                    function(Set $links, Link $link): Set {
+                    static function(SetInterface $links, Link $link): SetInterface {
                         return $links->add($link->href());
                     }
                 );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 
@@ -87,24 +83,24 @@ final class LinksParser implements Parser
             $links = (new Elements('a'))(
                 (new Body)($document)
             )
-                ->filter(function(NodeInterface $a): bool {
+                ->filter(static function(Node $a): bool {
                     return $a instanceof A;
                 })
-                ->filter(function(A $a): bool {
-                    return substr((string) $a, 0, 1) !== '#';
+                ->filter(static function(A $a): bool {
+                    return (string) Str::of((string) $a)->substring(0, 1) !== '#';
                 })
                 ->reduce(
                     $links,
-                    function(Set $links, A $a): Set {
+                    static function(SetInterface $links, A $a): SetInterface {
                         return $links->add($a->href());
                     }
                 );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         }
 
         $links = $links->map(function(UrlInterface $link) use ($request, $attributes): UrlInterface {
-            return $this->resolver->resolve(
+            return ($this->resolve)(
                 $request,
                 $attributes,
                 $link

@@ -3,19 +3,20 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\HttpResource\{
-    Alternates,
-    Alternate,
-    Attribute,
-    Attributes
+use Innmind\Crawler\{
+    HttpResource\Alternates,
+    HttpResource\Alternate,
+    HttpResource\Attribute,
+    HttpResource\Attributes,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\{
     Map,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -36,8 +37,8 @@ class AlternatesTest extends TestCase
     public function testIterator()
     {
         $alternates = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     $alternate = new Alternate(
                         'fr',
@@ -56,14 +57,13 @@ class AlternatesTest extends TestCase
         $this->assertSame('fr', $alternates->key());
     }
 
-    /**
-     * @expectedException Innmind\Crawler\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotOnlyAlternates()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     $this->createMock(Attribute::class)
                 )
@@ -73,8 +73,8 @@ class AlternatesTest extends TestCase
     public function testMerge()
     {
         $first = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'de',
                     new Alternate(
                         'de',
@@ -82,7 +82,7 @@ class AlternatesTest extends TestCase
                             ->add($de = Url::fromString('/de'))
                     )
                 )
-                ->put(
+                (
                     'en',
                     new Alternate(
                         'en',
@@ -92,8 +92,8 @@ class AlternatesTest extends TestCase
                 )
         );
         $second = new Alternates(
-            (new Map('string', Attribute::class))
-                ->put(
+            Map::of('string', Attribute::class)
+                (
                     'fr',
                     new Alternate(
                         'fr',
@@ -101,7 +101,7 @@ class AlternatesTest extends TestCase
                             ->add($fr = Url::fromString('/fr'))
                     )
                 )
-                ->put(
+                (
                     'en',
                     new Alternate(
                         'en',

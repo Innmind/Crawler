@@ -8,33 +8,33 @@ use Innmind\Crawler\{
     HttpResource,
     Parser,
     HttpResource\Attribute,
-    Parser\Http\ContentTypeParser
+    Parser\Http\ContentTypeParser,
 };
 use Innmind\Http\Message\Request;
 use Innmind\HttpTransport\Transport;
 use Innmind\Filesystem\MediaType\{
     MediaType,
-    NullMediaType
+    NullMediaType,
 };
 use Innmind\Immutable\Map;
 
 final class Crawler implements CrawlerInterface
 {
-    private $transport;
-    private $parser;
+    private $fulfill;
+    private $parse;
 
     public function __construct(
-        Transport $transport,
-        Parser $parser
+        Transport $fulfill,
+        Parser $parse
     ) {
-        $this->transport = $transport;
-        $this->parser = $parser;
+        $this->fulfill = $fulfill;
+        $this->parse = $parse;
     }
 
-    public function execute(Request $request): HttpResource
+    public function __invoke(Request $request): HttpResource
     {
-        $response = $this->transport->fulfill($request);
-        $attributes = $this->parser->parse(
+        $response = ($this->fulfill)($request);
+        $attributes = ($this->parse)(
             $request,
             $response,
             new Map('string', Attribute::class)

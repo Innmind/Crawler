@@ -9,12 +9,12 @@ use Innmind\Crawler\{
     HttpResource\Alternates,
     Parser,
     Parser\Http\ContentTypeParser,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Url\{
+    UrlInterface,
     Url,
-    UrlInterface
 };
 use Innmind\Http\{
     Message\Request\Request,
@@ -22,90 +22,39 @@ use Innmind\Http\{
     Message\Response,
     Message\Method\Method,
     ProtocolVersion\ProtocolVersion,
-    Headers\Headers
 };
 use Innmind\Filesystem\{
     Stream\StringStream,
-    MediaType\MediaType
-};
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
+    MediaType\MediaType,
 };
 use Innmind\Immutable\{
     Map,
     Set,
     SetInterface
 };
+use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
 class AlternatesParserTest extends TestCase
 {
-    private $parser;
+    private $parse;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->parser = new AlternatesParser(
-            new Reader(
-                new NodeTranslator(
-                    NodeTranslators::defaults()->merge(
-                        HtmlTranslators::defaults()
-                    )
-                )
-            ),
+        $this->parse = new AlternatesParser(
+            html(),
             new UrlResolver(new BaseResolver)
         );
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf(Parser::class, $this->parser);
+        $this->assertInstanceOf(Parser::class, $this->parse);
     }
 
     public function testKey()
     {
         $this->assertSame('alternates', AlternatesParser::key());
-    }
-
-    public function testDoesntParseWhenNoContentType()
-    {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(Response::class);
-        $expected = new Map('string', Attribute::class);
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
-    }
-
-    public function testDoesntParseWhenNotHtml()
-    {
-        $request = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
-                ContentTypeParser::key(),
-                new Attribute\Attribute(
-                    ContentTypeParser::key(),
-                    MediaType::fromString('text/csv')
-                )
-            );
-
-        $attributes = $this->parser->parse(
-            $request,
-            $response,
-            $expected
-        );
-
-        $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenNoLink()
@@ -115,8 +64,8 @@ class AlternatesParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('<html></html>'));
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -124,7 +73,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(RequestInterface::class),
             $response,
             $expected
@@ -142,8 +91,8 @@ class AlternatesParserTest extends TestCase
             ->willReturn(
                 new StringStream('<html><head><link rel="alternate" href="ios-app://294047850/lmfr/" /></head></html>')
             );
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -151,7 +100,7 @@ class AlternatesParserTest extends TestCase
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             $this->createMock(RequestInterface::class),
             $response,
             $expected
@@ -181,8 +130,8 @@ class AlternatesParserTest extends TestCase
 HTML
                 )
             );
-        $attributes = (new Map('string', Attribute::class))
-            ->put(
+        $attributes = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
@@ -190,13 +139,11 @@ HTML
                 )
             );
 
-        $attributes = $this->parser->parse(
+        $attributes = ($this->parse)(
             new Request(
                 Url::fromString('http://example.com/foo/'),
                 new Method('GET'),
-                new ProtocolVersion(1, 1),
-                new Headers,
-                new StringStream('')
+                new ProtocolVersion(1, 1)
             ),
             $response,
             $attributes

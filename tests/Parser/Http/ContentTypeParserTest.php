@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\ContentTypeParser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Filesystem\MediaType;
 use Innmind\Http\{
@@ -15,7 +15,7 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue
+    Header\ContentTypeValue,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ class ContentTypeParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $parser = new ContentTypeParser;
+        $parse = new ContentTypeParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -53,14 +53,14 @@ class ContentTypeParserTest extends TestCase
             ->willReturn(false);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
-        $parser = new ContentTypeParser;
+        $parse = new ContentTypeParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $headers = $this->createMock(Headers::class);
@@ -80,14 +80,14 @@ class ContentTypeParserTest extends TestCase
             ->willReturn($this->createMock(Header::class));
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testParse()
     {
-        $parser = new ContentTypeParser;
+        $parse = new ContentTypeParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $headers = $this->createMock(Headers::class);
@@ -114,7 +114,7 @@ class ContentTypeParserTest extends TestCase
             );
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);

@@ -6,11 +6,11 @@ namespace Innmind\Crawler\Parser;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\AlternatesParser as HttpParser,
-    Parser\Html\AlternatesParser as HtmlParser
+    Parser\Html\AlternatesParser as HtmlParser,
 };
 use Innmind\http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -19,20 +19,20 @@ final class AlternatesParser implements Parser
     private $http;
     private $html;
 
-    public function __construct(HttpParser $http, HtmlParser $html)
+    public function __construct(Parser $http, Parser $html)
     {
         $this->http = $http;
         $this->html = $html;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
         return $this->merge(
-            $this->http->parse($request, $response, $attributes),
-            $this->html->parse($request, $response, $attributes)
+            ($this->http)($request, $response, $attributes),
+            ($this->html)($request, $response, $attributes)
         );
     }
 

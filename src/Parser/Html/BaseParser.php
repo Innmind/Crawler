@@ -5,51 +5,42 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
-use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
-};
+use Innmind\Xml\Reader;
 use Innmind\Html\{
     Visitor\Element,
     Visitor\Head,
-    Exception\ElementNotFoundException,
-    Element\Base
+    Exception\ElementNotFound,
+    Element\Base,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
 final class BaseParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $base = (new Element('base'))(
                 (new Head)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 

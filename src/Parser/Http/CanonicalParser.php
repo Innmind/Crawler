@@ -6,26 +6,26 @@ namespace Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Http\{
     Message\Request,
     Message\Response,
     Header\Link,
-    Header\LinkValue
+    Header\LinkValue,
 };
 use Innmind\Immutable\MapInterface;
 
 final class CanonicalParser implements Parser
 {
-    private $resolver;
+    private $resolve;
 
-    public function __construct(UrlResolver $resolver)
+    public function __construct(UrlResolver $resolve)
     {
-        $this->resolver = $resolver;
+        $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
@@ -41,7 +41,7 @@ final class CanonicalParser implements Parser
             ->headers()
             ->get('Link')
             ->values()
-            ->filter(function(LinkValue $value): bool {
+            ->filter(static function(LinkValue $value): bool {
                 return $value->relationship() === 'canonical';
             });
 
@@ -53,7 +53,7 @@ final class CanonicalParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $this->resolver->resolve(
+                ($this->resolve)(
                     $request,
                     $attributes,
                     $links->current()->url()

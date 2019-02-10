@@ -5,69 +5,62 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    ElementInterface
+    Reader,
+    Element,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Str
+    Str,
 };
 
 final class DescriptionParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $metas = (new Elements('meta'))(
                 (new Head)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $meta = $metas
-            ->filter(function(ElementInterface $meta): bool {
+            ->filter(static function(Element $meta): bool {
                 return $meta->attributes()->contains('name') &&
                     $meta->attributes()->contains('content');
             })
-            ->filter(function(ElementInterface $meta): bool {
+            ->filter(static function(Element $meta): bool {
                 $name = $meta
                     ->attributes()
                     ->get('name')
                     ->value();
 
-                return (string) (new Str($name))->toLower() === 'description';
+                return (string) Str::of($name)->toLower() === 'description';
             });
 
         if ($meta->size() !== 1) {
@@ -79,7 +72,7 @@ final class DescriptionParser implements Parser
             ->attributes()
             ->get('content')
             ->value();
-        $description = (new Str($description))
+        $description = Str::of($description)
             ->trim()
             ->pregReplace('/\t/m', ' ')
             ->pregReplace('/ {2,}/m', ' ');

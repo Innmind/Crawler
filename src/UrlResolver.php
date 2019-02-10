@@ -8,7 +8,7 @@ use Innmind\UrlResolver\ResolverInterface;
 use Innmind\Http\Message\Request;
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Immutable\MapInterface;
 
@@ -24,7 +24,7 @@ final class UrlResolver
     /**
      * @param  MapInterface<string, AttributeInterface> $attributes
      */
-    public function resolve(
+    public function __invoke(
         Request $request,
         MapInterface $attributes,
         UrlInterface $target

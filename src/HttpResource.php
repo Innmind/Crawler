@@ -8,10 +8,14 @@ use Innmind\Url\UrlInterface;
 use Innmind\Filesystem\{
     File,
     MediaType,
-    Name
+    Name,
 };
 use Innmind\Stream\Readable;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
+use function Innmind\Immutable\assertMap;
 
 final class HttpResource implements File
 {
@@ -27,19 +31,11 @@ final class HttpResource implements File
         MapInterface $attributes,
         Readable $content
     ) {
-        if (
-            (string) $attributes->keyType() !== 'string' ||
-            (string) $attributes->valueType() !== Attribute::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 3 must be of type MapInterface<string, %s>',
-                Attribute::class
-            ));
-        }
+        assertMap('string', Attribute::class, $attributes, 3);
 
-        $name = basename((string) $url->path());
+        $name = \basename((string) $url->path());
         $this->url = $url;
-        $this->name = new Name\Name(empty($name) ? 'index' : $name);
+        $this->name = new Name\Name(Str::of($name)->empty() ? 'index' : $name);
         $this->mediaType = $mediaType;
         $this->attributes = $attributes;
         $this->content = $content;

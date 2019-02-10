@@ -5,12 +5,13 @@ namespace Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Exception\DomainException;
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element,
 };
 use Innmind\Immutable\{
     SetInterface,
-    Set
+    Set,
+    Str,
 };
 
 /**
@@ -22,7 +23,7 @@ final class Role
 
     public function __construct(string $role)
     {
-        if (empty($role)) {
+        if (Str::of($role)->empty()) {
             throw new DomainException;
         }
 
@@ -30,11 +31,11 @@ final class Role
     }
 
     /**
-     * @return SetInterface<ElementInterface>
+     * @return SetInterface<Element>
      */
-    public function __invoke(NodeInterface $node): SetInterface
+    public function __invoke(Node $node): SetInterface
     {
-        $set = new Set(ElementInterface::class);
+        $set = new Set(Element::class);
 
         if ($this->check($node)) {
             $set = $set->add($node);
@@ -42,7 +43,7 @@ final class Role
 
         return $node->children()->reduce(
             $set,
-            function(Set $set, int $position, NodeInterface $node): Set {
+            function(SetInterface $set, int $position, Node $node): SetInterface {
                 return $set->merge(
                     $this($node)
                 );
@@ -50,9 +51,9 @@ final class Role
         );
     }
 
-    private function check(NodeInterface $node): bool
+    private function check(Node $node): bool
     {
-        return $node instanceof ElementInterface &&
+        return $node instanceof Element &&
             $node->attributes()->contains('role') &&
             $node->attributes()->get('role')->value() === $this->role;
     }

@@ -6,7 +6,7 @@ namespace Tests\Innmind\Crawler\Parser\Http;
 use Innmind\Crawler\{
     Parser,
     Parser\Http\CharsetParser,
-    HttpResource\Attribute
+    HttpResource\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
@@ -15,7 +15,7 @@ use Innmind\Http\{
     Header,
     Header\ContentType,
     Header\ContentTypeValue,
-    Header\Parameter
+    Header\Parameter,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ class CharsetParserTest extends TestCase
 
     public function testDoesntParseWhenNoContentType()
     {
-        $parser = new CharsetParser;
+        $parse = new CharsetParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -53,14 +53,14 @@ class CharsetParserTest extends TestCase
             ->willReturn(false);
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenContentTypeNotFullyParsed()
     {
-        $parser = new CharsetParser;
+        $parse = new CharsetParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -81,14 +81,14 @@ class CharsetParserTest extends TestCase
             ->willReturn($this->createMock(Header::class));
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testDoesntParseWhenNoCharset()
     {
-        $parser = new CharsetParser;
+        $parse = new CharsetParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -117,14 +117,14 @@ class CharsetParserTest extends TestCase
             );
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertSame($expected, $attributes);
     }
 
     public function testParse()
     {
-        $parser = new CharsetParser;
+        $parse = new CharsetParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
         $response
@@ -147,8 +147,8 @@ class CharsetParserTest extends TestCase
                     new ContentTypeValue(
                         'foo',
                         'bar',
-                        (new Map('string', Parameter::class))
-                            ->put(
+                        Map::of('string', Parameter::class)
+                            (
                                 'charset',
                                 new Parameter\Parameter('charset', 'utf-8')
                             )
@@ -157,7 +157,7 @@ class CharsetParserTest extends TestCase
             );
         $expected = new Map('string', Attribute::class);
 
-        $attributes = $parser->parse($request, $response, $expected);
+        $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);

@@ -6,61 +6,55 @@ namespace Innmind\Crawler\Parser\Html;
 use Innmind\Crawler\{
     Parser,
     HttpResource\Attribute\Attribute,
-    UrlResolver
+    UrlResolver,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface
+    Reader,
+    Node,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Head,
-    Exception\ElementNotFoundException,
-    Element\Link
+    Exception\ElementNotFound,
+    Element\Link,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\MapInterface;
 
 final class RssParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
+    private $resolve;
 
-    private $reader;
-    private $resolver;
-
-    public function __construct(ReaderInterface $reader, UrlResolver $resolver)
+    public function __construct(Reader $read, UrlResolver $resolve)
     {
-        $this->reader = $reader;
-        $this->resolver = $resolver;
+        $this->read = $read;
+        $this->resolve = $resolve;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
                 (new Head)($document)
             )
-                ->filter(function(NodeInterface $link): bool {
+                ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
                 })
-                ->filter(function(Link $link): bool {
+                ->filter(static function(Link $link): bool {
                     return $link->relationship() === 'alternate' &&
                         $link->attributes()->contains('type') &&
                         $link->attributes()->get('type')->value() === 'application/rss+xml';
                 });
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
@@ -72,7 +66,7 @@ final class RssParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $this->resolver->resolve(
+                ($this->resolve)(
                     $request,
                     $attributes,
                     $links->current()->href()

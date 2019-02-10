@@ -5,62 +5,58 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute
+    HttpResource\Attribute\Attribute,
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    Visitor\Text
+    Reader,
+    Node,
+    Visitor\Text,
 };
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Body,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
-    Response
+    Response,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Set
+    SetInterface,
+    Set,
+    Str,
 };
 
 final class CitationsParser implements Parser
 {
-    use HtmlTrait;
+    private $read;
 
-    private $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(Reader $read)
     {
-        $this->reader = $reader;
+        $this->read = $read;
     }
 
-    public function parse(
+    public function __invoke(
         Request $request,
         Response $response,
         MapInterface $attributes
     ): MapInterface {
-        if (!$this->isHtml($attributes)) {
-            return $attributes;
-        }
-
-        $document = $this->reader->read($response->body());
+        $document = ($this->read)($response->body());
 
         try {
             $citations = (new Elements('cite'))(
                 (new Body)($document)
             );
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $citations = $citations->reduce(
             new Set('string'),
-            function(Set $citations, NodeInterface $cite): Set {
+            function(SetInterface $citations, Node $cite): SetInterface {
                 return $citations->add(
-                    trim((new Text)($cite))
+                    (string) Str::of((new Text)($cite))->trim()
                 );
             }
         );
