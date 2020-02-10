@@ -16,8 +16,8 @@ use function Innmind\Immutable\assertMap;
 
 final class Attributes implements AttributesInterface
 {
-    private $name;
-    private $content;
+    private string $name;
+    private MapInterface $content;
 
     public function __construct(
         string $name,

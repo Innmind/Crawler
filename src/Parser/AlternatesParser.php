@@ -16,8 +16,8 @@ use Innmind\Immutable\MapInterface;
 
 final class AlternatesParser implements Parser
 {
-    private $http;
-    private $html;
+    private Parser $http;
+    private Parser $html;
 
     public function __construct(Parser $http, Parser $html)
     {

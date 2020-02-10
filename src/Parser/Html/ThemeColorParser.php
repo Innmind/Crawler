@@ -31,7 +31,7 @@ use Innmind\Immutable\{
 
 final class ThemeColorParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {

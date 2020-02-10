@@ -24,7 +24,7 @@ use Innmind\Immutable\MapInterface;
 
 final class CharsetParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {

@@ -29,7 +29,7 @@ final class IosParser implements Parser
 {
     private const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
 
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {

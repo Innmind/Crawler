@@ -19,11 +19,11 @@ use function Innmind\Immutable\assertMap;
 
 final class HttpResource implements File
 {
-    private $url;
-    private $name;
-    private $mediaType;
-    private $attributes;
-    private $content;
+    private UrlInterface $url;
+    private Name $name;
+    private MediaType $mediaType;
+    private MapInterface $attributes;
+    private Readable $content;
 
     public function __construct(
         UrlInterface $url,

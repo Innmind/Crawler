@@ -12,7 +12,7 @@ use Innmind\Immutable\MapInterface;
 
 final class SequenceParser implements Parser
 {
-    private $parsers;
+    private array $parsers;
 
     public function __construct(Parser ...$parsers)
     {

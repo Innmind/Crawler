@@ -19,7 +19,7 @@ use Innmind\Immutable\{
  */
 final class Role
 {
-    private $role;
+    private string $role;
 
     public function __construct(string $role)
     {

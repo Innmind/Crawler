@@ -18,7 +18,7 @@ use Innmind\Immutable\MapInterface;
 
 final class CanonicalParser implements Parser
 {
-    private $resolve;
+    private UrlResolver $resolve;
 
     public function __construct(UrlResolver $resolve)
     {

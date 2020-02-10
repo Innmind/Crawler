@@ -16,8 +16,8 @@ use Innmind\Immutable\MapInterface;
 
 final class HtmlParser implements Parser
 {
-    private $parse;
-    private $html;
+    private Parser $parse;
+    private Html $html;
 
     public function __construct(Parser $parse)
     {

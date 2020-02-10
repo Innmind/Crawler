@@ -25,7 +25,7 @@ use Innmind\Immutable\MapInterface;
 
 final class AndroidParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {

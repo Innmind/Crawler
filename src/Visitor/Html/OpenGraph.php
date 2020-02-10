@@ -19,9 +19,9 @@ use Innmind\Immutable\{
 
 final class OpenGraph
 {
-    private $property;
-    private $head;
-    private $metas;
+    private string $property;
+    private Head $head;
+    private Elements $metas;
 
     public function __construct(string $property)
     {

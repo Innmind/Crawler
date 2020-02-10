@@ -18,8 +18,8 @@ use Innmind\Immutable\MapInterface;
 
 final class UrlParser implements Parser
 {
-    private $read;
-    private $extract;
+    private Reader $read;
+    private OpenGraph $extract;
 
     public function __construct(Reader $read)
     {

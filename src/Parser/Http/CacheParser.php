@@ -21,7 +21,7 @@ use Innmind\Immutable\MapInterface;
 
 final class CacheParser implements Parser
 {
-    private $clock;
+    private TimeContinuumInterface $clock;
 
     public function __construct(TimeContinuumInterface $clock)
     {

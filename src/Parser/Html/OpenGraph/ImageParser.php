@@ -26,8 +26,8 @@ use Innmind\Immutable\{
 
 final class ImageParser implements Parser
 {
-    private $read;
-    private $extract;
+    private Reader $read;
+    private OpenGraph $extract;
 
     public function __construct(Reader $read)
     {

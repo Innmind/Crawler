@@ -11,7 +11,7 @@ use Innmind\Immutable\Sequence;
 
 final class RemoveElements
 {
-    private $toRemove;
+    private Sequence $toRemove;
 
     public function __construct(string ...$toRemove)
     {

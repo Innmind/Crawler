@@ -13,7 +13,7 @@ use function Innmind\Immutable\assertSet;
 
 final class Alternate implements Attribute
 {
-    private $attribute;
+    private Attribute $attribute;
 
     public function __construct(
         string $language,

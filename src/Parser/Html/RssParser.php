@@ -26,8 +26,8 @@ use Innmind\Immutable\MapInterface;
 
 final class RssParser implements Parser
 {
-    private $read;
-    private $resolve;
+    private Reader $read;
+    private UrlResolver $resolve;
 
     public function __construct(Reader $read, UrlResolver $resolve)
     {

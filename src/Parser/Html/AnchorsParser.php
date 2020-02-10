@@ -30,7 +30,7 @@ use Innmind\Immutable\{
 
 final class AnchorsParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {

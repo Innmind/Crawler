@@ -35,8 +35,8 @@ use Innmind\Immutable\{
 
 final class AlternatesParser implements Parser
 {
-    private $read;
-    private $resolve;
+    private Reader $read;
+    private UrlResolver $resolve;
 
     public function __construct(
         Reader $read,

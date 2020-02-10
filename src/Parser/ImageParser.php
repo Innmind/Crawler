@@ -16,8 +16,8 @@ use Innmind\Immutable\MapInterface;
 
 final class ImageParser implements Parser
 {
-    private $parse;
-    private $image;
+    private Parser $parse;
+    private Image $image;
 
     public function __construct(Parser $parse)
     {

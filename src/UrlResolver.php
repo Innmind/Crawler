@@ -14,7 +14,7 @@ use Innmind\Immutable\MapInterface;
 
 final class UrlResolver
 {
-    private $resolver;
+    private ResolverInterface $resolver;
 
     public function __construct(ResolverInterface $resolver)
     {

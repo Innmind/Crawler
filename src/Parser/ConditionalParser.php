@@ -15,7 +15,7 @@ use Innmind\Immutable\MapInterface;
  */
 final class ConditionalParser implements Parser
 {
-    private $parsers;
+    private array $parsers;
 
     public function __construct(Parser ...$parsers)
     {

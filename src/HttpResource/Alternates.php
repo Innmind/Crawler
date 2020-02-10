@@ -11,7 +11,7 @@ use Innmind\Immutable\{
 
 final class Alternates implements Attributes
 {
-    private $attributes;
+    private Attributes $attributes;
 
     public function __construct(MapInterface $alternates)
     {

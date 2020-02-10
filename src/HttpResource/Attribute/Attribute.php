@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class Attribute implements AttributeInterface
 {
-    private $name;
+    private string $name;
     private $content;
 
     public function __construct(string $name, $content)
