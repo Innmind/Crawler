@@ -19,7 +19,6 @@
         "innmind/immutable": "~2.13",
         "innmind/http": "~3.0",
         "innmind/filesystem": "~3.0",
-        "guzzlehttp/guzzle": "^6.2",
         "innmind/url-resolver": "~3.0",
         "innmind/time-continuum": "^1.0",
         "innmind/html": "~4.0",
