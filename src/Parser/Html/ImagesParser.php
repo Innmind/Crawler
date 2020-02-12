@@ -18,7 +18,6 @@ use Innmind\Xml\{
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
-    Visitor\Body,
     Exception\ElementNotFound,
     Element\Img,
 };
@@ -26,12 +25,8 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Pair,
 };
@@ -50,19 +45,19 @@ final class ImagesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
-            $body = (new Body)($document);
+            $body = Element::body()($document);
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $images = $this
             ->images($body)
-            ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
+            ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
                     $description
@@ -70,7 +65,7 @@ final class ImagesParser implements Parser
             });
         $figures = $this
             ->figures($body)
-            ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
+            ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
                     $description
@@ -101,8 +96,8 @@ final class ImagesParser implements Parser
                 return $img instanceof Img;
             })
             ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $images, Img $img): MapInterface {
+                Map::of(Url::class, 'string'),
+                static function(Map $images, Img $img): Map {
                     return $images->put(
                         $img->src(),
                         $img->attributes()->contains('alt') ?
@@ -125,8 +120,8 @@ final class ImagesParser implements Parser
                 }
             })
             ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $images, ElementInterface $figure): MapInterface {
+                Map::of(Url::class, 'string'),
+                static function(Map $images, ElementInterface $figure): Map {
                     $img = (new Element('img'))($figure);
 
                     try {
@@ -147,7 +142,7 @@ final class ImagesParser implements Parser
             );
     }
 
-    private function removeDuplicates(MapInterface $images, MapInterface $figures): MapInterface
+    private function removeDuplicates(Map $images, Map $figures): Map
     {
         $urls = $figures
             ->keys()
@@ -156,7 +151,7 @@ final class ImagesParser implements Parser
 
         return $figures
             ->merge($images)
-            ->filter(static function(UrlInterface $url) use ($urls): bool {
+            ->filter(static function(Url $url) use ($urls): bool {
                 return $urls->contains($url);
             });
     }

@@ -14,7 +14,8 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class UrlParser implements Parser
 {
@@ -30,8 +31,8 @@ final class UrlParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         $values = ($this->extract)($document);
@@ -44,7 +45,7 @@ final class UrlParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                Url::fromString($values->current())
+                Url::of(first($values))
             )
         );
     }

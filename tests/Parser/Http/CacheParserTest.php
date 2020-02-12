@@ -9,37 +9,34 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
 };
 use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    PointInTimeInterface,
-    ElapsedPeriod,
-    Period\Earth\Second,
+    Clock,
+    PointInTime,
+    Earth\ElapsedPeriod,
+    Earth\Period\Second,
 };
 use Innmind\Http\{
     Message\Request\Request,
     Message\Response,
-    Message\Method\Method,
-    Headers\Headers,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    Headers,
+    ProtocolVersion,
     Header\CacheControl,
     Header\CacheControlValue\PrivateCache,
     Header\CacheControlValue\PublicCache,
     Header\CacheControlValue\SharedMaxAge,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
-class CaheParserTest extends TestCase
+class CacheParserTest extends TestCase
 {
     public function testInterface()
     {
         $this->assertInstanceOf(
             Parser::class,
             new CacheParser(
-                $this->createMock(TimeContinuumInterface::class)
+                $this->createMock(Clock::class)
             )
         );
     }
@@ -55,15 +52,15 @@ class CaheParserTest extends TestCase
         $response
             ->method('headers')
             ->willReturn(new Headers);
-        $clock = $this->createMock(TimeContinuumInterface::class);
+        $clock = $this->createMock(Clock::class);
         $attributes = (new CacheParser($clock))(
             new Request(
-                Url::fromString('http://example.com'),
+                Url::of('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $expected = new Map('string', Attribute::class)
+            $expected = Map::of('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -81,15 +78,15 @@ class CaheParserTest extends TestCase
                     )
                 )
             );
-        $clock = $this->createMock(TimeContinuumInterface::class);
+        $clock = $this->createMock(Clock::class);
         $attributes = (new CacheParser($clock))(
             new Request(
-                Url::fromString('http://example.com'),
+                Url::of('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $expected = new Map('string', Attribute::class)
+            $expected = Map::of('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -108,13 +105,13 @@ class CaheParserTest extends TestCase
                     )
                 )
             );
-        $clock = $this->createMock(TimeContinuumInterface::class);
+        $clock = $this->createMock(Clock::class);
         $clock
             ->expects($this->once())
             ->method('now')
             ->will(
                 $this->onConsecutiveCalls(
-                    $directive = $this->createMock(PointInTimeInterface::class)
+                    $directive = $this->createMock(PointInTime::class)
                 )
             );
         $directive
@@ -124,26 +121,26 @@ class CaheParserTest extends TestCase
                 return $second->seconds() === 42;
             }))
             ->willReturn(
-                $expected = $this->createMock(PointInTimeInterface::class)
+                $expected = $this->createMock(PointInTime::class)
             );
         $attributes = (new CacheParser($clock))(
             new Request(
-                Url::fromString('http://example.com'),
+                Url::of('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $notExpected = new Map('string', Attribute::class)
+            $notExpected = Map::of('string', Attribute::class)
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
         $attribute = $attributes->get('expires_at');
         $this->assertSame('expires_at', $attribute->name());
-        $this->assertInstanceOf(PointInTimeInterface::class, $attribute->content());
+        $this->assertInstanceOf(PointInTime::class, $attribute->content());
         $this->assertSame(
             $expected,
             $attribute->content()

@@ -7,20 +7,20 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 interface Parser
 {
     /**
-     * @param MapInterface<string, AttributeInterface> $attributes
+     * @param Map<string, AttributeInterface> $attributes
      *
-     * @return MapInterface<string, AttributeInterface>
+     * @return Map<string, AttributeInterface>
      */
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface;
+        Map $attributes
+    ): Map;
 
     public static function key(): string;
 }

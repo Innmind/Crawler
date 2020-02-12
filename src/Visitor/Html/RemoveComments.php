@@ -7,6 +7,7 @@ use Innmind\Xml\{
     Node,
     Node\Comment,
 };
+use Innmind\Immutable\Map;
 
 final class RemoveComments
 {
@@ -14,7 +15,14 @@ final class RemoveComments
     {
         $removedChildren = 0;
 
-        return $node->children()->reduce(
+        $children = $node->children()->reduce(
+            Map::of('int', Node::class),
+            static function(Map $children, Node $child): Map {
+                return ($children)($children->size(), $child);
+            },
+        );
+
+        return $children->reduce(
             $node,
             function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
                 if ($child instanceof Comment) {

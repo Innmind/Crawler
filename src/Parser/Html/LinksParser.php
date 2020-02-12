@@ -15,8 +15,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
-    Visitor\Body,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\Link,
     Element\A,
@@ -25,13 +24,9 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
     Set,
     Str,
 };
@@ -50,14 +45,14 @@ final class LinksParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
-        $links = new Set(UrlInterface::class);
+        $links = Set::of(Url::class);
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document)
             )
                 ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
@@ -71,7 +66,7 @@ final class LinksParser implements Parser
                 })
                 ->reduce(
                     $links,
-                    static function(SetInterface $links, Link $link): SetInterface {
+                    static function(Set $links, Link $link): Set {
                         return $links->add($link->href());
                     }
                 );
@@ -81,17 +76,17 @@ final class LinksParser implements Parser
 
         try {
             $links = (new Elements('a'))(
-                (new Body)($document)
+                Element::body()($document)
             )
                 ->filter(static function(Node $a): bool {
                     return $a instanceof A;
                 })
                 ->filter(static function(A $a): bool {
-                    return (string) Str::of((string) $a)->substring(0, 1) !== '#';
+                    return Str::of($a->toString())->substring(0, 1)->toString() !== '#';
                 })
                 ->reduce(
                     $links,
-                    static function(SetInterface $links, A $a): SetInterface {
+                    static function(Set $links, A $a): Set {
                         return $links->add($a->href());
                     }
                 );
@@ -99,7 +94,7 @@ final class LinksParser implements Parser
             //pass
         }
 
-        $links = $links->map(function(UrlInterface $link) use ($request, $attributes): UrlInterface {
+        $links = $links->map(function(Url $link) use ($request, $attributes): Url {
             return ($this->resolve)(
                 $request,
                 $attributes,

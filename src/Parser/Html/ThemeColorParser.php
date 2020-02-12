@@ -13,7 +13,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element as Search,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
@@ -22,12 +22,13 @@ use Innmind\Http\Message\{
 };
 use Innmind\Colour\{
     Colour,
-    Exception\ExceptionInterface,
+    Exception\Exception,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
+use function Innmind\Immutable\first;
 
 final class ThemeColorParser implements Parser
 {
@@ -41,13 +42,13 @@ final class ThemeColorParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $meta = (new Elements('meta'))(
-                (new Head)($document)
+                Search::head()($document)
             )
                 ->filter(static function(Element $meta): bool {
                     return $meta->attributes()->contains('name') &&
@@ -59,7 +60,7 @@ final class ThemeColorParser implements Parser
                         ->get('name')
                         ->value();
 
-                    return (string) Str::of($name)->toLower() === 'theme-color';
+                    return Str::of($name)->toLower()->toString() === 'theme-color';
                 });
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -70,14 +71,13 @@ final class ThemeColorParser implements Parser
         }
 
         try {
-            $colour = Colour::fromString(
-                $meta
-                    ->current()
+            $colour = Colour::of(
+                first($meta)
                     ->attributes()
                     ->get('content')
                     ->value()
             );
-        } catch (ExceptionInterface $e) {
+        } catch (Exception $e) {
             return $attributes;
         }
 

@@ -10,14 +10,14 @@ use Innmind\Crawler\{
 use Innmind\Xml\Reader;
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Body,
+    Visitor\Element,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class JournalParser implements Parser
 {
@@ -31,13 +31,13 @@ final class JournalParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $articles = (new Elements('article'))(
-                (new Body)($document)
+                Element::body()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;

@@ -12,7 +12,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class ImageParser implements Parser
 {
@@ -28,8 +28,8 @@ final class ImageParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (!$attributes->contains(ContentTypeParser::key())) {
             return $attributes;
         }

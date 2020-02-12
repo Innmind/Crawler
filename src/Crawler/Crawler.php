@@ -12,10 +12,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Http\Message\Request;
 use Innmind\HttpTransport\Transport;
-use Innmind\Filesystem\MediaType\{
-    MediaType,
-    NullMediaType,
-};
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 
 final class Crawler implements CrawlerInterface
@@ -37,15 +34,13 @@ final class Crawler implements CrawlerInterface
         $attributes = ($this->parse)(
             $request,
             $response,
-            new Map('string', Attribute::class)
+            Map::of('string', Attribute::class)
         );
 
         if ($attributes->contains(ContentTypeParser::key())) {
-            $mediaType = MediaType::fromString(
-                (string) $attributes->get(ContentTypeParser::key())->content()
-            );
+            $mediaType = $attributes->get(ContentTypeParser::key())->content();
         } else {
-            $mediaType = new NullMediaType;
+            $mediaType = MediaType::null();
         }
 
         return new HttpResource(

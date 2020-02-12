@@ -13,16 +13,14 @@ use Innmind\Http\{
     Message\Request,
     Message\Response,
 };
-use Innmind\Filesystem\{
-    Stream\StringStream,
-    MediaType\MediaType,
-};
-use Innmind\Url\UrlInterface;
+use Innmind\Stream\Readable\Stream;
+use Innmind\MediaType\MediaType;
+use Innmind\Url\Url;
 use Innmind\Immutable\{
     Map,
-    MapInterface,
-    SetInterface
+    Set,
 };
+use function Innmind\Immutable\unwrap;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -51,13 +49,13 @@ class ImageParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
         $expected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -76,7 +74,7 @@ class ImageParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <html>
 <head>
     <meta property="og:title" content="The Rock" />
@@ -92,7 +90,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -111,7 +109,7 @@ HTML
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <html>
 <head>
     <meta property="og:title" content="The Rock" />
@@ -128,7 +126,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -139,7 +137,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -150,22 +148,23 @@ HTML
         $preview = $attributes->get('preview');
         $this->assertSame('preview', $preview->name());
         $this->assertInstanceOf(
-            SetInterface::class,
+            Set::class,
             $preview->content()
         );
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $preview->content()->type()
         );
         $this->assertCount(2, $preview->content());
+        $content = unwrap($preview->content());
         $this->assertSame(
             'http://ia.media-imdb.com/images/rock.jpg',
-            (string) $preview->content()->current()
+            \current($content)->toString(),
         );
-        $preview->content()->next();
+        \next($content);
         $this->assertSame(
             'http://ia.media-imdb.com/images/rock2.jpg',
-            (string) $preview->content()->current()
+            \current($content)->toString(),
         );
     }
 }

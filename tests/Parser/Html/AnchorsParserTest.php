@@ -13,15 +13,13 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SetInterface,
+    Set,
 };
+use function Innmind\Immutable\unwrap;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -56,13 +54,13 @@ class AnchorsParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -82,13 +80,13 @@ class AnchorsParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <body>
@@ -108,7 +106,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -118,11 +116,11 @@ HTML
         $this->assertTrue($attributes->contains('anchors'));
         $anchors = $attributes->get('anchors');
         $this->assertSame('anchors', $anchors->name());
-        $this->assertInstanceOf(SetInterface::class, $anchors->content());
+        $this->assertInstanceOf(Set::class, $anchors->content());
         $this->assertSame('string', (string) $anchors->content()->type());
         $this->assertSame(
             ['bar', 'baz'],
-            $anchors->content()->toPrimitive()
+            unwrap($anchors->content()),
         );
     }
 }

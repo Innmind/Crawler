@@ -8,8 +8,9 @@ use Innmind\Crawler\{
     Exception\DomainException,
 };
 use Innmind\Xml\Element;
-use Innmind\Filesystem\Stream\StringStream;
-use Innmind\Immutable\SetInterface;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +21,7 @@ class RoleTest extends TestCase
         $visitor = new Role('main');
 
         $html = html()(
-            new StringStream(<<<HTML
+            Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <body>
@@ -39,15 +40,16 @@ HTML
 
         $elements = $visitor($html);
 
-        $this->assertInstanceOf(SetInterface::class, $elements);
+        $this->assertInstanceOf(Set::class, $elements);
         $this->assertSame(Element::class, (string) $elements->type());
         $this->assertCount(2, $elements);
+        $elements = unwrap($elements);
         $this->assertSame(
             '<h1>whatever</h1>'."\n".'        ',
-            $elements->current()->content()
+            \current($elements)->content()
         );
-        $elements->next();
-        $this->assertSame('hey', $elements->current()->content());
+        \next($elements);
+        $this->assertSame('hey', \current($elements)->content());
     }
 
     public function testThrowWhenEmptyRole()

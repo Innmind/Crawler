@@ -7,8 +7,8 @@ use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
     Exception\CantMergeDifferentLanguages,
 };
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\SetInterface;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 use function Innmind\Immutable\assertSet;
 
 final class Alternate implements Attribute
@@ -17,9 +17,9 @@ final class Alternate implements Attribute
 
     public function __construct(
         string $language,
-        SetInterface $links
+        Set $links
     ) {
-        assertSet(UrlInterface::class, $links, 2);
+        assertSet(Url::class, $links, 2);
 
         $this->attribute = new Attribute\Attribute(
             $language,

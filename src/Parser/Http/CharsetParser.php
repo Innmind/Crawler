@@ -12,19 +12,20 @@ use Innmind\Http\{
     Message\Response,
     Header\ContentType,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class CharsetParser implements Parser
 {
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (
-            !$response->headers()->has('Content-Type') ||
+            !$response->headers()->contains('Content-Type') ||
             !($header = $response->headers()->get('Content-Type')) instanceof ContentType ||
-            !$header->values()->current()->parameters()->contains('charset')
+            !first($header->values())->parameters()->contains('charset')
         ) {
             return $attributes;
         }
@@ -33,9 +34,7 @@ final class CharsetParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $header
-                    ->values()
-                    ->current()
+                first($header->values())
                     ->parameters()
                     ->get('charset')
                     ->value()

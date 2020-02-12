@@ -14,7 +14,8 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class CanonicalParser implements Parser
 {
@@ -28,10 +29,10 @@ final class CanonicalParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (
-            !$response->headers()->has('Link') ||
+            !$response->headers()->contains('Link') ||
             !$response->headers()->get('Link') instanceof Link
         ) {
             return $attributes;
@@ -56,7 +57,7 @@ final class CanonicalParser implements Parser
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    $links->current()->url()
+                    first($links)->url()
                 )
             )
         );

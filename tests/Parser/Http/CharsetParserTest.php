@@ -14,7 +14,6 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue,
     Header\Parameter,
 };
 use Innmind\Immutable\Map;
@@ -43,15 +42,8 @@ class CharsetParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('headers')
-            ->willReturn(
-                $headers = $this->createMock(Headers::class)
-            );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(false);
-        $expected = new Map('string', Attribute::class);
+            ->willReturn(Headers::of());
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -67,19 +59,11 @@ class CharsetParserTest extends TestCase
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(Headers::class)
+                Headers::of(
+                    new Header\Header('Content-Type'),
+                )
             );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(true);
-        $headers
-            ->expects($this->once())
-            ->method('get')
-            ->with('Content-Type')
-            ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -95,27 +79,11 @@ class CharsetParserTest extends TestCase
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(Headers::class)
-            );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(true);
-        $headers
-            ->expects($this->once())
-            ->method('get')
-            ->with('Content-Type')
-            ->willReturn(
-                new ContentType(
-                    new ContentTypeValue(
-                        'foo',
-                        'bar',
-                        new Map('string', Parameter::class)
-                    )
+                Headers::of(
+                    ContentType::of('foo', 'bar')
                 )
             );
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -131,38 +99,22 @@ class CharsetParserTest extends TestCase
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(Headers::class)
-            );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(true);
-        $headers
-            ->expects($this->once())
-            ->method('get')
-            ->with('Content-Type')
-            ->willReturn(
-                new ContentType(
-                    new ContentTypeValue(
+                Headers::of(
+                    ContentType::of(
                         'foo',
                         'bar',
-                        Map::of('string', Parameter::class)
-                            (
-                                'charset',
-                                new Parameter\Parameter('charset', 'utf-8')
-                            )
+                        new Parameter\Parameter('charset', 'utf-8')
                     )
                 )
             );
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);
-        $this->assertSame('charset', $attributes->key());
-        $this->assertSame('charset', $attributes->current()->name());
-        $this->assertSame('utf-8', $attributes->current()->content());
+        $this->assertTrue($attributes->contains('charset'));
+        $this->assertSame('charset', $attributes->get('charset')->name());
+        $this->assertSame('utf-8', $attributes->get('charset')->content());
     }
 }

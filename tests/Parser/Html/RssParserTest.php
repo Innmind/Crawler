@@ -14,19 +14,11 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -64,13 +56,13 @@ class RssParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -90,13 +82,13 @@ class RssParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -120,20 +112,20 @@ HTML
         $request
             ->expects($this->once())
             ->method('url')
-            ->willReturn(Url::fromString('http://example.com'));
+            ->willReturn(Url::of('http://example.com'));
         $response = $this->createMock(Response::class);
         $notExpected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -150,7 +142,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -160,7 +152,7 @@ HTML
         $this->assertTrue($attributes->contains('rss'));
         $rss = $attributes->get('rss');
         $this->assertSame('rss', $rss->name());
-        $this->assertInstanceOf(UrlInterface::class, $rss->content());
-        $this->assertSame('http://example.com/rss', (string) $rss->content());
+        $this->assertInstanceOf(Url::class, $rss->content());
+        $this->assertSame('http://example.com/rss', $rss->content()->toString());
     }
 }

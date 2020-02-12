@@ -14,7 +14,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Body,
+    Visitor\Element,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
@@ -22,8 +22,7 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
     Set,
     Str,
 };
@@ -40,23 +39,23 @@ final class CitationsParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $citations = (new Elements('cite'))(
-                (new Body)($document)
+                Element::body()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $citations = $citations->reduce(
-            new Set('string'),
-            function(SetInterface $citations, Node $cite): SetInterface {
+            Set::of('string'),
+            function(Set $citations, Node $cite): Set {
                 return $citations->add(
-                    (string) Str::of((new Text)($cite))->trim()
+                    Str::of((new Text)($cite))->trim()->toString(),
                 );
             }
         );

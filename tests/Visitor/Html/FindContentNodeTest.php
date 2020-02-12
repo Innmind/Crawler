@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Visitor\Html\FindContentNode;
-use Innmind\Html\Visitor\Body;
+use Innmind\Html\Visitor\Element;
 use Innmind\Xml\Node;
 use Innmind\Stream\Readable\Stream;
-use Innmind\Immutable\Map;
+use Innmind\Immutable\Sequence;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -18,8 +18,7 @@ class FindContentNodeTest extends TestCase
         $html = html()(new Stream(fopen('fixtures/lemonde.html', 'r')));
 
         $node = (new FindContentNode)(
-            Map::of('int', Node::class)
-                (0, (new Body)($html))
+            Sequence::of(Node::class, Element::body()($html)),
         );
 
         $this->assertSame('div', $node->name());
@@ -28,21 +27,5 @@ class FindContentNodeTest extends TestCase
             'container_18 clearfix',
             $node->attributes()->get('class')->value()
         );
-    }
-
-    public function testDoesntFailWhenCursorNotAtStart()
-    {
-        $expected = $this->createMock(Node::class);
-        $expected
-            ->expects($this->once())
-            ->method('hasChildren')
-            ->willReturn(false);
-        $map = Map::of('int', Node::class)
-            (0, $expected);
-        $map->next();
-
-        $node = (new FindContentNode)($map);
-
-        $this->assertSame($expected, $node);
     }
 }

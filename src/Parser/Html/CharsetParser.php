@@ -13,14 +13,15 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element as Search,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class CharsetParser implements Parser
 {
@@ -34,13 +35,13 @@ final class CharsetParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $metas = (new Elements('meta'))(
-                (new Head)($document)
+                Search::head()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -58,8 +59,7 @@ final class CharsetParser implements Parser
             self::key(),
             new Attribute(
                 self::key(),
-                $meta
-                    ->current()
+                first($meta)
                     ->attributes()
                     ->get('charset')
                     ->value()

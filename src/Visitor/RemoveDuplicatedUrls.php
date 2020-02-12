@@ -3,11 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Visitor;
 
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    SetInterface,
     Set,
-    MapInterface,
     Map,
 };
 use function Innmind\Immutable\assertSet;
@@ -15,19 +13,19 @@ use function Innmind\Immutable\assertSet;
 final class RemoveDuplicatedUrls
 {
     /**
-     * @param SetInterface<UrlInterface> $urls
+     * @param Set<Url> $urls
      *
-     * @return SetInterface<UrlInterface>
+     * @return Set<Url>
      */
-    public function __invoke(SetInterface $urls): SetInterface
+    public function __invoke(Set $urls): Set
     {
-        assertSet(UrlInterface::class, $urls, 1);
+        assertSet(Url::class, $urls, 1);
 
         return $urls
             ->reduce(
-                new Map('string', UrlInterface::class),
-                static function(MapInterface $urls, UrlInterface $url): MapInterface {
-                    $string = (string) $url;
+                Map::of('string', Url::class),
+                static function(Map $urls, Url $url): Map {
+                    $string = $url->toString();
 
                     if ($urls->contains($string)) {
                         return $urls;
@@ -37,8 +35,8 @@ final class RemoveDuplicatedUrls
                 }
             )
             ->reduce(
-                new Set(UrlInterface::class),
-                static function(SetInterface $urls, string $string, UrlInterface $url): SetInterface {
+                Set::of(Url::class),
+                static function(Set $urls, string $string, Url $url): Set {
                     return $urls->add($url);
                 }
             );

@@ -4,16 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Crawler\HttpResource;
 
 use Innmind\Crawler\Exception\InvalidArgumentException;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 
 final class Alternates implements Attributes
 {
     private Attributes $attributes;
 
-    public function __construct(MapInterface $alternates)
+    public function __construct(Map $alternates)
     {
         $this->attributes = new Attributes\Attributes(
             'alternates',
@@ -32,34 +29,9 @@ final class Alternates implements Attributes
         return $this->attributes->name();
     }
 
-    public function content(): MapInterface
+    public function content(): Map
     {
         return $this->attributes->content();
-    }
-
-    public function current()
-    {
-        return $this->attributes->current();
-    }
-
-    public function key()
-    {
-        return $this->attributes->key();
-    }
-
-    public function next()
-    {
-        $this->attributes->next();
-    }
-
-    public function rewind()
-    {
-        $this->attributes->rewind();
-    }
-
-    public function valid()
-    {
-        return $this->attributes->valid();
     }
 
     public function merge(self $alternates): self
@@ -69,7 +41,7 @@ final class Alternates implements Attributes
             ->keys()
             ->merge($alternates->content()->keys())
             ->reduce(
-                new Map('string', Attribute::class),
+                Map::of('string', Attribute::class),
                 function(Map $all, string $language) use ($alternates): Map {
                     if (!$this->content()->contains($language)) {
                         return $all->put(

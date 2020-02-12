@@ -13,7 +13,7 @@ use Innmind\Http\{
     Message\Request,
     Message\Response,
 };
-use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\MediaType\MediaType;
 use Innmind\Stream\{
     Readable,
     Stream\Size,
@@ -52,7 +52,7 @@ class WeightParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('image/png')
+                    MediaType::of('image/png')
                 )
             );
         $response
@@ -84,7 +84,7 @@ class WeightParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('image/jpg')
+                    MediaType::of('image/jpg')
                 )
             );
         $response

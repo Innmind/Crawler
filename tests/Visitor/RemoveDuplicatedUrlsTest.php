@@ -4,14 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Visitor;
 
 use Innmind\Crawler\Visitor\RemoveDuplicatedUrls;
-use Innmind\Url\{
-    UrlInterface,
-    Url
-};
-use Innmind\Immutable\{
-    SetInterface,
-    Set
-};
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class RemoveDuplicatedUrlsTest extends TestCase
@@ -20,29 +15,29 @@ class RemoveDuplicatedUrlsTest extends TestCase
     {
         $urls = (new RemoveDuplicatedUrls)(
             Set::of(
-                UrlInterface::class,
-                $keep1 = Url::fromString('http://example.com/'),
-                Url::fromString('http://example.com/'),
-                $keep2 = Url::fromString('http://example.com/yay'),
-                $keep3 = Url::fromString('http://example.com/bar/baz'),
-                Url::fromString('http://example.com/bar/baz'),
-                $keep4 = Url::fromString('http://example.com/unique')
+                Url::class,
+                $keep1 = Url::of('http://example.com/'),
+                Url::of('http://example.com/'),
+                $keep2 = Url::of('http://example.com/yay'),
+                $keep3 = Url::of('http://example.com/bar/baz'),
+                Url::of('http://example.com/bar/baz'),
+                $keep4 = Url::of('http://example.com/unique')
             )
         );
 
-        $this->assertInstanceOf(SetInterface::class, $urls);
-        $this->assertSame(UrlInterface::class, (string) $urls->type());
+        $this->assertInstanceOf(Set::class, $urls);
+        $this->assertSame(Url::class, (string) $urls->type());
         $this->assertSame(
             [$keep1, $keep2, $keep3, $keep4],
-            $urls->toPrimitive()
+            unwrap($urls),
         );
     }
 
     public function testThrowWhenInvalidSet()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 1 must be of type SetInterface<Innmind\Url\UrlInterface>');
+        $this->expectExceptionMessage('Argument 1 must be of type Set<Innmind\Url\Url>');
 
-        (new RemoveDuplicatedUrls)(new Set('string'));
+        (new RemoveDuplicatedUrls)(Set::strings());
     }
 }

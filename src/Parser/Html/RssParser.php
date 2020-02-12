@@ -14,7 +14,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\Link,
 };
@@ -22,7 +22,8 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class RssParser implements Parser
 {
@@ -38,13 +39,13 @@ final class RssParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document)
             )
                 ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
@@ -69,7 +70,7 @@ final class RssParser implements Parser
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    $links->current()->href()
+                    first($links)->href()
                 )
             )
         );

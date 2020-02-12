@@ -4,15 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\Crawler;
 
 use Innmind\HttpTransport\Transport;
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Xml\Reader;
-use Innmind\UrlResolver\ResolverInterface;
+use Innmind\UrlResolver\Resolver;
 
 function bootstrap(
     Transport $transport,
-    TimeContinuumInterface $clock,
+    Clock $clock,
     Reader $reader,
-    ResolverInterface $resolver
+    Resolver $resolver
 ): Crawler {
     $parser = new Parser\SequenceParser(
         new Parser\Http\ContentTypeParser,

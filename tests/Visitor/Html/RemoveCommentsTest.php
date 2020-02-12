@@ -5,7 +5,7 @@ namespace Tests\Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Visitor\Html\RemoveComments;
 use Innmind\Xml\Node;
-use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Stream\Readable\Stream;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ class RemoveCommentsTest extends TestCase
         $visitor = new RemoveComments;
 
         $html = html()(
-            new StringStream(<<<HTML
+            Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <body>
@@ -56,6 +56,6 @@ HTML;
 
         $this->assertNotSame($html, $cleaned);
         $this->assertInstanceOf(Node::class, $cleaned);
-        $this->assertSame($expected, (string) $cleaned);
+        $this->assertSame($expected, $cleaned->toString());
     }
 }

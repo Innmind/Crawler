@@ -10,7 +10,6 @@ use Innmind\Crawler\{
 use Innmind\Xml\Reader;
 use Innmind\Html\{
     Visitor\Element,
-    Visitor\Head,
     Exception\ElementNotFound,
     Element\Base,
 };
@@ -18,7 +17,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class BaseParser implements Parser
 {
@@ -32,13 +31,13 @@ final class BaseParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $base = (new Element('base'))(
-                (new Head)($document)
+                Element::head()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;

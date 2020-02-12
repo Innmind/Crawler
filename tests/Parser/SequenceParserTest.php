@@ -6,12 +6,13 @@ namespace Tests\Innmind\Crawler\Parser;
 use Innmind\Crawler\{
     Parser\SequenceParser,
     Parser,
+    HttpResource\Attribute,
 };
 use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class SequenceParserTest extends TestCase
@@ -37,18 +38,18 @@ class SequenceParserTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $attributes = $this->createMock(MapInterface::class);
+        $attributes = Map::of('string', Attribute::class);
 
         $parser1
             ->expects($this->once())
             ->method('__invoke')
             ->with($request, $response, $attributes)
-            ->willReturn($attributes2 = $this->createMock(MapInterface::class));
+            ->willReturn($attributes2 = Map::of('string', Attribute::class));
         $parser2
             ->expects($this->once())
             ->method('__invoke')
             ->with($request, $response, $attributes2)
-            ->willReturn($attributes3 = $this->createMock(MapInterface::class));
+            ->willReturn($attributes3 = Map::of('string', Attribute::class));
 
         $final = $parse($request, $response, $attributes);
 

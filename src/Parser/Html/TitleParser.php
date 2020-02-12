@@ -14,7 +14,6 @@ use Innmind\Http\Message\{
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
-    Visitor\Head,
     Exception\ElementNotFound,
 };
 use Innmind\Xml\{
@@ -23,9 +22,10 @@ use Innmind\Xml\{
     Visitor\Text,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
+use function Innmind\Immutable\first;
 
 final class TitleParser implements Parser
 {
@@ -39,8 +39,8 @@ final class TitleParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         $title = $this->getH1($document);
@@ -72,7 +72,7 @@ final class TitleParser implements Parser
             return '';
         }
 
-        return (string) Str::of((new Text)($h1s->current()))->trim();
+        return Str::of((new Text)(first($h1s)))->trim()->toString();
     }
 
     private function getTitle(Node $document): string
@@ -80,11 +80,11 @@ final class TitleParser implements Parser
         try {
             $title = (new Text)(
                 (new Element('title'))(
-                    (new Head)($document)
+                    Element::head()($document)
                 )
             );
 
-            return (string) Str::of($title)->trim();
+            return Str::of($title)->trim()->toString();
         } catch (ElementNotFound $e) {
             return '';
         }

@@ -10,10 +10,7 @@ use Innmind\Crawler\{
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Http\Message\Request;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -26,16 +23,16 @@ class UrlResolverTest extends TestCase
         $request
             ->expects($this->once())
             ->method('url')
-            ->willReturn(Url::fromString('http://github.com/Innmind/'));
+            ->willReturn(Url::of('http://github.com/Innmind/'));
 
         $url = $resolve(
             $request,
-            new Map('string', Attribute::class),
-            Url::fromString('/foo')
+            Map::of('string', Attribute::class),
+            Url::of('/foo')
         );
 
-        $this->assertInstanceOf(UrlInterface::class, $url);
-        $this->assertSame('http://github.com/foo', (string) $url);
+        $this->assertInstanceOf(Url::class, $url);
+        $this->assertSame('http://github.com/foo', $url->toString());
     }
 
     public function testResolveFromBase()
@@ -45,7 +42,7 @@ class UrlResolverTest extends TestCase
         $request
             ->expects($this->once())
             ->method('url')
-            ->willReturn(Url::fromString('http://github.com/Innmind/'));
+            ->willReturn(Url::of('http://github.com/Innmind/'));
 
         $url = $resolve(
             $request,
@@ -54,14 +51,14 @@ class UrlResolverTest extends TestCase
                     BaseParser::key(),
                     new Attribute\Attribute(
                         BaseParser::key(),
-                        Url::fromString('http://sub.github.com'),
+                        Url::of('http://sub.github.com'),
                         0
                     )
                 ),
-            Url::fromString('/foo')
+            Url::of('/foo')
         );
 
-        $this->assertInstanceOf(UrlInterface::class, $url);
-        $this->assertSame('http://sub.github.com/foo', (string) $url);
+        $this->assertInstanceOf(Url::class, $url);
+        $this->assertSame('http://sub.github.com/foo', $url->toString());
     }
 }

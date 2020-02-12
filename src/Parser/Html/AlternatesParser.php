@@ -12,7 +12,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element,
     Element\Link,
     Exception\ElementNotFound,
 };
@@ -24,11 +24,9 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SequenceInterface,
     Pair,
     Set,
 };
@@ -49,13 +47,13 @@ final class AlternatesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -76,19 +74,19 @@ final class AlternatesParser implements Parser
 
         $alternates = $links
             ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $links, Link $link): MapInterface {
+                Map::of(Url::class, 'string'),
+                static function(Map $links, Link $link): Map {
                     return $links->put(
                         $link->href(),
                         $link->attributes()->get('hreflang')->value()
                     );
                 }
             )
-            ->groupBy(static function(UrlInterface $url, string $language) {
+            ->groupBy(static function(Url $url, string $language) {
                 return $language;
             })
-            ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
-                return $links->map(function(UrlInterface $link, string $language) use ($request, $attributes): Pair {
+            ->map(function(string $language, Map $links) use ($request, $attributes): Map {
+                return $links->map(function(Url $link, string $language) use ($request, $attributes): Pair {
                     $link = ($this->resolve)(
                         $request,
                         $attributes,
@@ -99,8 +97,8 @@ final class AlternatesParser implements Parser
                 });
             })
             ->reduce(
-                new Map('string', Attribute::class),
-                static function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
+                Map::of('string', Attribute::class),
+                static function(Map $languages, string $language, Map $links): Map {
                     return $languages->put(
                         $language,
                         new Alternate(

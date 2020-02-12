@@ -13,7 +13,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Body,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\A,
 };
@@ -22,8 +22,7 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
     Set,
     Str,
 };
@@ -40,13 +39,13 @@ final class AnchorsParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $anchors = (new Elements('a'))(
-                (new Body)($document)
+                Element::body()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -57,13 +56,13 @@ final class AnchorsParser implements Parser
                 return $node instanceof A;
             })
             ->filter(static function(A $anchor): bool {
-                return Str::of((string) $anchor->href())->matches('~^#~');
+                return Str::of($anchor->href()->toString())->matches('~^#~');
             })
             ->reduce(
-                new Set('string'),
-                static function(SetInterface $anchors, A $anchor): SetInterface {
+                Set::of('string'),
+                static function(Set $anchors, A $anchor): Set {
                     return $anchors->add(
-                        (string) Str::of((string) $anchor->href())->substring(1)
+                        Str::of($anchor->href()->toString())->substring(1)->toString(),
                     );
                 }
             );

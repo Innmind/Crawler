@@ -13,7 +13,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element as Search,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
@@ -21,9 +21,10 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
+use function Innmind\Immutable\first;
 
 final class DescriptionParser implements Parser
 {
@@ -37,13 +38,13 @@ final class DescriptionParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $metas = (new Elements('meta'))(
-                (new Head)($document)
+                Search::head()($document)
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -60,15 +61,14 @@ final class DescriptionParser implements Parser
                     ->get('name')
                     ->value();
 
-                return (string) Str::of($name)->toLower() === 'description';
+                return Str::of($name)->toLower()->toString() === 'description';
             });
 
         if ($meta->size() !== 1) {
             return $attributes;
         }
 
-        $description = $meta
-            ->current()
+        $description = first($meta)
             ->attributes()
             ->get('content')
             ->value();
@@ -85,7 +85,7 @@ final class DescriptionParser implements Parser
 
         return $attributes->put(
             self::key(),
-            new Attribute(self::key(), (string) $description)
+            new Attribute(self::key(), $description->toString())
         );
     }
 

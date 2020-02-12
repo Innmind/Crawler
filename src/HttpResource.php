@@ -4,44 +4,44 @@ declare(strict_types = 1);
 namespace Innmind\Crawler;
 
 use Innmind\Crawler\HttpResource\Attribute;
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use Innmind\Filesystem\{
     File,
-    MediaType,
     Name,
 };
+use Innmind\MediaType\MediaType;
 use Innmind\Stream\Readable;
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
 use function Innmind\Immutable\assertMap;
 
 final class HttpResource implements File
 {
-    private UrlInterface $url;
+    private Url $url;
     private Name $name;
     private MediaType $mediaType;
-    private MapInterface $attributes;
+    private Map $attributes;
     private Readable $content;
 
     public function __construct(
-        UrlInterface $url,
+        Url $url,
         MediaType $mediaType,
-        MapInterface $attributes,
+        Map $attributes,
         Readable $content
     ) {
         assertMap('string', Attribute::class, $attributes, 3);
 
-        $name = \basename((string) $url->path());
+        $name = \basename($url->path()->toString());
         $this->url = $url;
-        $this->name = new Name\Name(Str::of($name)->empty() ? 'index' : $name);
+        $this->name = new Name(Str::of($name)->empty() ? 'index' : $name);
         $this->mediaType = $mediaType;
         $this->attributes = $attributes;
         $this->content = $content;
     }
 
-    public function url(): UrlInterface
+    public function url(): Url
     {
         return $this->url;
     }
@@ -62,9 +62,9 @@ final class HttpResource implements File
     }
 
     /**
-     * @return MapInterface<string, Attribute>
+     * @return Map<string, Attribute>
      */
-    public function attributes(): MapInterface
+    public function attributes(): Map
     {
         return $this->attributes;
     }

@@ -12,7 +12,7 @@ use Innmind\http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class AlternatesParser implements Parser
 {
@@ -28,8 +28,8 @@ final class AlternatesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         return $this->merge(
             ($this->http)($request, $response, $attributes),
             ($this->html)($request, $response, $attributes)
@@ -41,7 +41,7 @@ final class AlternatesParser implements Parser
         return 'alternates';
     }
 
-    private function merge(MapInterface $http, MapInterface $html): MapInterface
+    private function merge(Map $http, Map $html): Map
     {
         if (!$http->contains(HttpParser::key())) {
             return $html;

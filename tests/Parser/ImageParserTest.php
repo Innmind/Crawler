@@ -13,7 +13,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -59,7 +59,7 @@ class ImageParserTest extends TestCase
         $attributes = Map::of('string', Attribute::class)
             (ContentTypeParser::key(), new Attribute\Attribute(
                 ContentTypeParser::key(),
-                MediaType::fromString('text/html')
+                MediaType::of('text/html')
             ));
 
         $this->assertSame(
@@ -83,7 +83,7 @@ class ImageParserTest extends TestCase
         $attributes = Map::of('string', Attribute::class)
             (ContentTypeParser::key(), new Attribute\Attribute(
                 ContentTypeParser::key(),
-                MediaType::fromString($type)
+                MediaType::of($type)
             ));
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);

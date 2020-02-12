@@ -12,34 +12,31 @@ use Innmind\Http\{
     Message\Response,
     Header\ContentType,
 };
-use Innmind\Filesystem\MediaType\MediaType;
-use Innmind\Immutable\MapInterface;
+use Innmind\MediaType\MediaType;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class ContentTypeParser implements Parser
 {
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (
-            !$response->headers()->has('Content-Type') ||
+            !$response->headers()->contains('Content-Type') ||
             !$response->headers()->get('Content-Type') instanceof ContentType
         ) {
             return $attributes;
         }
 
+        $contentType = first($response->headers()->get('Content-Type')->values());
+
         return $attributes->put(
             self::key(),
             new Attribute(
                 self::key(),
-                MediaType::fromString(
-                    (string) $response
-                        ->headers()
-                        ->get('Content-Type')
-                        ->values()
-                        ->current()
-                )
+                MediaType::of($contentType->toString()),
             )
         );
     }

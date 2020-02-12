@@ -8,14 +8,13 @@ use Innmind\Crawler\{
     Parser\Http\ContentTypeParser,
     HttpResource\Attribute,
 };
-use Innmind\Filesystem\MediaType;
+use Innmind\MediaType\MediaType;
 use Innmind\Http\{
     Message\Request,
     Message\Response,
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -43,15 +42,8 @@ class ContentTypeParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('headers')
-            ->willReturn(
-                $headers = $this->createMock(Headers::class)
-            );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(false);
-        $expected = new Map('string', Attribute::class);
+            ->willReturn(Headers::of());
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -63,22 +55,14 @@ class ContentTypeParserTest extends TestCase
         $parse = new ContentTypeParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $headers = $this->createMock(Headers::class);
+        $headers = Headers::of(
+            new Header\Header('Content-Type'),
+        );
         $response
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn($headers);
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(true);
-        $headers
-            ->expects($this->once())
-            ->method('get')
-            ->with('Content-Type')
-            ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -90,40 +74,25 @@ class ContentTypeParserTest extends TestCase
         $parse = new ContentTypeParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $headers = $this->createMock(Headers::class);
+        $headers = Headers::of(
+            ContentType::of('text', 'bar'),
+        );
         $response
             ->expects($this->exactly(3))
             ->method('headers')
             ->willReturn($headers);
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Type')
-            ->willReturn(true);
-        $headers
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->with('Content-Type')
-            ->willReturn(
-                new ContentType(
-                    new ContentTypeValue(
-                        'text',
-                        'bar'
-                    )
-                )
-            );
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);
-        $this->assertSame('content_type', $attributes->key());
-        $this->assertSame('content_type', $attributes->current()->name());
+        $this->assertTrue($attributes->contains('content_type'));
+        $this->assertSame('content_type', $attributes->get('content_type')->name());
         $this->assertInstanceOf(
             MediaType::class,
-            $attributes->current()->content()
+            $attributes->get('content_type')->content()
         );
-        $this->assertSame('text/bar', (string) $attributes->current()->content());
+        $this->assertSame('text/bar', $attributes->get('content_type')->content()->toString());
     }
 }
