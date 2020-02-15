@@ -11,16 +11,13 @@ use Innmind\Crawler\{
     UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Http\{
     Message\Request\Request,
     Message\Response,
-    Message\Method\Method,
-    Headers\Headers,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    Headers,
+    ProtocolVersion,
     Header,
     Header\Value\Value,
     Header\Parameter,
@@ -29,7 +26,11 @@ use Innmind\Http\{
 };
 use Innmind\Immutable\{
     Map,
-    SetInterface,
+    Set,
+};
+use function Innmind\Immutable\{
+    first,
+    unwrap,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -62,12 +63,12 @@ class AlternatesParserTest extends TestCase
             ->willReturn(new Headers);
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com'),
+                Url::of('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $expected = new Map('string', Attribute::class)
+            $expected = Map::of('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -88,12 +89,12 @@ class AlternatesParserTest extends TestCase
             );
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com'),
+                Url::of('http://example.com'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $expected = new Map('string', Attribute::class)
+            $expected = Map::of('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -108,7 +109,7 @@ class AlternatesParserTest extends TestCase
                 Headers::of(
                     new Link(
                         new LinkValue(
-                            Url::fromString('/foo/bar'),
+                            Url::of('/foo/bar'),
                             'prev'
                         )
                     )
@@ -116,12 +117,12 @@ class AlternatesParserTest extends TestCase
             );
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            $expected = new Map('string', Attribute::class)
+            $expected = Map::of('string', Attribute::class)
         );
 
         $this->assertSame($expected, $attributes);
@@ -136,52 +137,36 @@ class AlternatesParserTest extends TestCase
                 Headers::of(
                     new Link(
                         new LinkValue(
-                            Url::fromString('/foo/bar'),
+                            Url::of('/foo/bar'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'fr')
-                                )
+                            new Parameter\Parameter('hreflang', 'fr')
                         ),
                         new LinkValue(
-                            Url::fromString('bar'),
+                            Url::of('bar'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'fr')
-                                )
+                            new Parameter\Parameter('hreflang', 'fr')
                         ),
                         new LinkValue(
-                            Url::fromString('baz'),
+                            Url::of('baz'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'fr')
-                                )
+                            new Parameter\Parameter('hreflang', 'fr')
                         ),
                         new LinkValue(
-                            Url::fromString('/en/foo/bar'),
+                            Url::of('/en/foo/bar'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'en')
-                                )
+                            new Parameter\Parameter('hreflang', 'en')
                         )
                     )
                 )
             );
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            new Map('string', Attribute::class)
+            Map::of('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));
@@ -192,33 +177,34 @@ class AlternatesParserTest extends TestCase
         $this->assertTrue($content->contains('en'));
         $this->assertTrue($content->contains('fr'));
         $this->assertInstanceOf(
-            SetInterface::class,
+            Set::class,
             $content->get('en')->content()
         );
         $this->assertInstanceOf(
-            SetInterface::class,
+            Set::class,
             $content->get('fr')->content()
         );
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $content->get('en')->content()->type()
         );
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $content->get('fr')->content()->type()
         );
         $this->assertSame(
             'http://example.com/en/foo/bar',
-            (string) $content->get('en')->content()->current()
+            first($content->get('en')->content())->toString(),
         );
+        $fr = unwrap($content->get('fr')->content());
         $this->assertSame(
             'http://example.com/foo/bar',
-            (string) $content->get('fr')->content()->current()
+            \current($fr)->toString(),
         );
-        $content->get('fr')->content()->next();
+        \next($fr);
         $this->assertSame(
             'http://example.com/foo/baz',
-            (string) $content->get('fr')->content()->current()
+            \current($fr)->toString(),
         );
     }
 }

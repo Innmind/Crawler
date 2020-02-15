@@ -14,7 +14,7 @@ use Innmind\Http\{
     Message\Request,
     Message\Response,
 };
-use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\MediaType\MediaType;
 use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +50,7 @@ class DimensionParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('image/jpg')
+                    MediaType::of('image/jpg')
                 )
             );
         $response

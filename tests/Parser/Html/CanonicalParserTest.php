@@ -15,18 +15,10 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
+use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -64,13 +56,13 @@ class CanonicalParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -90,13 +82,13 @@ class CanonicalParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,18 +110,18 @@ HTML
     {
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $expected = (new Map('string', Attribute::class))
-            ->put(
+        $expected = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -157,17 +149,17 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $request
             ->expects($this->once())
             ->method('url')
-            ->willReturn(Url::fromString('http://github.com'));
+            ->willReturn(Url::of('http://github.com'));
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -184,7 +176,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -194,7 +186,7 @@ HTML
         $this->assertTrue($attributes->contains('canonical'));
         $canonical = $attributes->get('canonical');
         $this->assertSame('canonical', $canonical->name());
-        $this->assertInstanceOf(UrlInterface::class, $canonical->content());
-        $this->assertSame('http://github.com/foo', (string) $canonical->content());
+        $this->assertInstanceOf(Url::class, $canonical->content());
+        $this->assertSame('http://github.com/foo', $canonical->content()->toString());
     }
 }

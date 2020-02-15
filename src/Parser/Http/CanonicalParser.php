@@ -14,11 +14,15 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
+use function Innmind\Immutable\first;
 
 final class CanonicalParser implements Parser
 {
-    private $resolve;
+    private UrlResolver $resolve;
 
     public function __construct(UrlResolver $resolve)
     {
@@ -28,15 +32,19 @@ final class CanonicalParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (
-            !$response->headers()->has('Link') ||
+            !$response->headers()->contains('Link') ||
             !$response->headers()->get('Link') instanceof Link
         ) {
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion We verify above we do have a link
+         * @var Set<LinkValue>
+         */
         $links = $response
             ->headers()
             ->get('Link')
@@ -49,16 +57,16 @@ final class CanonicalParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    $links->current()->url()
-                )
-            )
+                    first($links)->url(),
+                ),
+            ),
         );
     }
 

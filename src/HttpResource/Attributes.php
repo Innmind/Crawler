@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\HttpResource;
 
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
-interface Attributes extends Attribute, \Iterator
+interface Attributes extends Attribute
 {
     /**
-     * @return MapInterface<string, Attribute>
+     * @return Map<string, Attribute>
      */
-    public function content(): MapInterface;
+    public function content(): Map;
 }

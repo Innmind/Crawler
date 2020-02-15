@@ -14,20 +14,15 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SetInterface,
+    Set,
 };
+use function Innmind\Immutable\unwrap;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -65,13 +60,13 @@ class LinksParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -99,20 +94,20 @@ HTML
         $request
             ->expects($this->exactly(7))
             ->method('url')
-            ->willReturn(Url::fromString('http://example.com'));
+            ->willReturn(Url::of('http://example.com'));
         $response = $this->createMock(Response::class);
         $notExpected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,7 +133,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -148,40 +143,41 @@ HTML
         $this->assertTrue($attributes->contains('links'));
         $links = $attributes->get('links');
         $this->assertSame('links', $links->name());
-        $this->assertInstanceOf(SetInterface::class, $links->content());
+        $this->assertInstanceOf(Set::class, $links->content());
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $links->content()->type()
         );
         $this->assertCount(6, $links->content());
+        $content = unwrap($links->content());
         $this->assertSame(
             'http://example.com/first',
-            (string) $links->content()->current()
+            \current($content)->toString(),
         );
-        $links->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/next',
-            (string) $links->content()->current()
+            \current($content)->toString(),
         );
-        $links->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/previous',
-            (string) $links->content()->current()
+            \current($content)->toString(),
         );
-        $links->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/last',
-            (string) $links->content()->current()
+            \current($content)->toString(),
         );
-        $links->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/anywhere',
-            (string) $links->content()->current()
+            \current($content)->toString(),
         );
-        $links->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/anywhere-else',
-             (string) $links->content()->current()
-            );
+            \current($content)->toString(),
+        );
     }
 }

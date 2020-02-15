@@ -13,7 +13,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element as Search,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
@@ -21,15 +21,16 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
+use function Innmind\Immutable\first;
 
 final class IosParser implements Parser
 {
     private const PATTERN = '/app\-argument\="?(?P<uri>.*)"?$/';
 
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {
@@ -39,13 +40,13 @@ final class IosParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $metas = (new Elements('meta'))(
-                (new Head)($document)
+                Search::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -61,7 +62,7 @@ final class IosParser implements Parser
             return $attributes;
         }
 
-        $content = $meta->current()->attributes()->get('content')->value();
+        $content = first($meta)->attributes()->get('content')->value();
         $content = Str::of($content);
 
         if (!$content->matches(self::PATTERN)) {
@@ -70,9 +71,9 @@ final class IosParser implements Parser
 
         $matches = $content->capture(self::PATTERN);
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), (string) $matches->get('uri'))
+            new Attribute(self::key(), $matches->get('uri')->toString()),
         );
     }
 

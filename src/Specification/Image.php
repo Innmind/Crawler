@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\Specification;
 
-use Innmind\Filesystem\MediaType;
+use Innmind\MediaType\MediaType;
 
 final class Image
 {
-    public function isSatisfiedBy(MediaType $type): bool
+    public function __invoke(MediaType $type): bool
     {
         return $type->topLevel() === 'image';
     }

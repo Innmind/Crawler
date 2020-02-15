@@ -14,16 +14,20 @@ use Innmind\Http\{
     Header\CacheControlValue\SharedMaxAge,
 };
 use Innmind\TimeContinuum\{
-    TimeContinuumInterface,
-    Period\Earth\Second,
+    Clock,
+    Earth\Period\Second,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
+use function Innmind\Immutable\first;
 
 final class CacheParser implements Parser
 {
-    private $clock;
+    private Clock $clock;
 
-    public function __construct(TimeContinuumInterface $clock)
+    public function __construct(Clock $clock)
     {
         $this->clock = $clock;
     }
@@ -31,12 +35,13 @@ final class CacheParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
-        if (!$response->headers()->has('Cache-Control')) {
+        Map $attributes
+    ): Map {
+        if (!$response->headers()->contains('Cache-Control')) {
             return $attributes;
         }
 
+        /** @var Set<SharedMaxAge> */
         $directives = $response
             ->headers()
             ->get('Cache-Control')
@@ -49,17 +54,15 @@ final class CacheParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 $this
                     ->clock
                     ->now()
-                    ->goForward(
-                        new Second($directives->current()->age())
-                    )
-            )
+                    ->goForward(new Second(first($directives)->age())),
+            ),
         );
     }
 

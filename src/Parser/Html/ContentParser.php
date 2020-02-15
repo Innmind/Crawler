@@ -18,7 +18,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Body,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\Link,
 };
@@ -27,14 +27,15 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
+    Sequence,
     Str,
 };
+use function Innmind\Immutable\first;
 
 final class ContentParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {
@@ -44,14 +45,14 @@ final class ContentParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
         $document = (new RemoveElements('script', 'style'))($document);
         $document = (new RemoveComments)($document);
 
         try {
-            $body = (new Body)($document);
+            $body = Element::body()($document);
         } catch (ElementNotFound $e) {
             return $attributes;
         }
@@ -65,7 +66,7 @@ final class ContentParser implements Parser
         }
 
         if ($elements->size() === 1) {
-            $node = $elements->current();
+            $node = first($elements);
         } else {
             foreach (['main', 'article'] as $tag) {
                 $elements = (new Elements($tag))($body);
@@ -76,12 +77,11 @@ final class ContentParser implements Parser
             }
 
             if ($elements->size() === 1) {
-                $node = $elements->current();
+                $node = first($elements);
             } else {
-                $node = (new FindContentNode)(
-                    Map::of('int', Node::class)
-                        (0, $body)
-                );
+                /** @var Sequence<Node> */
+                $nodes = Sequence::of(Node::class, $body);
+                $node = (new FindContentNode)($nodes);
             }
         }
 
@@ -91,9 +91,9 @@ final class ContentParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), (string) $text)
+            new Attribute(self::key(), $text->toString()),
         );
     }
 

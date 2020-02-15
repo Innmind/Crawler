@@ -18,19 +18,17 @@ use Innmind\UrlResolver\UrlResolver as BaseResolver;
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
-    Message\Method\Method,
-    Headers\Headers,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    Headers,
+    ProtocolVersion,
     Header,
     Header\Link,
     Header\LinkValue,
     Header\Parameter,
 };
 use Innmind\Url\Url;
-use Innmind\Filesystem\{
-    Stream\StringStream,
-    MediaType\MediaType,
-};
+use Innmind\Stream\Readable\Stream;
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
@@ -71,13 +69,9 @@ class AlternatesParserTest extends TestCase
                 Headers::of(
                     new Link(
                         new LinkValue(
-                            Url::fromString('/en/foo/bar'),
+                            Url::of('/en/foo/bar'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'en')
-                                )
+                            new Parameter\Parameter('hreflang', 'en')
                         )
                     )
                 )
@@ -85,12 +79,12 @@ class AlternatesParserTest extends TestCase
 
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
             $response,
-            new Map('string', Attribute::class)
+            Map::of('string', Attribute::class)
         );
 
         $this->assertTrue($attributes->contains('alternates'));
@@ -106,7 +100,7 @@ class AlternatesParserTest extends TestCase
         $response
             ->method('body')
             ->willReturn(
-                new StringStream(<<<HTML
+                Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,19 +112,22 @@ class AlternatesParserTest extends TestCase
 HTML
                 )
             );
+        $response
+            ->method('headers')
+            ->willReturn(Headers::of());
 
         $attributes = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
@@ -155,13 +152,9 @@ HTML
                 Headers::of(
                     new Link(
                         new LinkValue(
-                            Url::fromString('/en/foo/bar'),
+                            Url::of('/en/foo/bar'),
                             'alternate',
-                            Map::of('string', Parameter::class)
-                                (
-                                    'hreflang',
-                                    new Parameter\Parameter('hreflang', 'en')
-                                )
+                            new Parameter\Parameter('hreflang', 'en')
                         )
                     )
                 )
@@ -169,7 +162,7 @@ HTML
         $response
             ->method('body')
             ->willReturn(
-                new StringStream(<<<HTML
+                Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -181,18 +174,18 @@ HTML
 HTML
                 )
             );
-        $attributes = (new Map('string', Attribute::class))
-            ->put(
+        $attributes = Map::of('string', Attribute::class)
+            (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),

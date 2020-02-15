@@ -11,22 +11,22 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class WeightParser implements Parser
 {
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (!$response->body()->knowsSize()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $response->body()->size())
+            new Attribute(self::key(), $response->body()->size()),
         );
     }
 

@@ -8,11 +8,9 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
 };
 use Innmind\Url\Url;
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-    File,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Filesystem\File;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -21,15 +19,15 @@ class HttpResourceTest extends TestCase
     public function testInterface()
     {
         $resource = new HttpResource(
-            $url = Url::fromString('http://example.com/foo'),
-            $mediaType = MediaType::fromString('application/json'),
-            $attributes = new Map('string', Attribute::class),
-            $content = new StringStream('')
+            $url = Url::of('http://example.com/foo'),
+            $mediaType = MediaType::of('application/json'),
+            $attributes = Map::of('string', Attribute::class),
+            $content = Stream::ofContent('')
         );
 
         $this->assertInstanceOf(File::class, $resource);
         $this->assertSame($url, $resource->url());
-        $this->assertSame('foo', (string) $resource->name());
+        $this->assertSame('foo', $resource->name()->toString());
         $this->assertSame($mediaType, $resource->mediaType());
         $this->assertSame($attributes, $resource->attributes());
         $this->assertSame($content, $resource->content());
@@ -38,25 +36,25 @@ class HttpResourceTest extends TestCase
     public function testThrowWhenInvalidAttributeMap()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 3 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>');
+        $this->expectExceptionMessage('Argument 3 must be of type Map<string, Innmind\Crawler\HttpResource\Attribute>');
 
         new HttpResource(
-            Url::fromString('http://example.com/foo'),
-            MediaType::fromString('application/json'),
-            new Map('int', 'int'),
-            new StringStream('')
+            Url::of('http://example.com/foo'),
+            MediaType::of('application/json'),
+            Map::of('int', 'int'),
+            Stream::ofContent('')
         );
     }
 
     public function testBuildDefaultName()
     {
         $resource = new HttpResource(
-            Url::fromString('http://example.com'),
-            MediaType::fromString('application/json'),
-            new Map('string', Attribute::class),
-            new StringStream('')
+            Url::of('http://example.com'),
+            MediaType::of('application/json'),
+            Map::of('string', Attribute::class),
+            Stream::ofContent('')
         );
 
-        $this->assertSame('index', (string) $resource->name());
+        $this->assertSame('index', $resource->name()->toString());
     }
 }

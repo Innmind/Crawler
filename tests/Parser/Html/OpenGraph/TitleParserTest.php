@@ -13,14 +13,9 @@ use Innmind\Http\{
     Message\Request,
     Message\Response,
 };
-use Innmind\Filesystem\{
-    Stream\StringStream,
-    MediaType\MediaType,
-};
-use Innmind\Immutable\{
-    Map,
-    MapInterface
-};
+use Innmind\Stream\Readable\Stream;
+use Innmind\MediaType\MediaType;
+use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -49,13 +44,13 @@ class TitleParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
         $expected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -74,7 +69,7 @@ class TitleParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <html>
 <head>
     <meta property="og:title" content="The Rock" />
@@ -90,7 +85,7 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -101,7 +96,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,

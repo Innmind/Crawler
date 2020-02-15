@@ -13,13 +13,13 @@ use Innmind\Http\{
     Message\Response,
     Header,
     Header\ContentLanguage,
-    Header\ContentLanguageValue,
     Headers,
 };
 use Innmind\Immutable\{
     Map,
-    SetInterface,
+    Set,
 };
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class LanguagesParserTest extends TestCase
@@ -46,14 +46,9 @@ class LanguagesParserTest extends TestCase
             ->expects($this->once())
             ->method('headers')
             ->willReturn(
-                $headers = $this->createMock(Headers::class)
+                Headers::of(),
             );
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Language')
-            ->willReturn(false);
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -65,22 +60,14 @@ class LanguagesParserTest extends TestCase
         $parse = new LanguagesParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $headers = $this->createMock(Headers::class);
+        $headers = Headers::of(
+            new Header\Header('Content-Language'),
+        );
         $response
             ->expects($this->exactly(2))
             ->method('headers')
             ->willReturn($headers);
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Language')
-            ->willReturn(true);
-        $headers
-            ->expects($this->once())
-            ->method('get')
-            ->with('Content-Language')
-            ->willReturn($this->createMock(Header::class));
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
@@ -92,45 +79,32 @@ class LanguagesParserTest extends TestCase
         $parse = new LanguagesParser;
         $request = $this->createMock(Request::class);
         $response = $this->createMock(Response::class);
-        $headers = $this->createMock(Headers::class);
+        $headers = Headers::of(
+            ContentLanguage::of('fr', 'en-US'),
+        );
         $response
             ->expects($this->exactly(3))
             ->method('headers')
             ->willReturn($headers);
-        $headers
-            ->expects($this->once())
-            ->method('has')
-            ->with('Content-Language')
-            ->willReturn(true);
-        $headers
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->with('Content-Language')
-            ->willReturn(
-                new ContentLanguage(
-                    new ContentLanguageValue('fr'),
-                    new ContentLanguageValue('en-US')
-                )
-            );
-        $expected = new Map('string', Attribute::class);
+        $expected = Map::of('string', Attribute::class);
 
         $attributes = $parse($request, $response, $expected);
 
         $this->assertNotSame($expected, $attributes);
         $this->assertCount(1, $attributes);
-        $this->assertSame('languages', $attributes->key());
-        $this->assertSame('languages', $attributes->current()->name());
+        $this->assertTrue($attributes->contains('languages'));
+        $this->assertSame('languages', $attributes->get('languages')->name());
         $this->assertInstanceOf(
-            SetInterface::class,
-            $attributes->current()->content()
+            Set::class,
+            $attributes->get('languages')->content()
         );
         $this->assertSame(
             'string',
-            (string) $attributes->current()->content()->type()
+            $attributes->get('languages')->content()->type()
         );
         $this->assertSame(
             ['fr', 'en-US'],
-            $attributes->current()->content()->toPrimitive()
+            unwrap($attributes->get('languages')->content()),
         );
     }
 }

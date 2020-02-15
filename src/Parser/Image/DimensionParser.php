@@ -12,30 +12,31 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 
 final class DimensionParser implements Parser
 {
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
+        /** @var array{0: int, 1: int} */
         $infos = \getimagesizefromstring(
-            (string) $response->body()
+            $response->body()->toString(),
         );
 
-        return $attributes->put(
+        /** @var Map<string, Attribute> */
+        $content = Map::of('string', Attribute::class);
+
+        return ($attributes)(
             self::key(),
             new Attributes(
                 self::key(),
-                Map::of('string', Attribute::class)
+                $content
                     ('width', new Attribute\Attribute('width', $infos[0]))
-                    ('height', new Attribute\Attribute('height', $infos[1]))
-            )
+                    ('height', new Attribute\Attribute('height', $infos[1])),
+            ),
         );
     }
 

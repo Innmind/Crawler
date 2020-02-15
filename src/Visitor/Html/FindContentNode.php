@@ -13,45 +13,53 @@ use Innmind\Math\{
     Regression\Dataset,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
+    Sequence,
     Str,
 };
-use function Innmind\Immutable\assertMap;
+use function Innmind\Immutable\assertSequence;
 
 final class FindContentNode
 {
     /**
-     * @param MapInterface<int, Node> $nodes
+     * @param Sequence<Node> $nodes
      */
-    public function __invoke(MapInterface $nodes): Node
+    public function __invoke(Sequence $nodes): Node
     {
-        assertMap('int', Node::class, $nodes, 1);
-
-        $nodes->rewind();
+        assertSequence(Node::class, $nodes, 1);
 
         if ($nodes->size() === 1) {
-            if (!$nodes->current()->hasChildren()) {
-                return $nodes->current();
+            if ($nodes->first()->children()->empty()) {
+                return $nodes->first();
             }
 
             try {
-                return $this($nodes->current()->children());
+                return $this($nodes->first()->children());
             } catch (ContentTooDispersed $e) {
-                return $nodes->current();
+                return $nodes->first();
             }
         }
 
+        /** @var Map<int, Node> */
+        $nodes = $nodes->reduce(
+            Map::of('int', Node::class),
+            static function(Map $children, Node $child): Map {
+                return ($children)($children->size(), $child);
+            },
+        );
+
+        /** @var array<int, int> */
         $dispersion = $nodes->reduce(
             [],
             static function(array $dispersion, int $position, Node $node): array {
                 $text = (new Text)($node);
-                $text = new Str($text);
+                $text = Str::of($text);
                 $dispersion[$position] = $text->wordCount();
 
                 return $dispersion;
             }
         );
-        $quantile = new Quantile(Dataset::fromArray($dispersion));
+        $quantile = new Quantile(Dataset::of($dispersion));
         $lookup = [];
 
         //select qartiles that have more words than the average nodes
@@ -78,6 +86,6 @@ final class FindContentNode
             return $dispersion[$position] >= $min;
         });
 
-        return $this($nodes);
+        return $this($nodes->values());
     }
 }

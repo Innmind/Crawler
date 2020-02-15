@@ -7,23 +7,24 @@ use Innmind\Crawler\{
     Visitor\RemoveDuplicatedUrls,
     Exception\CantMergeDifferentLanguages,
 };
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\SetInterface;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 use function Innmind\Immutable\assertSet;
 
 final class Alternate implements Attribute
 {
-    private $attribute;
+    private Attribute $attribute;
 
-    public function __construct(
-        string $language,
-        SetInterface $links
-    ) {
-        assertSet(UrlInterface::class, $links, 2);
+    /**
+     * @param Set<Url> $links
+     */
+    public function __construct(string $language, Set $links)
+    {
+        assertSet(Url::class, $links, 2);
 
         $this->attribute = new Attribute\Attribute(
             $language,
-            (new RemoveDuplicatedUrls)($links)
+            (new RemoveDuplicatedUrls)($links),
         );
     }
 
@@ -32,8 +33,12 @@ final class Alternate implements Attribute
         return $this->attribute->name();
     }
 
+    /**
+     * @return Set<Url>
+     */
     public function content()
     {
+        /** @var Set<Url> */
         return $this->attribute->content();
     }
 
@@ -46,8 +51,8 @@ final class Alternate implements Attribute
         return new self(
             $this->name(),
             $this->content()->merge(
-                $alternate->content()
-            )
+                $alternate->content(),
+            ),
         );
     }
 }

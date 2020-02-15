@@ -13,20 +13,15 @@ use Innmind\Crawler\{
 use Innmind\Http\{
     Message\Request\Request,
     Message\Response,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
 use Innmind\HttpTransport\Transport;
-use Innmind\Filesystem\{
-    MediaType\NullMediaType,
-    MediaType\MediaType,
-    Stream\StringStream,
-};
+use Innmind\MediaType\MediaType;
 use Innmind\Stream\Readable;
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Set,
-    MapInterface,
     Map,
 };
 use PHPUnit\Framework\TestCase;
@@ -40,7 +35,7 @@ class CrawlerTest extends TestCase
             $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
-            $url = Url::fromString('http://example.com'),
+            $url = Url::of('http://example.com'),
             new Method('GET'),
             new ProtocolVersion(1, 1)
         );
@@ -68,10 +63,10 @@ class CrawlerTest extends TestCase
         $this->assertInstanceOf(CrawlerInterface::class, $crawl);
         $this->assertInstanceOf(HttpResource::class, $resource);
         $this->assertSame($url, $resource->url());
-        $this->assertInstanceOf(NullMediaType::class, $resource->mediaType());
+        $this->assertEquals(MediaType::null(), $resource->mediaType());
         $this->assertSame($content, $resource->content());
         $attributes = $resource->attributes();
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(Attribute::class, (string) $attributes->valueType());
         $this->assertCount(1, $attributes);
@@ -85,7 +80,7 @@ class CrawlerTest extends TestCase
             $parser = $this->createMock(Parser::class)
         );
         $request = new Request(
-            Url::fromString('http://example.com'),
+            Url::of('http://example.com'),
             new Method('GET'),
             new ProtocolVersion(1, 1)
         );
@@ -107,13 +102,15 @@ class CrawlerTest extends TestCase
                 Map::of('string', Attribute::class)
                     (
                         'content_type',
-                        new Attribute\Attribute('content_type', 'application/json', 24)
+                        new Attribute\Attribute(
+                            'content_type',
+                            $expected = MediaType::of('application/json')
+                        )
                     )
             );
 
         $resource = $crawl($request);
 
-        $this->assertInstanceOf(MediaType::class, $resource->mediaType());
-        $this->assertSame('application/json', (string) $resource->mediaType());
+        $this->assertSame($expected, $resource->mediaType());
     }
 }

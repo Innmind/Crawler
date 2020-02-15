@@ -9,7 +9,6 @@ use Innmind\Xml\{
     Element,
 };
 use Innmind\Immutable\{
-    SetInterface,
     Set,
     Str,
 };
@@ -19,7 +18,7 @@ use Innmind\Immutable\{
  */
 final class Role
 {
-    private $role;
+    private string $role;
 
     public function __construct(string $role)
     {
@@ -31,21 +30,24 @@ final class Role
     }
 
     /**
-     * @return SetInterface<Element>
+     * @return Set<Element>
      */
-    public function __invoke(Node $node): SetInterface
+    public function __invoke(Node $node): Set
     {
-        $set = new Set(Element::class);
+        /** @var Set<Element> */
+        $set = Set::of(Element::class);
 
         if ($this->check($node)) {
-            $set = $set->add($node);
+            /** @psalm-suppress ArgumentTypeCoercion */
+            $set = ($set)($node);
         }
 
+        /** @var Set<Element> */
         return $node->children()->reduce(
             $set,
-            function(SetInterface $set, int $position, Node $node): SetInterface {
+            function(Set $set, Node $node): Set {
                 return $set->merge(
-                    $this($node)
+                    $this($node),
                 );
             }
         );

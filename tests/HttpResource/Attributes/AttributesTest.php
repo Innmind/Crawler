@@ -34,40 +34,18 @@ class AttributesTest extends TestCase
 
         new Attributes(
             '',
-            new Map('string', Attribute::class)
+            Map::of('string', Attribute::class)
         );
     }
 
     public function testThrowWhenInvalidAttributeMap()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<string, Innmind\Crawler\HttpResource\Attribute>');
+        $this->expectExceptionMessage('Argument 2 must be of type Map<string, Innmind\Crawler\HttpResource\Attribute>');
 
         new Attributes(
             'foo',
-            new Map('int', 'int')
+            Map::of('int', 'int')
         );
-    }
-
-    public function testIterator()
-    {
-        $attributes = new Attributes(
-            'foo',
-            $content = Map::of('string', Attribute::class)
-                ('bar', new Attribute\Attribute('bar', 42))
-                ('baz', new Attribute\Attribute('baz', 'idk'))
-        );
-
-        $this->assertSame($content->get('bar'), $attributes->current());
-        $this->assertSame('bar', $attributes->key());
-        $this->assertTrue($attributes->valid());
-        $this->assertNull($attributes->next());
-        $this->assertSame($content->get('baz'), $attributes->current());
-        $this->assertSame('baz', $attributes->key());
-        $this->assertTrue($attributes->valid());
-        $attributes->next();
-        $this->assertFalse($attributes->valid());
-        $this->assertNull($attributes->rewind());
-        $this->assertSame('bar', $attributes->key());
     }
 }

@@ -14,7 +14,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\Link,
 };
@@ -22,12 +22,16 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
+use function Innmind\Immutable\first;
 
 final class CanonicalParser implements Parser
 {
-    private $read;
-    private $resolve;
+    private Reader $read;
+    private UrlResolver $resolve;
 
     public function __construct(Reader $read, UrlResolver $resolve)
     {
@@ -38,18 +42,22 @@ final class CanonicalParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Set<Link>
+         */
         $link = $links
             ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
@@ -62,16 +70,16 @@ final class CanonicalParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    $link->current()->href()
-                )
-            )
+                    first($link)->href(),
+                ),
+            ),
         );
     }
 

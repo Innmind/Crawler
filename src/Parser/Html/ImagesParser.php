@@ -18,7 +18,6 @@ use Innmind\Xml\{
 use Innmind\Html\{
     Visitor\Elements,
     Visitor\Element,
-    Visitor\Body,
     Exception\ElementNotFound,
     Element\Img,
 };
@@ -26,20 +25,16 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Pair,
 };
 
 final class ImagesParser implements Parser
 {
-    private $read;
-    private $resolve;
+    private Reader $read;
+    private UrlResolver $resolve;
 
     public function __construct(Reader $read, UrlResolver $resolve)
     {
@@ -50,42 +45,42 @@ final class ImagesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
-            $body = (new Body)($document);
+            $body = Element::body()($document);
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
         $images = $this
             ->images($body)
-            ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
+            ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
-                    $description
+                    $description,
                 );
             });
         $figures = $this
             ->figures($body)
-            ->map(function(UrlInterface $url, string $description) use ($request, $attributes): Pair {
+            ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
-                    $description
+                    $description,
                 );
             });
 
         $images = $this->removeDuplicates($images, $figures);
 
-        if ($images->size() === 0) {
+        if ($images->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $images)
+            new Attribute(self::key(), $images),
         );
     }
 
@@ -94,26 +89,35 @@ final class ImagesParser implements Parser
         return 'images';
     }
 
+    /**
+     * @return Map<Url, string>
+     */
     private function images(ElementInterface $body): Map
     {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Map<Url, string>
+         */
         return (new Elements('img'))($body)
             ->filter(static function(Node $img): bool {
                 return $img instanceof Img;
             })
-            ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $images, Img $img): MapInterface {
-                    return $images->put(
-                        $img->src(),
-                        $img->attributes()->contains('alt') ?
-                            $img->attributes()->get('alt')->value() : ''
-                    );
-                }
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(Img $img): \Generator {
+                    yield $img->src() => $img->attributes()->contains('alt') ?
+                        $img->attributes()->get('alt')->value() : '';
+                },
             );
     }
 
+    /**
+     * @return Map<Url, string>
+     */
     private function figures(ElementInterface $body): Map
     {
+        /** @var Map<Url, string> */
         return (new Elements('figure'))($body)
             ->filter(static function(Node $figure): bool {
                 try {
@@ -124,40 +128,38 @@ final class ImagesParser implements Parser
                     return false;
                 }
             })
-            ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $images, ElementInterface $figure): MapInterface {
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(ElementInterface $figure): \Generator {
+                    /** @var Img */
                     $img = (new Element('img'))($figure);
 
                     try {
                         $caption = (new Element('figcaption'))($figure);
 
-                        return $images->put(
-                            $img->src(),
-                            (new Text)($caption)
-                        );
+                        yield $img->src() => (new Text)($caption);
                     } catch (ElementNotFound $e) {
-                        return $images->put(
-                            $img->src(),
-                            $img->attributes()->contains('alt') ?
-                                $img->attributes()->get('alt')->value() : ''
-                        );
+                        yield $img->src() => $img->attributes()->contains('alt') ?
+                            $img->attributes()->get('alt')->value() : '';
                     }
-                }
+                },
             );
     }
 
-    private function removeDuplicates(MapInterface $images, MapInterface $figures): MapInterface
+    /**
+     * @param Map<Url, string> $images
+     * @param Map<Url, string> $figures
+     *
+     * @return Map<Url, string>
+     */
+    private function removeDuplicates(Map $images, Map $figures): Map
     {
-        $urls = $figures
-            ->keys()
-            ->merge($images->keys());
-        $urls = (new RemoveDuplicatedUrls)($urls);
+        $all = $figures->merge($images);
+        $urls = (new RemoveDuplicatedUrls)($all->keys());
 
-        return $figures
-            ->merge($images)
-            ->filter(static function(UrlInterface $url) use ($urls): bool {
-                return $urls->contains($url);
-            });
+        return $all->filter(static function(Url $url) use ($urls): bool {
+            return $urls->contains($url);
+        });
     }
 }

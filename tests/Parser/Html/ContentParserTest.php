@@ -13,15 +13,9 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
+use Innmind\MediaType\MediaType;
 use Innmind\Stream\Readable\Stream;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -56,13 +50,13 @@ class ContentParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -85,7 +79,7 @@ class ContentParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
@@ -100,7 +94,7 @@ class ContentParserTest extends TestCase
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,

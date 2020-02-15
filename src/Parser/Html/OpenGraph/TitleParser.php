@@ -13,12 +13,13 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\first;
 
 final class TitleParser implements Parser
 {
-    private $read;
-    private $extract;
+    private Reader $read;
+    private OpenGraph $extract;
 
     public function __construct(Reader $read)
     {
@@ -29,8 +30,8 @@ final class TitleParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         $values = ($this->extract)($document);
@@ -39,9 +40,9 @@ final class TitleParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $values->current())
+            new Attribute(self::key(), first($values)),
         );
     }
 

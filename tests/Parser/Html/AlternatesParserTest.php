@@ -12,25 +12,23 @@ use Innmind\Crawler\{
     UrlResolver,
 };
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Http\{
     Message\Request\Request,
     Message\Request as RequestInterface,
     Message\Response,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
-use Innmind\Filesystem\{
-    Stream\StringStream,
-    MediaType\MediaType,
-};
+use Innmind\Stream\Readable\Stream;
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\{
     Map,
     Set,
-    SetInterface
+};
+use function Innmind\Immutable\{
+    first,
+    unwrap,
 };
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
@@ -63,13 +61,13 @@ class AlternatesParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
         $expected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -89,14 +87,14 @@ class AlternatesParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(
-                new StringStream('<html><head><link rel="alternate" href="ios-app://294047850/lmfr/" /></head></html>')
+                Stream::ofContent('<html><head><link rel="alternate" href="ios-app://294047850/lmfr/" /></head></html>')
             );
         $expected = Map::of('string', Attribute::class)
             (
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
@@ -116,7 +114,7 @@ class AlternatesParserTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(
-                new StringStream(<<<HTML
+                Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -135,13 +133,13 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
 
         $attributes = ($this->parse)(
             new Request(
-                Url::fromString('http://example.com/foo/'),
+                Url::of('http://example.com/foo/'),
                 new Method('GET'),
                 new ProtocolVersion(1, 1)
             ),
@@ -157,33 +155,34 @@ HTML
         $this->assertTrue($content->contains('en'));
         $this->assertTrue($content->contains('fr'));
         $this->assertInstanceOf(
-            SetInterface::class,
+            Set::class,
             $content->get('en')->content()
         );
         $this->assertInstanceOf(
-            SetInterface::class,
+            Set::class,
             $content->get('fr')->content()
         );
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $content->get('en')->content()->type()
         );
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $content->get('fr')->content()->type()
         );
         $this->assertSame(
             'http://example.com/en/',
-            (string) $content->get('en')->content()->current()
+            first($content->get('en')->content())->toString()
         );
+        $content = unwrap($content->get('fr')->content());
         $this->assertSame(
             'http://example.com/fr/',
-            (string) $content->get('fr')->content()->current()
+            \current($content)->toString(),
         );
-        $content->get('fr')->content()->next();
+        \next($content);
         $this->assertSame(
             'http://example.com/fr/foo/',
-            (string) $content->get('fr')->content()->current()
+            \current($content)->toString(),
         );
     }
 }

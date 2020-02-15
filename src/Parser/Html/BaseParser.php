@@ -5,12 +5,11 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute,
+    HttpResource\Attribute,
 };
 use Innmind\Xml\Reader;
 use Innmind\Html\{
     Visitor\Element,
-    Visitor\Head,
     Exception\ElementNotFound,
     Element\Base,
 };
@@ -18,11 +17,12 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Url\Url;
+use Innmind\Immutable\Map;
 
 final class BaseParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {
@@ -32,13 +32,13 @@ final class BaseParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $base = (new Element('base'))(
-                (new Head)($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -48,14 +48,33 @@ final class BaseParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $base->href())
+            new Attribute\Attribute(self::key(), $base->href()),
         );
     }
 
     public static function key(): string
     {
         return 'base';
+    }
+
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
+    public static function find(Map $attributes, Url $default): Url
+    {
+        if (!$attributes->contains(self::key())) {
+            return $default;
+        }
+
+        /** @var mixed */
+        $base = $attributes->get(self::key())->content();
+
+        if (!$base instanceof Url) { // in case somebody overwrote the attribute
+            return $default;
+        }
+
+        return $base;
     }
 }

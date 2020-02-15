@@ -13,7 +13,7 @@ use Innmind\Xml\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element,
     Exception\ElementNotFound,
     Element\Link,
 };
@@ -21,11 +21,15 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
+use function Innmind\Immutable\first;
 
 final class AndroidParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {
@@ -35,33 +39,37 @@ final class AndroidParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Set<Link>
+         */
         $link = $links
             ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
             })
             ->filter(static function(Link $link): bool {
-                return (string) $link->href()->scheme() === 'android-app';
+                return $link->href()->scheme()->toString() === 'android-app';
             });
 
         if ($link->size() !== 1) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $link->current()->href())
+            new Attribute(self::key(), first($link)->href()),
         );
     }
 

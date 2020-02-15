@@ -9,25 +9,21 @@ use Innmind\Crawler\{
     Visitor\Html\OpenGraph,
 };
 use Innmind\Xml\Reader;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Url\Url;
 use Innmind\Http\Message\{
     Request,
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
     Set,
     Str,
 };
 
 final class ImageParser implements Parser
 {
-    private $read;
-    private $extract;
+    private Reader $read;
+    private OpenGraph $extract;
 
     public function __construct(Reader $read)
     {
@@ -38,28 +34,26 @@ final class ImageParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         $values = ($this->extract)($document)
             ->filter(static function(string $url): bool {
                 return !Str::of($url)->empty();
             })
-            ->reduce(
-                new Set(UrlInterface::class),
-                static function(SetInterface $urls, string $url): SetInterface {
-                    return $urls->add(Url::fromString($url));
-                }
+            ->mapTo(
+                Url::class,
+                static fn(string $url): Url => Url::of($url),
             );
 
         if ($values->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $values)
+            new Attribute(self::key(), $values),
         );
     }
 

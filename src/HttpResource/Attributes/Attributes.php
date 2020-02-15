@@ -9,20 +9,22 @@ use Innmind\Crawler\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
 };
 use function Innmind\Immutable\assertMap;
 
 final class Attributes implements AttributesInterface
 {
-    private $name;
-    private $content;
+    private string $name;
+    /** @var Map<string, Attribute> */
+    private Map $content;
 
-    public function __construct(
-        string $name,
-        MapInterface $attributes
-    ) {
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
+    public function __construct(string $name, Map $attributes)
+    {
         if (Str::of($name)->empty()) {
             throw new DomainException;
         }
@@ -38,33 +40,11 @@ final class Attributes implements AttributesInterface
         return $this->name;
     }
 
-    public function content(): MapInterface
+    /**
+     * @return Map<string, Attribute>
+     */
+    public function content(): Map
     {
         return $this->content;
-    }
-
-    public function current()
-    {
-        return $this->content->current();
-    }
-
-    public function key()
-    {
-        return $this->content->key();
-    }
-
-    public function next()
-    {
-        $this->content->next();
-    }
-
-    public function rewind()
-    {
-        $this->content->rewind();
-    }
-
-    public function valid()
-    {
-        return $this->content->valid();
     }
 }

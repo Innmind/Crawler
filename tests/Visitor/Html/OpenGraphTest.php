@@ -5,8 +5,11 @@ namespace Tests\Innmind\Crawler\Visitor\Html;
 
 use Innmind\Crawler\Visitor\Html\OpenGraph;
 use Innmind\Xml\Node;
-use Innmind\Filesystem\Stream\StringStream;
-use Innmind\Immutable\Set;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Immutable\{
+    Set,
+    Sequence,
+};
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -14,14 +17,20 @@ class OpenGraphTest extends TestCase
 {
     public function testReturnEmptySetWhenHeadNotFound()
     {
-        $values = (new OpenGraph('image'))($this->createMock(Node::class));
+        $node = $this->createMock(Node::class);
+        $node
+            ->expects($this->any())
+            ->method('children')
+            ->willReturn(Sequence::of(Node::class));
+
+        $values = (new OpenGraph('image'))($node);
 
         $this->assertTrue($values->equals(Set::of('string')));
     }
 
     public function testReturnEmptySetWhenNoPropertyFound()
     {
-        $html = new StringStream(<<<HTML
+        $html = Stream::ofContent(<<<HTML
 <html>
 <head>
     <meta property="og:title" content="The Rock" />
@@ -40,7 +49,7 @@ HTML
 
     public function testReturnValuesSet()
     {
-        $html = new StringStream(<<<HTML
+        $html = Stream::ofContent(<<<HTML
 <html>
 <head>
     <meta property="og:title" content="The Rock" />

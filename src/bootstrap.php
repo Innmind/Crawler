@@ -4,48 +4,49 @@ declare(strict_types = 1);
 namespace Innmind\Crawler;
 
 use Innmind\HttpTransport\Transport;
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Xml\Reader;
-use Innmind\UrlResolver\ResolverInterface;
+use Innmind\UrlResolver\Resolver;
 
 function bootstrap(
     Transport $transport,
-    TimeContinuumInterface $clock,
+    Clock $clock,
     Reader $reader,
-    ResolverInterface $resolver
+    Resolver $resolver
 ): Crawler {
+    $resolver = new UrlResolver($resolver);
     $parser = new Parser\SequenceParser(
         new Parser\Http\ContentTypeParser,
         new Parser\Http\CacheParser($clock),
         new Parser\HtmlParser(
-            new Parser\Html\BaseParser($reader)
+            new Parser\Html\BaseParser($reader),
         ),
         new Parser\AlternatesParser(
-            new Parser\Http\AlternatesParser($resolver = new UrlResolver($resolver)),
+            new Parser\Http\AlternatesParser($resolver),
             new Parser\HtmlParser(
-                new Parser\Html\AlternatesParser($reader, $resolver)
-            )
+                new Parser\Html\AlternatesParser($reader, $resolver),
+            ),
         ),
         new Parser\ConditionalParser(
             new Parser\HtmlParser(
                 new Parser\ConditionalParser(
                     new Parser\Html\OpenGraph\UrlParser($reader),
-                    new Parser\Html\CanonicalParser($reader, $resolver)
-                )
+                    new Parser\Html\CanonicalParser($reader, $resolver),
+                ),
             ),
-            new Parser\Http\CanonicalParser($resolver)
+            new Parser\Http\CanonicalParser($resolver),
         ),
         new Parser\ConditionalParser(
             new Parser\HtmlParser(
-                new Parser\Html\CharsetParser($reader)
+                new Parser\Html\CharsetParser($reader),
             ),
-            new Parser\Http\CharsetParser
+            new Parser\Http\CharsetParser,
         ),
         new Parser\ConditionalParser(
             new Parser\HtmlParser(
-                new Parser\Html\LanguagesParser($reader)
+                new Parser\Html\LanguagesParser($reader),
             ),
-            new Parser\Http\LanguagesParser
+            new Parser\Http\LanguagesParser,
         ),
         new Parser\HtmlParser(
             new Parser\SequenceParser(
@@ -63,15 +64,15 @@ function bootstrap(
                 new Parser\Html\JournalParser($reader),
                 new Parser\Html\LinksParser($reader, $resolver),
                 new Parser\Html\RssParser($reader, $resolver),
-                new Parser\Html\ThemeColorParser($reader)
-            )
+                new Parser\Html\ThemeColorParser($reader),
+            ),
         ),
         new Parser\ImageParser(
             new Parser\SequenceParser(
                 new Parser\Image\DimensionParser,
-                new Parser\Image\WeightParser
-            )
-        )
+                new Parser\Image\WeightParser,
+            ),
+        ),
     );
 
     return new Crawler\Crawler($transport, $parser);

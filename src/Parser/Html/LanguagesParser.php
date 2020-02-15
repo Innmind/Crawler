@@ -15,7 +15,6 @@ use Innmind\Xml\{
 use Innmind\Html\{
     Visitor\Element,
     Visitor\Elements,
-    Visitor\Head,
     Exception\ElementNotFound,
 };
 use Innmind\Http\Message\{
@@ -23,14 +22,15 @@ use Innmind\Http\Message\{
     Response,
 };
 use Innmind\Immutable\{
-    MapInterface,
+    Map,
     Str,
     Set,
 };
+use function Innmind\Immutable\first;
 
 final class LanguagesParser implements Parser
 {
-    private $read;
+    private Reader $read;
 
     public function __construct(Reader $read)
     {
@@ -40,8 +40,8 @@ final class LanguagesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $languages = null;
 
         $document = ($this->read)($response->body());
@@ -59,7 +59,7 @@ final class LanguagesParser implements Parser
         if (!$languages instanceof AttributeInterface) {
             try {
                 $metas = (new Elements('meta'))(
-                    (new Head)($document)
+                    Element::head()($document)
                 )
                     ->filter(static function(ElementInterface $element): bool {
                         return $element->attributes()->contains('http-equiv') &&
@@ -67,14 +67,13 @@ final class LanguagesParser implements Parser
                     })
                     ->filter(static function(ElementInterface $meta): bool {
                         $header = $meta->attributes()->get('http-equiv')->value();
-                        $header = new Str($header);
+                        $header = Str::of($header);
 
-                        return (string) $header->toLower() === 'content-language';
+                        return $header->toLower()->toString() === 'content-language';
                     });
 
                 if ($metas->size() === 1) {
-                    $languages = $metas
-                        ->current()
+                    $languages = first($metas)
                         ->attributes()
                         ->get('content');
                 }
@@ -89,13 +88,13 @@ final class LanguagesParser implements Parser
 
         $languages = $this->parseAttribute($languages);
 
-        if ($languages->size() === 0) {
+        if ($languages->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $languages)
+            new Attribute(self::key(), $languages),
         );
     }
 
@@ -106,14 +105,14 @@ final class LanguagesParser implements Parser
 
     private function parseAttribute(AttributeInterface $languages): Set
     {
-        $set = new Set('string');
-        $languages = explode(',', $languages->value());
+        $set = Set::strings();
+        $languages = \explode(',', $languages->value());
 
         foreach ($languages as $language) {
             $language = Str::of($language)->trim();
 
             if ($language->matches('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
-                $set = $set->add((string) $language);
+                $set = ($set)($language->toString());
             }
         }
 

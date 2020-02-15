@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Specification;
 
 use Innmind\Crawler\Specification\Html;
-use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\MediaType\MediaType;
 use PHPUnit\Framework\TestCase;
 
 class HtmlTest extends TestCase
@@ -18,7 +18,7 @@ class HtmlTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $spec->isSatisfiedBy(MediaType::fromString($type))
+            $spec(MediaType::of($type))
         );
     }
 

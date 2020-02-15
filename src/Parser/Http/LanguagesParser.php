@@ -14,8 +14,7 @@ use Innmind\Http\{
     Header\ContentLanguageValue,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
     Set,
 };
 
@@ -24,16 +23,17 @@ final class LanguagesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (
-            !$response->headers()->has('Content-Language') ||
+            !$response->headers()->contains('Content-Language') ||
             !$response->headers()->get('Content-Language') instanceof ContentLanguage
         ) {
             return $attributes;
         }
 
-        return $attributes->put(
+        /** @psalm-suppress ArgumentTypeCoercion */
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
@@ -41,13 +41,11 @@ final class LanguagesParser implements Parser
                     ->headers()
                     ->get('Content-Language')
                     ->values()
-                    ->reduce(
-                        new Set('string'),
-                        static function(SetInterface $carry, ContentLanguageValue $language): SetInterface {
-                            return $carry->add((string) $language);
-                        }
-                    )
-            )
+                    ->mapTo(
+                        'string',
+                        static fn(ContentLanguageValue $language): string => $language->toString(),
+                    ),
+            ),
         );
     }
 

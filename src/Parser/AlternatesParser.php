@@ -7,17 +7,19 @@ use Innmind\Crawler\{
     Parser,
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Html\AlternatesParser as HtmlParser,
+    HttpResource\Attribute,
+    HttpResource\Alternates,
 };
-use Innmind\http\Message\{
+use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class AlternatesParser implements Parser
 {
-    private $http;
-    private $html;
+    private Parser $http;
+    private Parser $html;
 
     public function __construct(Parser $http, Parser $html)
     {
@@ -28,11 +30,11 @@ final class AlternatesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         return $this->merge(
             ($this->http)($request, $response, $attributes),
-            ($this->html)($request, $response, $attributes)
+            ($this->html)($request, $response, $attributes),
         );
     }
 
@@ -41,7 +43,13 @@ final class AlternatesParser implements Parser
         return 'alternates';
     }
 
-    private function merge(MapInterface $http, MapInterface $html): MapInterface
+    /**
+     * @param Map<string, Attribute> $http
+     * @param Map<string, Attribute> $html
+     *
+     * @return Map<string, Attribute>
+     */
+    private function merge(Map $http, Map $html): Map
     {
         if (!$http->contains(HttpParser::key())) {
             return $html;
@@ -51,13 +59,14 @@ final class AlternatesParser implements Parser
             return $http;
         }
 
-        return $http->put(
+        /** @var Alternates */
+        $httpAlternates = $http->get(HttpParser::key());
+        /** @var Alternates */
+        $htmlAlternates = $html->get(HtmlParser::key());
+
+        return ($http)(
             self::key(),
-            $http
-                ->get(HttpParser::key())
-                ->merge(
-                    $html->get(HtmlParser::key())
-                )
+            $httpAlternates->merge($htmlAlternates),
         );
     }
 }

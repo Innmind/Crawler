@@ -8,14 +8,9 @@ use Innmind\Crawler\{
     HttpResource\Attribute,
     Exception\CantMergeDifferentLanguages,
 };
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
-use Innmind\Immutable\{
-    SetInterface,
-    Set,
-};
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class AlternateTest extends TestCase
@@ -26,13 +21,13 @@ class AlternateTest extends TestCase
             Attribute::class,
             $alternate = new Alternate(
                 'fr',
-                new Set(UrlInterface::class)
+                Set::of(Url::class)
             )
         );
         $this->assertSame('fr', $alternate->name());
-        $this->assertInstanceOf(SetInterface::class, $alternate->content());
+        $this->assertInstanceOf(Set::class, $alternate->content());
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $alternate->content()->type()
         );
     }
@@ -40,17 +35,17 @@ class AlternateTest extends TestCase
     public function testThrowWhenInvalidLinks()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<Innmind\Url\UrlInterface>');
+        $this->expectExceptionMessage('Argument 2 must be of type Set<Innmind\Url\Url>');
 
-        new Alternate('fr', new Set('int'));
+        new Alternate('fr', Set::of('int'));
     }
 
     public function testThrowWhenMergingDifferentLanguages()
     {
         $this->expectException(CantMergeDifferentLanguages::class);
 
-        (new Alternate('fr', new Set(UrlInterface::class)))->merge(
-            new Alternate('en', new Set(UrlInterface::class))
+        (new Alternate('fr', Set::of(Url::class)))->merge(
+            new Alternate('en', Set::of(Url::class))
         );
     }
 
@@ -58,11 +53,11 @@ class AlternateTest extends TestCase
     {
         $first = new Alternate(
             'fr',
-            Set::of(UrlInterface::class, $foo = Url::fromString('/foo'))
+            Set::of(Url::class, $foo = Url::of('/foo'))
         );
         $second = new Alternate(
             'fr',
-            Set::of(UrlInterface::class, $bar = Url::fromString('/bar'))
+            Set::of(Url::class, $bar = Url::of('/bar'))
         );
 
         $third = $first->merge($second);
@@ -71,6 +66,6 @@ class AlternateTest extends TestCase
         $this->assertNotSame($first, $third);
         $this->assertNotSame($second, $third);
         $this->assertSame('fr', $third->name());
-        $this->assertSame([$foo, $bar], $third->content()->toPrimitive());
+        $this->assertSame([$foo, $bar], unwrap($third->content()));
     }
 }

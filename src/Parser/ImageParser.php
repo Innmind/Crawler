@@ -12,12 +12,13 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\MediaType\MediaType;
+use Innmind\Immutable\Map;
 
 final class ImageParser implements Parser
 {
-    private $parse;
-    private $image;
+    private Parser $parse;
+    private Image $image;
 
     public function __construct(Parser $parse)
     {
@@ -28,15 +29,16 @@ final class ImageParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         if (!$attributes->contains(ContentTypeParser::key())) {
             return $attributes;
         }
 
+        /** @var MediaType */
         $type = $attributes->get(ContentTypeParser::key())->content();
 
-        if (!$this->image->isSatisfiedBy($type)) {
+        if (!($this->image)($type)) {
             return $attributes;
         }
 

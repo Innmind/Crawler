@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Crawler\Specification;
 
 use Innmind\Crawler\Specification\Image;
-use Innmind\Filesystem\MediaType\MediaType;
+use Innmind\MediaType\MediaType;
 use PHPUnit\Framework\TestCase;
 
 class ImageTest extends TestCase
@@ -18,7 +18,7 @@ class ImageTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $spec->isSatisfiedBy(MediaType::fromString($type))
+            $spec(MediaType::of($type))
         );
     }
 

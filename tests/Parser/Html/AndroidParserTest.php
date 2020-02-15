@@ -13,15 +13,10 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
+use Innmind\Immutable\Map;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -56,13 +51,13 @@ class AndroidParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -82,13 +77,13 @@ class AndroidParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -116,13 +111,13 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -140,7 +135,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -150,10 +145,10 @@ HTML
         $this->assertTrue($attributes->contains('android'));
         $android = $attributes->get('android');
         $this->assertSame('android', $android->name());
-        $this->assertInstanceOf(UrlInterface::class, $android->content());
+        $this->assertInstanceOf(Url::class, $android->content());
         $this->assertSame(
             'android-app://some/path',
-            (string) $android->content()
+            $android->content()->toString(),
         );
     }
 }

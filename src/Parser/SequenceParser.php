@@ -8,11 +8,12 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class SequenceParser implements Parser
 {
-    private $parsers;
+    /** @var list<Parser> */
+    private array $parsers;
 
     public function __construct(Parser ...$parsers)
     {
@@ -22,13 +23,13 @@ final class SequenceParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         foreach ($this->parsers as $parse) {
             $attributes = $parse(
                 $request,
                 $response,
-                $attributes
+                $attributes,
             );
         }
 

@@ -14,20 +14,12 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Filesystem\{
-    MediaType\MediaType,
-    Stream\StringStream,
-};
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\MediaType\MediaType;
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
 use Innmind\UrlResolver\UrlResolver as BaseResolver;
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-    SetInterface,
-};
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\unwrap;
 use function Innmind\Html\bootstrap as html;
 use PHPUnit\Framework\TestCase;
 
@@ -65,13 +57,13 @@ class ImagesParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('<html></html>'));
+            ->willReturn(Stream::ofContent('<html></html>'));
 
         $attributes = ($this->parse)(
             $request,
@@ -91,13 +83,13 @@ class ImagesParserTest extends TestCase
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <body>
@@ -124,17 +116,17 @@ HTML
                 ContentTypeParser::key(),
                 new Attribute\Attribute(
                     ContentTypeParser::key(),
-                    MediaType::fromString('text/html')
+                    MediaType::of('text/html')
                 )
             );
         $request
             ->expects($this->exactly(6))
             ->method('url')
-            ->willReturn(Url::fromString('http://github.com'));
+            ->willReturn(Url::of('http://github.com'));
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream(<<<HTML
+            ->willReturn(Stream::ofContent(<<<HTML
 <!DOCTYPE html>
 <html>
 <body>
@@ -161,7 +153,7 @@ HTML
         );
 
         $this->assertNotSame($notExpected, $attributes);
-        $this->assertInstanceOf(MapInterface::class, $attributes);
+        $this->assertInstanceOf(Map::class, $attributes);
         $this->assertSame('string', (string) $attributes->keyType());
         $this->assertSame(
             Attribute::class,
@@ -171,21 +163,22 @@ HTML
         $this->assertTrue($attributes->contains('images'));
         $images = $attributes->get('images');
         $this->assertSame('images', $images->name());
-        $this->assertInstanceOf(MapInterface::class, $images->content());
+        $this->assertInstanceOf(Map::class, $images->content());
         $this->assertSame(
-            UrlInterface::class,
+            Url::class,
             (string) $images->content()->keyType()
         );
         $this->assertSame('string', (string) $images->content()->valueType());
         $map = $images->content();
         $this->assertCount(3, $map);
-        $this->assertSame('http://github.com/foo.png', (string) $map->key());
-        $this->assertSame('bar', $map->current());
-        $map->next();
-        $this->assertSame('http://github.com/bar.png', (string) $map->key());
-        $this->assertSame('baz', $map->current());
-        $map->next();
-        $this->assertSame('http://github.com/baz.png', (string) $map->key());
-        $this->assertSame('foobar', $map->current());
+        $urls = unwrap($map->keys());
+        $this->assertSame('http://github.com/foo.png', \current($urls)->toString());
+        $this->assertSame('bar', $map->get(\current($urls)));
+        \next($urls);
+        $this->assertSame('http://github.com/bar.png', \current($urls)->toString());
+        $this->assertSame('baz', $map->get(\current($urls)));
+        \next($urls);
+        $this->assertSame('http://github.com/baz.png', \current($urls)->toString());
+        $this->assertSame('foobar', $map->get(\current($urls)));
     }
 }

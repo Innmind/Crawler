@@ -12,7 +12,7 @@ use Innmind\Crawler\{
 };
 use Innmind\Html\{
     Visitor\Elements,
-    Visitor\Head,
+    Visitor\Element,
     Element\Link,
     Exception\ElementNotFound,
 };
@@ -24,19 +24,17 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SequenceInterface,
     Pair,
     Set,
 };
 
 final class AlternatesParser implements Parser
 {
-    private $read;
-    private $resolve;
+    private Reader $read;
+    private UrlResolver $resolve;
 
     public function __construct(
         Reader $read,
@@ -49,18 +47,22 @@ final class AlternatesParser implements Parser
     public function __invoke(
         Request $request,
         Response $response,
-        MapInterface $attributes
-    ): MapInterface {
+        Map $attributes
+    ): Map {
         $document = ($this->read)($response->body());
 
         try {
             $links = (new Elements('link'))(
-                (new Head)($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Set<Link>
+         */
         $links = $links
             ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
@@ -70,50 +72,47 @@ final class AlternatesParser implements Parser
                     $link->attributes()->contains('hreflang');
             });
 
-        if ($links->size() === 0) {
+        if ($links->empty()) {
             return $attributes;
         }
 
+        /** @var Map<string, Attribute> */
         $alternates = $links
-            ->reduce(
-                new Map(UrlInterface::class, 'string'),
-                static function(MapInterface $links, Link $link): MapInterface {
-                    return $links->put(
-                        $link->href(),
-                        $link->attributes()->get('hreflang')->value()
-                    );
-                }
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(Link $link): \Generator {
+                    yield $link->href() => $link->attributes()->get('hreflang')->value();
+                },
             )
-            ->groupBy(static function(UrlInterface $url, string $language) {
+            ->map(function(Url $link, string $language) use ($request, $attributes): Pair {
+                $link = ($this->resolve)(
+                    $request,
+                    $attributes,
+                    $link,
+                );
+
+                return new Pair($link, $language);
+            })
+            ->groupBy(static function(Url $url, string $language) {
                 return $language;
             })
-            ->map(function(string $language, MapInterface $links) use ($request, $attributes): MapInterface {
-                return $links->map(function(UrlInterface $link, string $language) use ($request, $attributes): Pair {
-                    $link = ($this->resolve)(
-                        $request,
-                        $attributes,
-                        $link
-                    );
+            ->toMapOf(
+                'string',
+                Attribute::class,
+                static function(string $language, Map $links): \Generator {
+                    /** @var Map<Url, string> $links */
 
-                    return new Pair($link, $language);
-                });
-            })
-            ->reduce(
-                new Map('string', Attribute::class),
-                static function(MapInterface $languages, string $language, MapInterface $links): MapInterface {
-                    return $languages->put(
+                    yield $language => new Alternate(
                         $language,
-                        new Alternate(
-                            $language,
-                            $links->keys()
-                        )
+                        $links->keys(),
                     );
-                }
+                },
             );
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Alternates($alternates)
+            new Alternates($alternates),
         );
     }
 
