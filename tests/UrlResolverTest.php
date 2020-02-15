@@ -61,4 +61,31 @@ class UrlResolverTest extends TestCase
         $this->assertInstanceOf(Url::class, $url);
         $this->assertSame('http://sub.github.com/foo', $url->toString());
     }
+
+    public function testResolveBaseFromRequestedUrlInCaseBaseIsRelativeToIt()
+    {
+        $resolve = new UrlResolver(new BaseResolver);
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('url')
+            ->willReturn(Url::of('http://github.com/Innmind/'));
+
+        $url = $resolve(
+            $request,
+            Map::of('string', Attribute::class)
+                (
+                    BaseParser::key(),
+                    new Attribute\Attribute(
+                        BaseParser::key(),
+                        Url::of('/SomeRepo/'),
+                        0
+                    )
+                ),
+            Url::of('foo')
+        );
+
+        $this->assertInstanceOf(Url::class, $url);
+        $this->assertSame('http://github.com/SomeRepo/foo', $url->toString());
+    }
 }

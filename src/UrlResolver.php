@@ -29,7 +29,10 @@ final class UrlResolver
         $base = $request->url();
 
         if ($attributes->contains(BaseParser::key())) {
-            $base = $attributes->get(BaseParser::key())->content();
+            $base = ($this->resolve)(
+                $base,
+                $attributes->get(BaseParser::key())->content(),
+            );
         }
 
         return ($this->resolve)($base, $target);
