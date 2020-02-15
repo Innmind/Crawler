@@ -26,11 +26,19 @@ final class RemoveComments
             $node,
             function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
                 if ($child instanceof Comment) {
+                    /**
+                     * @psalm-suppress MixedArgument
+                     * @psalm-suppress MixedOperand
+                     */
                     return $node->removeChild(
                         $position - $removedChildren++
                     );
                 }
 
+                /**
+                 * @psalm-suppress MixedArgument
+                 * @psalm-suppress MixedOperand
+                 */
                 return $node->replaceChild(
                     $position - $removedChildren,
                     $this($child)

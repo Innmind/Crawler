@@ -7,8 +7,10 @@ use Innmind\Crawler\{
     Parser,
     Parser\Http\AlternatesParser as HttpParser,
     Parser\Html\AlternatesParser as HtmlParser,
+    HttpResource\Attribute,
+    HttpResource\Alternates,
 };
-use Innmind\http\Message\{
+use Innmind\Http\Message\{
     Request,
     Response,
 };
@@ -41,6 +43,12 @@ final class AlternatesParser implements Parser
         return 'alternates';
     }
 
+    /**
+     * @param Map<string, Attribute> $http
+     * @param Map<string, Attribute> $html
+     *
+     * @return Map<string, Attribute>
+     */
     private function merge(Map $http, Map $html): Map
     {
         if (!$http->contains(HttpParser::key())) {
@@ -51,13 +59,14 @@ final class AlternatesParser implements Parser
             return $http;
         }
 
+        /** @var Alternates */
+        $httpAlternates = $http->get(HttpParser::key());
+        /** @var Alternates */
+        $htmlAlternates = $html->get(HtmlParser::key());
+
         return $http->put(
             self::key(),
-            $http
-                ->get(HttpParser::key())
-                ->merge(
-                    $html->get(HtmlParser::key())
-                )
+            $httpAlternates->merge($htmlAlternates),
         );
     }
 }

@@ -12,6 +12,7 @@ use Innmind\Immutable\Map;
 
 final class SequenceParser implements Parser
 {
+    /** @var list<Parser> */
     private array $parsers;
 
     public function __construct(Parser ...$parsers)

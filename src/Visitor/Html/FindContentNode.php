@@ -40,6 +40,7 @@ final class FindContentNode
             }
         }
 
+        /** @var Map<int, Node> */
         $nodes = $nodes->reduce(
             Map::of('int', Node::class),
             static function(Map $children, Node $child): Map {
@@ -47,6 +48,7 @@ final class FindContentNode
             },
         );
 
+        /** @var array<int, int> */
         $dispersion = $nodes->reduce(
             [],
             static function(array $dispersion, int $position, Node $node): array {

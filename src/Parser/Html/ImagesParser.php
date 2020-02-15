@@ -89,26 +89,35 @@ final class ImagesParser implements Parser
         return 'images';
     }
 
+    /**
+     * @return Map<Url, string>
+     */
     private function images(ElementInterface $body): Map
     {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Map<Url, string>
+         */
         return (new Elements('img'))($body)
             ->filter(static function(Node $img): bool {
                 return $img instanceof Img;
             })
-            ->reduce(
-                Map::of(Url::class, 'string'),
-                static function(Map $images, Img $img): Map {
-                    return $images->put(
-                        $img->src(),
-                        $img->attributes()->contains('alt') ?
-                            $img->attributes()->get('alt')->value() : ''
-                    );
-                }
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(Img $img): \Generator {
+                    yield $img->src() => $img->attributes()->contains('alt') ?
+                        $img->attributes()->get('alt')->value() : '';
+                },
             );
     }
 
+    /**
+     * @return Map<Url, string>
+     */
     private function figures(ElementInterface $body): Map
     {
+        /** @var Map<Url, string> */
         return (new Elements('figure'))($body)
             ->filter(static function(Node $figure): bool {
                 try {
@@ -122,6 +131,7 @@ final class ImagesParser implements Parser
             ->reduce(
                 Map::of(Url::class, 'string'),
                 static function(Map $images, ElementInterface $figure): Map {
+                    /** @var Img */
                     $img = (new Element('img'))($figure);
 
                     try {
@@ -142,6 +152,12 @@ final class ImagesParser implements Parser
             );
     }
 
+    /**
+     * @param Map<Url, string> $images
+     * @param Map<Url, string> $figures
+     *
+     * @return Map<Url, string>
+     */
     private function removeDuplicates(Map $images, Map $figures): Map
     {
         $urls = $figures

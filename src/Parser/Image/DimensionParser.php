@@ -21,15 +21,19 @@ final class DimensionParser implements Parser
         Response $response,
         Map $attributes
     ): Map {
+        /** @var array{0: int, 1: int} */
         $infos = \getimagesizefromstring(
             $response->body()->toString(),
         );
+
+        /** @var Map<string, Attribute> */
+        $content = Map::of('string', Attribute::class);
 
         return $attributes->put(
             self::key(),
             new Attributes(
                 self::key(),
-                Map::of('string', Attribute::class)
+                $content
                     ('width', new Attribute\Attribute('width', $infos[0]))
                     ('height', new Attribute\Attribute('height', $infos[1]))
             )

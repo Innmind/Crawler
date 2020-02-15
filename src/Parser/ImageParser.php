@@ -12,6 +12,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 
 final class ImageParser implements Parser
@@ -34,6 +35,7 @@ final class ImageParser implements Parser
             return $attributes;
         }
 
+        /** @var MediaType */
         $type = $attributes->get(ContentTypeParser::key())->content();
 
         if (!$this->image->isSatisfiedBy($type)) {

@@ -43,6 +43,7 @@ final class AlternatesParser implements Parser
             return $attributes;
         }
 
+        /** @psalm-suppress ArgumentTypeCoercion we verify above we do have a Link */
         $links = $response
             ->headers()
             ->get('Link')
@@ -68,6 +69,7 @@ final class AlternatesParser implements Parser
             return $attributes;
         }
 
+        /** @var Map<string, Attribute> */
         $alternates = $links
             ->groupBy(static function(Url $url, string $language): string {
                 return $language;
@@ -86,6 +88,8 @@ final class AlternatesParser implements Parser
             ->reduce(
                 Map::of('string', Attribute::class),
                 static function(Map $languages, string $language, Map $links): Map {
+                    /** @var Map<Url, string> $links */
+
                     return $languages->put(
                         $language,
                         new Alternate(

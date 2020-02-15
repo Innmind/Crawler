@@ -12,8 +12,12 @@ use Innmind\Immutable\Str;
 final class Attribute implements AttributeInterface
 {
     private string $name;
+    /** @var mixed */
     private $content;
 
+    /**
+     * @param mixed $content
+     */
     public function __construct(string $name, $content)
     {
         if (Str::of($name)->empty()) {

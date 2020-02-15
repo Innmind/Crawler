@@ -51,6 +51,9 @@ final class AnchorsParser implements Parser
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         */
         $anchors = $anchors
             ->filter(static function(Node $node): bool {
                 return $node instanceof A;
@@ -59,7 +62,7 @@ final class AnchorsParser implements Parser
                 return Str::of($anchor->href()->toString())->matches('~^#~');
             })
             ->reduce(
-                Set::of('string'),
+                Set::strings(),
                 static function(Set $anchors, A $anchor): Set {
                     return $anchors->add(
                         Str::of($anchor->href()->toString())->substring(1)->toString(),

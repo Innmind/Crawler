@@ -14,7 +14,10 @@ use Innmind\Http\{
     Header\Link,
     Header\LinkValue,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
 use function Innmind\Immutable\first;
 
 final class CanonicalParser implements Parser
@@ -38,6 +41,10 @@ final class CanonicalParser implements Parser
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion We verify above we do have a link
+         * @var Set<LinkValue>
+         */
         $links = $response
             ->headers()
             ->get('Link')

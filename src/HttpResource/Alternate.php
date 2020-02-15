@@ -15,10 +15,11 @@ final class Alternate implements Attribute
 {
     private Attribute $attribute;
 
-    public function __construct(
-        string $language,
-        Set $links
-    ) {
+    /**
+     * @param Set<Url> $links
+     */
+    public function __construct(string $language, Set $links)
+    {
         assertSet(Url::class, $links, 2);
 
         $this->attribute = new Attribute\Attribute(
@@ -32,8 +33,12 @@ final class Alternate implements Attribute
         return $this->attribute->name();
     }
 
+    /**
+     * @return Set<Url>
+     */
     public function content()
     {
+        /** @var Set<Url> */
         return $this->attribute->content();
     }
 

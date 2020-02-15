@@ -17,7 +17,10 @@ use Innmind\TimeContinuum\{
     Clock,
     Earth\Period\Second,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
 use function Innmind\Immutable\first;
 
 final class CacheParser implements Parser
@@ -38,6 +41,7 @@ final class CacheParser implements Parser
             return $attributes;
         }
 
+        /** @var Set<SharedMaxAge> */
         $directives = $response
             ->headers()
             ->get('Cache-Control')

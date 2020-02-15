@@ -39,11 +39,19 @@ final class RemoveElements
                     $child instanceof Element &&
                     $this->toRemove->contains($child->name())
                 ) {
+                    /**
+                     * @psalm-suppress MixedArgument
+                     * @psalm-suppress MixedOperand
+                     */
                     return $node->removeChild(
                         $position - $removedChildren++
                     );
                 }
 
+                /**
+                 * @psalm-suppress MixedArgument
+                 * @psalm-suppress MixedOperand
+                 */
                 return $node->replaceChild(
                     $position - $removedChildren,
                     $this($child)

@@ -77,11 +77,11 @@ final class ContentParser implements Parser
             }
 
             if ($elements->size() === 1) {
-                $node = $elements->current();
+                $node = first($elements);
             } else {
-                $node = (new FindContentNode)(
-                    Sequence::of(Node::class, $body)
-                );
+                /** @var Sequence<Node> */
+                $nodes = Sequence::of(Node::class, $body);
+                $node = (new FindContentNode)($nodes);
             }
         }
 

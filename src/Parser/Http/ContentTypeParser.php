@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Parser\Http;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute,
+    HttpResource\Attribute,
 };
 use Innmind\Http\{
     Message\Request,
@@ -34,7 +34,7 @@ final class ContentTypeParser implements Parser
 
         return $attributes->put(
             self::key(),
-            new Attribute(
+            new Attribute\Attribute(
                 self::key(),
                 MediaType::of($contentType->toString()),
             )
@@ -44,5 +44,24 @@ final class ContentTypeParser implements Parser
     public static function key(): string
     {
         return 'content_type';
+    }
+
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
+    public static function find(Map $attributes): MediaType
+    {
+        if (!$attributes->contains(self::key())) {
+            return MediaType::null();
+        }
+
+        /** @var mixed */
+        $content = $attributes->get(self::key())->content();
+
+        if (!$content instanceof MediaType) { // in case the attribute has been overwrote
+            return MediaType::null();
+        }
+
+        return $content;
     }
 }

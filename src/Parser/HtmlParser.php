@@ -12,6 +12,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
+use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 
 final class HtmlParser implements Parser
@@ -34,6 +35,7 @@ final class HtmlParser implements Parser
             return $attributes;
         }
 
+        /** @var MediaType */
         $type = $attributes->get(ContentTypeParser::key())->content();
 
         if (!$this->html->isSatisfiedBy($type)) {

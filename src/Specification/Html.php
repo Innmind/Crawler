@@ -8,7 +8,8 @@ use Innmind\Immutable\Set;
 
 final class Html
 {
-    private static Set $allowed;
+    /** @var Set<string> */
+    private static ?Set $allowed = null;
 
     public function isSatisfiedBy(MediaType $type): bool
     {
@@ -23,11 +24,12 @@ final class Html
 
     /**
      * @see https://www.w3.org/2003/01/xhtml-mimetype/
+     *
+     * @return Set<string>
      */
     private static function allowed(): Set
     {
-        return self::$allowed ?? self::$allowed = Set::of(
-            'string',
+        return self::$allowed ??= Set::strings(
             'text/html',
             'text/xml',
             'application/xml',

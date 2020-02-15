@@ -22,7 +22,10 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
 use function Innmind\Immutable\first;
 
 final class RssParser implements Parser
@@ -44,6 +47,10 @@ final class RssParser implements Parser
         $document = ($this->read)($response->body());
 
         try {
+            /**
+             * @psalm-suppress ArgumentTypeCoercion
+             * @var Set<Link>
+             */
             $links = (new Elements('link'))(
                 Element::head()($document)
             )

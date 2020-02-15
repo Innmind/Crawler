@@ -10,6 +10,9 @@ final class Alternates implements Attributes
 {
     private Attributes $attributes;
 
+    /**
+     * @param Map<string, Attribute> $alternates
+     */
     public function __construct(Map $alternates)
     {
         $this->attributes = new Attributes\Attributes(
@@ -29,6 +32,9 @@ final class Alternates implements Attributes
         return $this->attributes->name();
     }
 
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     */
     public function content(): Map
     {
         return $this->attributes->content();
@@ -36,6 +42,7 @@ final class Alternates implements Attributes
 
     public function merge(self $alternates): self
     {
+        /** @var Map<string, Attribute> */
         $languages = $this
             ->content()
             ->keys()
@@ -57,6 +64,7 @@ final class Alternates implements Attributes
                         );
                     }
 
+                    /** @psalm-suppress MixedMethodCall */
                     return $all->put(
                         $language,
                         $this

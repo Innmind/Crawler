@@ -105,7 +105,7 @@ final class LanguagesParser implements Parser
 
     private function parseAttribute(AttributeInterface $languages): Set
     {
-        $set = Set::of('string');
+        $set = Set::strings();
         $languages = explode(',', $languages->value());
 
         foreach ($languages as $language) {

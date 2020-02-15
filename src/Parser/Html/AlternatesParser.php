@@ -59,6 +59,10 @@ final class AlternatesParser implements Parser
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Set<Link>
+         */
         $links = $links
             ->filter(static function(Node $link): bool {
                 return $link instanceof Link;
@@ -72,6 +76,7 @@ final class AlternatesParser implements Parser
             return $attributes;
         }
 
+        /** @var Map<string, Attribute> */
         $alternates = $links
             ->reduce(
                 Map::of(Url::class, 'string'),
@@ -99,6 +104,8 @@ final class AlternatesParser implements Parser
             ->reduce(
                 Map::of('string', Attribute::class),
                 static function(Map $languages, string $language, Map $links): Map {
+                    /** @var Map<Url, string> $links */
+
                     return $languages->put(
                         $language,
                         new Alternate(

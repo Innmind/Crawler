@@ -37,11 +37,7 @@ final class Crawler implements CrawlerInterface
             Map::of('string', Attribute::class)
         );
 
-        if ($attributes->contains(ContentTypeParser::key())) {
-            $mediaType = $attributes->get(ContentTypeParser::key())->content();
-        } else {
-            $mediaType = MediaType::null();
-        }
+        $mediaType = ContentTypeParser::find($attributes);
 
         return new HttpResource(
             $request->url(),

@@ -5,7 +5,7 @@ namespace Innmind\Crawler\Parser\Html;
 
 use Innmind\Crawler\{
     Parser,
-    HttpResource\Attribute\Attribute,
+    HttpResource\Attribute,
 };
 use Innmind\Xml\Reader;
 use Innmind\Html\{
@@ -17,6 +17,7 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
+use Innmind\Url\Url;
 use Innmind\Immutable\Map;
 
 final class BaseParser implements Parser
@@ -49,12 +50,31 @@ final class BaseParser implements Parser
 
         return $attributes->put(
             self::key(),
-            new Attribute(self::key(), $base->href())
+            new Attribute\Attribute(self::key(), $base->href())
         );
     }
 
     public static function key(): string
     {
         return 'base';
+    }
+
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
+    public static function find(Map $attributes, Url $default): Url
+    {
+        if (!$attributes->contains(self::key())) {
+            return $default;
+        }
+
+        /** @var mixed */
+        $base = $attributes->get(self::key())->content();
+
+        if (!$base instanceof Url) { // in case somebody overwrote the attribute
+            return $default;
+        }
+
+        return $base;
     }
 }

@@ -19,7 +19,7 @@ final class UrlResolver
     }
 
     /**
-     * @param  Map<string, AttributeInterface> $attributes
+     * @param  Map<string, HttpResource\Attribute> $attributes
      */
     public function __invoke(
         Request $request,
@@ -28,12 +28,10 @@ final class UrlResolver
     ): Url {
         $base = $request->url();
 
-        if ($attributes->contains(BaseParser::key())) {
-            $base = ($this->resolve)(
-                $base,
-                $attributes->get(BaseParser::key())->content(),
-            );
-        }
+        $base = ($this->resolve)(
+            $base,
+            BaseParser::find($attributes, $base),
+        );
 
         return ($this->resolve)($base, $target);
     }

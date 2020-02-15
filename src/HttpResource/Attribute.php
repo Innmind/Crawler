@@ -6,5 +6,9 @@ namespace Innmind\Crawler\HttpResource;
 interface Attribute
 {
     public function name(): string;
+
+    /**
+     * @return mixed
+     */
     public function content();
 }

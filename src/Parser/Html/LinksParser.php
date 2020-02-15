@@ -48,9 +48,14 @@ final class LinksParser implements Parser
         Map $attributes
     ): Map {
         $document = ($this->read)($response->body());
+        /** @var Set<Url> */
         $links = Set::of(Url::class);
 
         try {
+            /**
+             * @psalm-suppress ArgumentTypeCoercion
+             * @var Set<Url>
+             */
             $links = (new Elements('link'))(
                 Element::head()($document)
             )
@@ -75,6 +80,10 @@ final class LinksParser implements Parser
         }
 
         try {
+            /**
+             * @psalm-suppress ArgumentTypeCoercion
+             * @var Set<Url>
+             */
             $links = (new Elements('a'))(
                 Element::body()($document)
             )

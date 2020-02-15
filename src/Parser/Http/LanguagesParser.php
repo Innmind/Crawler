@@ -32,6 +32,7 @@ final class LanguagesParser implements Parser
             return $attributes;
         }
 
+        /** @psalm-suppress ArgumentTypeCoercion */
         return $attributes->put(
             self::key(),
             new Attribute(

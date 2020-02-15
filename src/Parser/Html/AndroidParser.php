@@ -21,7 +21,10 @@ use Innmind\Http\Message\{
     Request,
     Response,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\{
+    Map,
+    Set,
+};
 use function Innmind\Immutable\first;
 
 final class AndroidParser implements Parser
@@ -48,6 +51,10 @@ final class AndroidParser implements Parser
             return $attributes;
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Set<Link>
+         */
         $link = $links
             ->filter(static function(Node $link): bool {
                 return $link instanceof Link;

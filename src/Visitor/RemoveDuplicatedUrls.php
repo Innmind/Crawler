@@ -21,6 +21,7 @@ final class RemoveDuplicatedUrls
     {
         assertSet(Url::class, $urls, 1);
 
+        /** @var Set<Url> */
         return $urls
             ->reduce(
                 Map::of('string', Url::class),

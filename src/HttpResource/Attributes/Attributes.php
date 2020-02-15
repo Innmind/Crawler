@@ -17,12 +17,14 @@ use function Innmind\Immutable\assertMap;
 final class Attributes implements AttributesInterface
 {
     private string $name;
+    /** @var Map<string, Attribute> */
     private Map $content;
 
-    public function __construct(
-        string $name,
-        Map $attributes
-    ) {
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
+    public function __construct(string $name, Map $attributes)
+    {
         if (Str::of($name)->empty()) {
             throw new DomainException;
         }
@@ -38,6 +40,9 @@ final class Attributes implements AttributesInterface
         return $this->name;
     }
 
+    /**
+     * @return Map<string, Attribute>
+     */
     public function content(): Map
     {
         return $this->content;

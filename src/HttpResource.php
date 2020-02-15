@@ -22,9 +22,13 @@ final class HttpResource implements File
     private Url $url;
     private Name $name;
     private MediaType $mediaType;
+    /** @var Map<string, Attribute> */
     private Map $attributes;
     private Readable $content;
 
+    /**
+     * @param Map<string, Attribute> $attributes
+     */
     public function __construct(
         Url $url,
         MediaType $mediaType,

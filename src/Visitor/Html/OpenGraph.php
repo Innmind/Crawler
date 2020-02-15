@@ -33,6 +33,7 @@ final class OpenGraph
     public function __invoke(Node $node): Set
     {
         try {
+            /** @var Set<string> */
             return ($this->metas)(
                 ($this->head)($node)
             )
@@ -44,7 +45,7 @@ final class OpenGraph
                     return $meta->attributes()->get('property')->value() === $this->property;
                 })
                 ->reduce(
-                    Set::of('string'),
+                    Set::strings(),
                     static function(Set $values, Element $meta): Set {
                         return $values->add(
                             $meta->attributes()->get('content')->value()
@@ -52,7 +53,7 @@ final class OpenGraph
                     }
                 );
         } catch (ElementNotFound $e) {
-            return Set::of('string');
+            return Set::strings();
         }
     }
 }

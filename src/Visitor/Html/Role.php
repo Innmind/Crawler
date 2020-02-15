@@ -34,12 +34,15 @@ final class Role
      */
     public function __invoke(Node $node): Set
     {
+        /** @var Set<Element> */
         $set = Set::of(Element::class);
 
         if ($this->check($node)) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $set = $set->add($node);
         }
 
+        /** @var Set<Element> */
         return $node->children()->reduce(
             $set,
             function(Set $set, Node $node): Set {
