@@ -25,16 +25,18 @@ class AlternatesTest extends TestCase
         $this->assertInstanceOf(
             Attributes::class,
             $alternates = new Alternates(
-                $map = Map::of('string', Attribute::class)
+                Map::of('string', Attribute::class)
             )
         );
         $this->assertSame('alternates', $alternates->name());
-        $this->assertSame($map, $alternates->content());
+        $this->assertInstanceOf(Map::class, $alternates->content());
+        $this->assertSame('string', $alternates->content()->keyType());
+        $this->assertSame(Alternate::class, $alternates->content()->valueType());
     }
 
     public function testThrowWhenNotOnlyAlternates()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
 
         new Alternates(
             Map::of('string', Attribute::class)

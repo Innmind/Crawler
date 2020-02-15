@@ -8,36 +8,36 @@ use Innmind\Immutable\Map;
 
 final class Alternates implements Attributes
 {
-    private Attributes $attributes;
+    /** @var Map<string, Alternate> */
+    private Map $alternates;
 
     /**
      * @param Map<string, Attribute> $alternates
      */
     public function __construct(Map $alternates)
     {
-        $this->attributes = new Attributes\Attributes(
-            'alternates',
-            $alternates,
+        /** @var Map<string, Alternate> */
+        $this->alternates = $alternates->toMapOf( // simply a type change
+            'string',
+            Alternate::class,
+            static function(string $language, Attribute $alternate): \Generator {
+                yield $language => $alternate;
+            },
         );
-
-        $alternates->foreach(function(string $language, Attribute $alternate) {
-            if (!$alternate instanceof Alternate) {
-                throw new InvalidArgumentException;
-            }
-        });
     }
 
     public function name(): string
     {
-        return $this->attributes->name();
+        return 'alternates';
     }
 
     /**
-     * @psalm-suppress LessSpecificImplementedReturnType
+     * @psalm-suppress ImplementedReturnTypeMismatch Alternate is an Attribute
+     * @return Map<string, Alternate>
      */
     public function content(): Map
     {
-        return $this->attributes->content();
+        return $this->alternates;
     }
 
     public function merge(self $alternates): self
@@ -63,7 +63,6 @@ final class Alternates implements Attributes
                         return;
                     }
 
-                    /** @psalm-suppress MixedMethodCall */
                     yield $language => $this
                         ->content()
                         ->get($language)
