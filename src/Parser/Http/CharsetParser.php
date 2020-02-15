@@ -40,15 +40,15 @@ final class CharsetParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 $value
                     ->parameters()
                     ->get('charset')
-                    ->value()
-            )
+                    ->value(),
+            ),
         );
     }
 

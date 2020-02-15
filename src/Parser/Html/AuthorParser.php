@@ -44,7 +44,7 @@ final class AuthorParser implements Parser
 
         try {
             $metas = (new Elements('meta'))(
-                Search::head()($document)
+                Search::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -71,15 +71,15 @@ final class AuthorParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 first($meta)
                     ->attributes()
                     ->get('content')
-                    ->value()
-            )
+                    ->value(),
+            ),
         );
     }
 

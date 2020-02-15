@@ -44,7 +44,7 @@ final class DescriptionParser implements Parser
 
         try {
             $metas = (new Elements('meta'))(
-                Search::head()($document)
+                Search::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -83,9 +83,9 @@ final class DescriptionParser implements Parser
                 ->append('...');
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $description->toString())
+            new Attribute(self::key(), $description->toString()),
         );
     }
 

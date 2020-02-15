@@ -88,13 +88,13 @@ final class LanguagesParser implements Parser
 
         $languages = $this->parseAttribute($languages);
 
-        if ($languages->size() === 0) {
+        if ($languages->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $languages)
+            new Attribute(self::key(), $languages),
         );
     }
 
@@ -106,13 +106,13 @@ final class LanguagesParser implements Parser
     private function parseAttribute(AttributeInterface $languages): Set
     {
         $set = Set::strings();
-        $languages = explode(',', $languages->value());
+        $languages = \explode(',', $languages->value());
 
         foreach ($languages as $language) {
             $language = Str::of($language)->trim();
 
             if ($language->matches('~^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$~')) {
-                $set = $set->add($language->toString());
+                $set = ($set)($language->toString());
             }
         }
 

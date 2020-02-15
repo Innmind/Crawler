@@ -38,7 +38,7 @@ final class BaseParser implements Parser
 
         try {
             $base = (new Element('base'))(
-                Element::head()($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -48,9 +48,9 @@ final class BaseParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute\Attribute(self::key(), $base->href())
+            new Attribute\Attribute(self::key(), $base->href()),
         );
     }
 

@@ -45,28 +45,24 @@ final class CitationsParser implements Parser
 
         try {
             $citations = (new Elements('cite'))(
-                Element::body()($document)
+                Element::body()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
         }
 
-        $citations = $citations->reduce(
-            Set::of('string'),
-            function(Set $citations, Node $cite): Set {
-                return $citations->add(
-                    Str::of((new Text)($cite))->trim()->toString(),
-                );
-            }
+        $citations = $citations->mapTo(
+            'string',
+            static fn(Node $cite): string => Str::of((new Text)($cite))->trim()->toString(),
         );
 
-        if ($citations->size() === 0) {
+        if ($citations->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $citations)
+            new Attribute(self::key(), $citations),
         );
     }
 

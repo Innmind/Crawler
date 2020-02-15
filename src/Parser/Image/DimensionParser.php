@@ -29,14 +29,14 @@ final class DimensionParser implements Parser
         /** @var Map<string, Attribute> */
         $content = Map::of('string', Attribute::class);
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attributes(
                 self::key(),
                 $content
                     ('width', new Attribute\Attribute('width', $infos[0]))
-                    ('height', new Attribute\Attribute('height', $infos[1]))
-            )
+                    ('height', new Attribute\Attribute('height', $infos[1])),
+            ),
         );
     }
 

@@ -38,7 +38,7 @@ final class ImageParser implements Parser
         /** @var MediaType */
         $type = $attributes->get(ContentTypeParser::key())->content();
 
-        if (!$this->image->isSatisfiedBy($type)) {
+        if (!($this->image)($type)) {
             return $attributes;
         }
 

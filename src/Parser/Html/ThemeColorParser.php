@@ -48,7 +48,7 @@ final class ThemeColorParser implements Parser
 
         try {
             $meta = (new Elements('meta'))(
-                Search::head()($document)
+                Search::head()($document),
             )
                 ->filter(static function(Element $meta): bool {
                     return $meta->attributes()->contains('name') &&
@@ -75,15 +75,15 @@ final class ThemeColorParser implements Parser
                 first($meta)
                     ->attributes()
                     ->get('content')
-                    ->value()
+                    ->value(),
             );
         } catch (Exception $e) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $colour)
+            new Attribute(self::key(), $colour),
         );
     }
 

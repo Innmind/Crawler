@@ -40,9 +40,9 @@ final class TitleParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), first($values))
+            new Attribute(self::key(), first($values)),
         );
     }
 

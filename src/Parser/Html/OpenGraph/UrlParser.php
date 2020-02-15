@@ -41,12 +41,12 @@ final class UrlParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
-                Url::of(first($values))
-            )
+                Url::of(first($values)),
+            ),
         );
     }
 

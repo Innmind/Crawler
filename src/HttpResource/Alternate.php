@@ -24,7 +24,7 @@ final class Alternate implements Attribute
 
         $this->attribute = new Attribute\Attribute(
             $language,
-            (new RemoveDuplicatedUrls)($links)
+            (new RemoveDuplicatedUrls)($links),
         );
     }
 
@@ -51,8 +51,8 @@ final class Alternate implements Attribute
         return new self(
             $this->name(),
             $this->content()->merge(
-                $alternate->content()
-            )
+                $alternate->content(),
+            ),
         );
     }
 }

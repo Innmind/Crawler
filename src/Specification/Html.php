@@ -11,7 +11,7 @@ final class Html
     /** @var Set<string> */
     private static ?Set $allowed = null;
 
-    public function isSatisfiedBy(MediaType $type): bool
+    public function __invoke(MediaType $type): bool
     {
         $type = (new MediaType(
             $type->topLevel(),
@@ -33,7 +33,7 @@ final class Html
             'text/html',
             'text/xml',
             'application/xml',
-            'application/xhtml+xml'
+            'application/xhtml+xml',
         );
     }
 }

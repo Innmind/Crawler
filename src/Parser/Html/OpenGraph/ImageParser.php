@@ -42,20 +42,18 @@ final class ImageParser implements Parser
             ->filter(static function(string $url): bool {
                 return !Str::of($url)->empty();
             })
-            ->reduce(
-                Set::of(Url::class),
-                static function(Set $urls, string $url): Set {
-                    return $urls->add(Url::of($url));
-                }
+            ->mapTo(
+                Url::class,
+                static fn(string $url): Url => Url::of($url),
             );
 
         if ($values->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $values)
+            new Attribute(self::key(), $values),
         );
     }
 

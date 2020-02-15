@@ -34,7 +34,7 @@ final class AlternatesParser implements Parser
     ): Map {
         return $this->merge(
             ($this->http)($request, $response, $attributes),
-            ($this->html)($request, $response, $attributes)
+            ($this->html)($request, $response, $attributes),
         );
     }
 
@@ -64,7 +64,7 @@ final class AlternatesParser implements Parser
         /** @var Alternates */
         $htmlAlternates = $html->get(HtmlParser::key());
 
-        return $http->put(
+        return ($http)(
             self::key(),
             $httpAlternates->merge($htmlAlternates),
         );

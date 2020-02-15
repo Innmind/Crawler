@@ -34,7 +34,7 @@ final class ConditionalParser implements Parser
             $attributes = $parse(
                 $request,
                 $response,
-                $attributes
+                $attributes,
             );
 
             if ($attributes !== $original) {

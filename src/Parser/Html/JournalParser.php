@@ -37,7 +37,7 @@ final class JournalParser implements Parser
 
         try {
             $articles = (new Elements('article'))(
-                Element::body()($document)
+                Element::body()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -47,9 +47,9 @@ final class JournalParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), true)
+            new Attribute(self::key(), true),
         );
     }
 

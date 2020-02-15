@@ -24,9 +24,9 @@ final class WeightParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $response->body()->size())
+            new Attribute(self::key(), $response->body()->size()),
         );
     }
 

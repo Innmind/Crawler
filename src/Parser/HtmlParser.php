@@ -38,7 +38,7 @@ final class HtmlParser implements Parser
         /** @var MediaType */
         $type = $attributes->get(ContentTypeParser::key())->content();
 
-        if (!$this->html->isSatisfiedBy($type)) {
+        if (!($this->html)($type)) {
             return $attributes;
         }
 

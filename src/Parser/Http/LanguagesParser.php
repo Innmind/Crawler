@@ -33,7 +33,7 @@ final class LanguagesParser implements Parser
         }
 
         /** @psalm-suppress ArgumentTypeCoercion */
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
@@ -41,13 +41,11 @@ final class LanguagesParser implements Parser
                     ->headers()
                     ->get('Content-Language')
                     ->values()
-                    ->reduce(
-                        Set::strings(),
-                        static function(Set $carry, ContentLanguageValue $language): Set {
-                            return $carry->add($language->toString());
-                        }
-                    )
-            )
+                    ->mapTo(
+                        'string',
+                        static fn(ContentLanguageValue $language): string => $language->toString(),
+                    ),
+            ),
         );
     }
 

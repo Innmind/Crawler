@@ -7,7 +7,7 @@ use Innmind\MediaType\MediaType;
 
 final class Image
 {
-    public function isSatisfiedBy(MediaType $type): bool
+    public function __invoke(MediaType $type): bool
     {
         return $type->topLevel() === 'image';
     }

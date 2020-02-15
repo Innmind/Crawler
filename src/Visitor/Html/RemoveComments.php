@@ -31,7 +31,7 @@ final class RemoveComments
                      * @psalm-suppress MixedOperand
                      */
                     return $node->removeChild(
-                        $position - $removedChildren++
+                        $position - $removedChildren++,
                     );
                 }
 
@@ -41,9 +41,9 @@ final class RemoveComments
                  */
                 return $node->replaceChild(
                     $position - $removedChildren,
-                    $this($child)
+                    $this($child),
                 );
-            }
+            },
         );
     }
 }

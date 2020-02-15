@@ -44,7 +44,7 @@ final class RemoveElements
                      * @psalm-suppress MixedOperand
                      */
                     return $node->removeChild(
-                        $position - $removedChildren++
+                        $position - $removedChildren++,
                     );
                 }
 
@@ -54,9 +54,9 @@ final class RemoveElements
                  */
                 return $node->replaceChild(
                     $position - $removedChildren,
-                    $this($child)
+                    $this($child),
                 );
-            }
+            },
         );
     }
 }

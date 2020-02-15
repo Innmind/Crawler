@@ -57,7 +57,7 @@ final class LinksParser implements Parser
              * @var Set<Url>
              */
             $links = (new Elements('link'))(
-                Element::head()($document)
+                Element::head()($document),
             )
                 ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
@@ -66,14 +66,14 @@ final class LinksParser implements Parser
                     return \in_array(
                         $link->relationship(),
                         ['first', 'next', 'previous', 'last'],
-                        true
+                        true,
                     );
                 })
                 ->reduce(
                     $links,
                     static function(Set $links, Link $link): Set {
-                        return $links->add($link->href());
-                    }
+                        return ($links)($link->href());
+                    },
                 );
         } catch (ElementNotFound $e) {
             //pass
@@ -85,7 +85,7 @@ final class LinksParser implements Parser
              * @var Set<Url>
              */
             $links = (new Elements('a'))(
-                Element::body()($document)
+                Element::body()($document),
             )
                 ->filter(static function(Node $a): bool {
                     return $a instanceof A;
@@ -96,7 +96,7 @@ final class LinksParser implements Parser
                 ->reduce(
                     $links,
                     static function(Set $links, A $a): Set {
-                        return $links->add($a->href());
+                        return ($links)($a->href());
                     }
                 );
         } catch (ElementNotFound $e) {
@@ -107,18 +107,18 @@ final class LinksParser implements Parser
             return ($this->resolve)(
                 $request,
                 $attributes,
-                $link
+                $link,
             );
         });
         $links = (new RemoveDuplicatedUrls)($links);
 
-        if ($links->size() === 0) {
+        if ($links->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $links)
+            new Attribute(self::key(), $links),
         );
     }
 

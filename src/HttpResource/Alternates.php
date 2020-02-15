@@ -17,7 +17,7 @@ final class Alternates implements Attributes
     {
         $this->attributes = new Attributes\Attributes(
             'alternates',
-            $alternates
+            $alternates,
         );
 
         $alternates->foreach(function(string $language, Attribute $alternate) {
@@ -47,36 +47,32 @@ final class Alternates implements Attributes
             ->content()
             ->keys()
             ->merge($alternates->content()->keys())
-            ->reduce(
-                Map::of('string', Attribute::class),
-                function(Map $all, string $language) use ($alternates): Map {
+            ->toMapOf(
+                'string',
+                Attribute::class,
+                function(string $language) use ($alternates): \Generator {
                     if (!$this->content()->contains($language)) {
-                        return $all->put(
-                            $language,
-                            $alternates->content()->get($language)
-                        );
+                        yield $language => $alternates->content()->get($language);
+
+                        return;
                     }
 
                     if (!$alternates->content()->contains($language)) {
-                        return $all->put(
-                            $language,
-                            $this->content()->get($language)
-                        );
+                        yield $language => $this->content()->get($language);
+
+                        return;
                     }
 
                     /** @psalm-suppress MixedMethodCall */
-                    return $all->put(
-                        $language,
-                        $this
-                            ->content()
-                            ->get($language)
-                            ->merge(
-                                $alternates
-                                    ->content()
-                                    ->get($language)
-                            )
-                    );
-                }
+                    yield $language => $this
+                        ->content()
+                        ->get($language)
+                        ->merge(
+                            $alternates
+                                ->content()
+                                ->get($language)
+                        );
+                },
             );
 
         return new self($languages);

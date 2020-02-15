@@ -18,7 +18,7 @@ class ImageTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $spec->isSatisfiedBy(MediaType::of($type))
+            $spec(MediaType::of($type))
         );
     }
 

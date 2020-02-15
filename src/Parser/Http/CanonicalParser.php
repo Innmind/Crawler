@@ -57,16 +57,16 @@ final class CanonicalParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    first($links)->url()
-                )
-            )
+                    first($links)->url(),
+                ),
+            ),
         );
     }
 

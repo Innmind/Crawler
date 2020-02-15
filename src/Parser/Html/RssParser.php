@@ -52,7 +52,7 @@ final class RssParser implements Parser
              * @var Set<Link>
              */
             $links = (new Elements('link'))(
-                Element::head()($document)
+                Element::head()($document),
             )
                 ->filter(static function(Node $link): bool {
                     return $link instanceof Link;
@@ -70,16 +70,16 @@ final class RssParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 ($this->resolve)(
                     $request,
                     $attributes,
-                    first($links)->href()
-                )
-            )
+                    first($links)->href(),
+                ),
+            ),
         );
     }
 

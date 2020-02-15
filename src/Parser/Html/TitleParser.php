@@ -53,9 +53,9 @@ final class TitleParser implements Parser
             }
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $title)
+            new Attribute(self::key(), $title),
         );
     }
 
@@ -80,8 +80,8 @@ final class TitleParser implements Parser
         try {
             $title = (new Text)(
                 (new Element('title'))(
-                    Element::head()($document)
-                )
+                    Element::head()($document),
+                ),
             );
 
             return Str::of($title)->trim()->toString();

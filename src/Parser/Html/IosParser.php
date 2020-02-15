@@ -46,7 +46,7 @@ final class IosParser implements Parser
 
         try {
             $metas = (new Elements('meta'))(
-                Search::head()($document)
+                Search::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -71,9 +71,9 @@ final class IosParser implements Parser
 
         $matches = $content->capture(self::PATTERN);
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $matches->get('uri')->toString())
+            new Attribute(self::key(), $matches->get('uri')->toString()),
         );
     }
 

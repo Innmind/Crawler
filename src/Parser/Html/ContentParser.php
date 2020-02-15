@@ -91,9 +91,9 @@ final class ContentParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $text->toString())
+            new Attribute(self::key(), $text->toString()),
         );
     }
 

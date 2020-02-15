@@ -45,7 +45,7 @@ final class AndroidParser implements Parser
 
         try {
             $links = (new Elements('link'))(
-                Element::head()($document)
+                Element::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -67,9 +67,9 @@ final class AndroidParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), first($link)->href())
+            new Attribute(self::key(), first($link)->href()),
         );
     }
 

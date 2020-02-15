@@ -35,11 +35,7 @@ final class RemoveDuplicatedUrls
                     return $urls->put($string, $url);
                 }
             )
-            ->reduce(
-                Set::of(Url::class),
-                static function(Set $urls, string $string, Url $url): Set {
-                    return $urls->add($url);
-                }
-            );
+            ->values()
+            ->toSetOf(Url::class);
     }
 }

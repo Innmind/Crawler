@@ -34,14 +34,12 @@ final class Crawler implements CrawlerInterface
         $attributes = ($this->parse)(
             $request,
             $response,
-            Map::of('string', Attribute::class)
+            Map::of('string', Attribute::class),
         );
-
-        $mediaType = ContentTypeParser::find($attributes);
 
         return new HttpResource(
             $request->url(),
-            $mediaType,
+            ContentTypeParser::find($attributes),
             $attributes,
             $response->body()
         );

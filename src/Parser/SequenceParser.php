@@ -29,7 +29,7 @@ final class SequenceParser implements Parser
             $attributes = $parse(
                 $request,
                 $response,
-                $attributes
+                $attributes,
             );
         }
 

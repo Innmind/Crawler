@@ -60,7 +60,7 @@ final class ImagesParser implements Parser
             ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
-                    $description
+                    $description,
                 );
             });
         $figures = $this
@@ -68,19 +68,19 @@ final class ImagesParser implements Parser
             ->map(function(Url $url, string $description) use ($request, $attributes): Pair {
                 return new Pair(
                     ($this->resolve)($request, $attributes, $url),
-                    $description
+                    $description,
                 );
             });
 
         $images = $this->removeDuplicates($images, $figures);
 
-        if ($images->size() === 0) {
+        if ($images->empty()) {
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $images)
+            new Attribute(self::key(), $images),
         );
     }
 
@@ -128,27 +128,22 @@ final class ImagesParser implements Parser
                     return false;
                 }
             })
-            ->reduce(
-                Map::of(Url::class, 'string'),
-                static function(Map $images, ElementInterface $figure): Map {
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(ElementInterface $figure): \Generator {
                     /** @var Img */
                     $img = (new Element('img'))($figure);
 
                     try {
                         $caption = (new Element('figcaption'))($figure);
 
-                        return $images->put(
-                            $img->src(),
-                            (new Text)($caption)
-                        );
+                        yield $img->src() => (new Text)($caption);
                     } catch (ElementNotFound $e) {
-                        return $images->put(
-                            $img->src(),
-                            $img->attributes()->contains('alt') ?
-                                $img->attributes()->get('alt')->value() : ''
-                        );
+                        yield $img->src() => $img->attributes()->contains('alt') ?
+                            $img->attributes()->get('alt')->value() : '';
                     }
-                }
+                },
             );
     }
 
@@ -160,15 +155,11 @@ final class ImagesParser implements Parser
      */
     private function removeDuplicates(Map $images, Map $figures): Map
     {
-        $urls = $figures
-            ->keys()
-            ->merge($images->keys());
-        $urls = (new RemoveDuplicatedUrls)($urls);
+        $all = $figures->merge($images);
+        $urls = (new RemoveDuplicatedUrls)($all->keys());
 
-        return $figures
-            ->merge($images)
-            ->filter(static function(Url $url) use ($urls): bool {
-                return $urls->contains($url);
-            });
+        return $all->filter(static function(Url $url) use ($urls): bool {
+            return $urls->contains($url);
+        });
     }
 }

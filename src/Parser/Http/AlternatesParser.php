@@ -48,61 +48,53 @@ final class AlternatesParser implements Parser
             ->headers()
             ->get('Link')
             ->values()
-            ->reduce(
-                Map::of(Url::class, 'string'),
-                static function(Map $links, LinkValue $header): Map {
+            ->toMapOf(
+                Url::class,
+                'string',
+                static function(LinkValue $header): \Generator {
                     if (
-                        $header->relationship() !== 'alternate' ||
-                        !$header->parameters()->contains('hreflang')
+                        $header->relationship() === 'alternate' &&
+                        $header->parameters()->contains('hreflang')
                     ) {
-                        return $links;
+                        yield $header->url() => $header->parameters()->get('hreflang')->value();
                     }
-
-                    return $links->put(
-                        $header->url(),
-                        $header->parameters()->get('hreflang')->value()
-                    );
-                }
+                },
             );
 
-        if ($links->size() === 0) {
+        if ($links->empty()) {
             return $attributes;
         }
 
         /** @var Map<string, Attribute> */
         $alternates = $links
+            ->map(function(Url $link, string $language) use ($request, $attributes): Pair {
+                $link = ($this->resolve)(
+                    $request,
+                    $attributes,
+                    $link,
+                );
+
+                return new Pair($link, $language);
+            })
             ->groupBy(static function(Url $url, string $language): string {
                 return $language;
             })
-            ->map(function(string $language, Map $links) use ($request, $attributes): Map {
-                return $links->map(function(Url $link, string $language) use ($request, $attributes): Pair {
-                    $link = ($this->resolve)(
-                        $request,
-                        $attributes,
-                        $link
-                    );
-
-                    return new Pair($link, $language);
-                });
-            })
-            ->reduce(
-                Map::of('string', Attribute::class),
-                static function(Map $languages, string $language, Map $links): Map {
+            ->toMapOf(
+                'string',
+                Attribute::class,
+                static function(string $language, Map $links): \Generator {
                     /** @var Map<Url, string> $links */
 
-                    return $languages->put(
+                    yield $language => new Alternate(
                         $language,
-                        new Alternate(
-                            $language,
-                            $links->keys()
-                        )
+                        $links->keys(),
                     );
-                }
+                },
             );
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Alternates($alternates)
+            new Alternates($alternates),
         );
     }
 

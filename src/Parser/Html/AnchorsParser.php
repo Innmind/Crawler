@@ -45,7 +45,7 @@ final class AnchorsParser implements Parser
 
         try {
             $anchors = (new Elements('a'))(
-                Element::body()($document)
+                Element::body()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -59,20 +59,16 @@ final class AnchorsParser implements Parser
                 return $node instanceof A;
             })
             ->filter(static function(A $anchor): bool {
-                return Str::of($anchor->href()->toString())->matches('~^#~');
+                return Str::of($anchor->href()->toString())->startsWith('#');
             })
-            ->reduce(
-                Set::strings(),
-                static function(Set $anchors, A $anchor): Set {
-                    return $anchors->add(
-                        Str::of($anchor->href()->toString())->substring(1)->toString(),
-                    );
-                }
+            ->mapTo(
+                'string',
+                static fn(A $anchor): string => Str::of($anchor->href()->toString())->substring(1)->toString(),
             );
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
-            new Attribute(self::key(), $anchors)
+            new Attribute(self::key(), $anchors),
         );
     }
 

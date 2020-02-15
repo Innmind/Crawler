@@ -35,7 +35,7 @@ final class OpenGraph
         try {
             /** @var Set<string> */
             return ($this->metas)(
-                ($this->head)($node)
+                ($this->head)($node),
             )
                 ->filter(static function(Element $meta): bool {
                     return $meta->attributes()->contains('property') &&
@@ -44,13 +44,9 @@ final class OpenGraph
                 ->filter(function(Element $meta): bool {
                     return $meta->attributes()->get('property')->value() === $this->property;
                 })
-                ->reduce(
-                    Set::strings(),
-                    static function(Set $values, Element $meta): Set {
-                        return $values->add(
-                            $meta->attributes()->get('content')->value()
-                        );
-                    }
+                ->mapTo(
+                    'string',
+                    static fn(Element $meta): string => $meta->attributes()->get('content')->value(),
                 );
         } catch (ElementNotFound $e) {
             return Set::strings();

@@ -41,7 +41,7 @@ final class CharsetParser implements Parser
 
         try {
             $metas = (new Elements('meta'))(
-                Search::head()($document)
+                Search::head()($document),
             );
         } catch (ElementNotFound $e) {
             return $attributes;
@@ -55,15 +55,15 @@ final class CharsetParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 first($meta)
                     ->attributes()
                     ->get('charset')
-                    ->value()
-            )
+                    ->value(),
+            ),
         );
     }
 

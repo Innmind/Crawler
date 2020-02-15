@@ -54,17 +54,15 @@ final class CacheParser implements Parser
             return $attributes;
         }
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute(
                 self::key(),
                 $this
                     ->clock
                     ->now()
-                    ->goForward(
-                        new Second(first($directives)->age())
-                    )
-            )
+                    ->goForward(new Second(first($directives)->age())),
+            ),
         );
     }
 

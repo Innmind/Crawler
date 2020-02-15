@@ -39,7 +39,7 @@ final class Role
 
         if ($this->check($node)) {
             /** @psalm-suppress ArgumentTypeCoercion */
-            $set = $set->add($node);
+            $set = ($set)($node);
         }
 
         /** @var Set<Element> */
@@ -47,7 +47,7 @@ final class Role
             $set,
             function(Set $set, Node $node): Set {
                 return $set->merge(
-                    $this($node)
+                    $this($node),
                 );
             }
         );

@@ -32,12 +32,12 @@ final class ContentTypeParser implements Parser
 
         $contentType = first($response->headers()->get('Content-Type')->values());
 
-        return $attributes->put(
+        return ($attributes)(
             self::key(),
             new Attribute\Attribute(
                 self::key(),
                 MediaType::of($contentType->toString()),
-            )
+            ),
         );
     }
 
