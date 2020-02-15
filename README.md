@@ -22,8 +22,9 @@ use Innmind\Url\Url;
 use Innmind\Http\{
     Message\Request\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    ProtocolVersion,
 };
+use function Innmind\Html\bootstrap as reader;
 
 $os = Factory::build();
 
@@ -36,10 +37,10 @@ $crawl = bootstrap(
 
 $resource = $crawl(
     new Request(
-        Url::fromString('https://en.wikipedia.org/wiki/H2g2'),
+        Url::of('https://en.wikipedia.org/wiki/H2g2'),
         new Method('GET'),
-        new ProtocolVersion(2, 0)
-    )
+        new ProtocolVersion(2, 0),
+    ),
 );
 ```
 
