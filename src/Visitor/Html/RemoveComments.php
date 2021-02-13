@@ -25,10 +25,12 @@ final class RemoveComments
         return $children->reduce(
             $node,
             function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
+                /** @psalm-suppress RedundantConditionGivenDocblockType */
                 if ($child instanceof Comment) {
                     /**
                      * @psalm-suppress MixedArgument
                      * @psalm-suppress MixedOperand
+                     * @psalm-suppress MixedAssignment
                      */
                     return $node->removeChild(
                         $position - $removedChildren++,

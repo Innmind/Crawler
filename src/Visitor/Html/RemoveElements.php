@@ -35,6 +35,7 @@ final class RemoveElements
         return $children->reduce(
             $node,
             function(Node $node, int $position, Node $child) use (&$removedChildren): Node {
+                /** @psalm-suppress MixedMethodCall */
                 if (
                     $child instanceof Element &&
                     $this->toRemove->contains($child->name())
@@ -42,6 +43,7 @@ final class RemoveElements
                     /**
                      * @psalm-suppress MixedArgument
                      * @psalm-suppress MixedOperand
+                     * @psalm-suppress MixedAssignment
                      */
                     return $node->removeChild(
                         $position - $removedChildren++,

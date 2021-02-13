@@ -117,7 +117,7 @@ class CacheParserTest extends TestCase
         $directive
             ->expects($this->once())
             ->method('goForward')
-            ->with($this->callback(function(Second $second) {
+            ->with($this->callback(static function(Second $second) {
                 return $second->seconds() === 42;
             }))
             ->willReturn(

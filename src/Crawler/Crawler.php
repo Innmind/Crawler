@@ -12,7 +12,6 @@ use Innmind\Crawler\{
 };
 use Innmind\Http\Message\Request;
 use Innmind\HttpTransport\Transport;
-use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 
 final class Crawler implements CrawlerInterface

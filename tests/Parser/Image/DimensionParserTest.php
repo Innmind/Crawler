@@ -56,7 +56,7 @@ class DimensionParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new Stream(fopen('fixtures/dont_panic.jpg', 'r')));
+            ->willReturn(new Stream(\fopen('fixtures/dont_panic.jpg', 'r')));
 
         $attributes = ($this->parse)(
             $request,

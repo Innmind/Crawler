@@ -29,6 +29,7 @@ final class CharsetParser implements Parser
 
         $header = $response->headers()->get('Content-Type');
 
+        /** @psalm-suppress RedundantCondition */
         if (!$header instanceof ContentType) {
             return $attributes;
         }

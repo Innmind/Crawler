@@ -79,7 +79,10 @@ final class FindContentNode
             throw new ContentTooDispersed;
         }
 
-        //select the minimum amount of words that needs to be in nodes
+        /**
+         * select the minimum amount of words that needs to be in nodes
+         * @psalm-suppress ArgumentTypeCoercion
+         */
         $min = $quantile->quartile(\min($lookup))->value()->value();
 
         $nodes = $nodes->filter(static function(int $position) use ($min, $dispersion): bool {

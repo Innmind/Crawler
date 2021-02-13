@@ -45,7 +45,7 @@ HTML
         $this->assertCount(2, $elements);
         $elements = unwrap($elements);
 
-        if (PHP_OS === 'Darwin') { // don't why there is a difference between OSes
+        if (\PHP_OS === 'Darwin') { // don't why there is a difference between OSes
             $this->assertSame(
                 "\n".'            <h1>whatever</h1>'."\n".'        ',
                 \current($elements)->content()

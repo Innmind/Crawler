@@ -41,7 +41,7 @@ HTML
 
         $cleaned = $visitor($html);
 
-        if (PHP_OS === 'Darwin') { // don't why there is a difference between OSes
+        if (\PHP_OS === 'Darwin') { // don't why there is a difference between OSes
             $expected = "<!DOCTYPE html>\n".
                         "<html>\n".
                         "<body>\n".
@@ -59,7 +59,7 @@ HTML
                         "    \n".
                         "    <div>hey</div>\n".
                         "</body>\n".
-                        "</html>";
+                        '</html>';
         } else {
             $expected = <<<HTML
 <!DOCTYPE html>

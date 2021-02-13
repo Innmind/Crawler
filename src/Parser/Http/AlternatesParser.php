@@ -84,7 +84,6 @@ final class AlternatesParser implements Parser
                 Attribute::class,
                 static function(string $language, Map $links): \Generator {
                     /** @var Map<Url, string> $links */
-
                     yield $language => new Alternate(
                         $language,
                         $links->keys(),
