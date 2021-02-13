@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Crawler\HttpResource;
 
-use Innmind\Crawler\Exception\InvalidArgumentException;
 use Innmind\Immutable\Map;
 
 final class Alternates implements Attributes

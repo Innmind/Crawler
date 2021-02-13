@@ -85,7 +85,7 @@ class ContentParserTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new Stream(fopen($fixture, 'r')));
+            ->willReturn(new Stream(\fopen($fixture, 'r')));
 
         $attributes = ($this->parse)(
             $request,
@@ -104,7 +104,7 @@ class ContentParserTest extends TestCase
         $this->assertTrue($attributes->contains('content'));
         $content = $attributes->get('content');
         $this->assertSame('content', $content->name());
-        $this->assertTrue(is_string($content->content()));
+        $this->assertTrue(\is_string($content->content()));
         $this->assertFalse(empty($content->content()));
     }
 

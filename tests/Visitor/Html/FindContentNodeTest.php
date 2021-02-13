@@ -15,7 +15,7 @@ class FindContentNodeTest extends TestCase
 {
     public function testFind()
     {
-        $html = html()(new Stream(fopen('fixtures/lemonde.html', 'r')));
+        $html = html()(new Stream(\fopen('fixtures/lemonde.html', 'r')));
 
         $node = (new FindContentNode)(
             Sequence::of(Node::class, Element::body()($html)),
